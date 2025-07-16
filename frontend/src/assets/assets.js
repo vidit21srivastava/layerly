@@ -1,10 +1,10 @@
-import posterLeft from './poster_left.jpg';
-import posterRight from './poster_right.jpg';
-import logo from './logo.jpg';
-import logoSlogan from './logo_slogan.jpg';
+import posterLeft from './poster_left.png';
+import posterRight from './poster_right.png';
+import logo from './logo.png';
+import logoSlogan from './logo_slogan.png';
 
 
-export {
+export const assets = {
     posterLeft,
     posterRight,
     logo,

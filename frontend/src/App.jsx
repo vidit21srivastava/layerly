@@ -7,9 +7,9 @@ import Custom from './pages/Custom'
 import Product from './pages/Product'
 import Cart from './pages/Cart'
 import Login from './pages/Login'
-import PlaceOrders from './pages/PlaceOrder'
+import PlaceOrder from './pages/PlaceOrder'
 import Orders from './pages/Orders'
-
+import Navbar from './components/Navbar'
 
 const App = () => {
   return (
@@ -27,7 +27,7 @@ const App = () => {
         <Route path='/product/:productID' element={<Product />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/place-order' element={<PlaceOrders />} />
+        <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='/orders' element={<Orders />} />
 
 
