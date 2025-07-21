@@ -2,10 +2,9 @@ import React, { useContext } from 'react'
 import { ShopContext } from '../context/ShopContext'
 
 const NewLaunch = () => {
-
-    const {
-        products
-    } = useContext(ShopContext)
+    console.log('NewLaunch component rendered');
+    const { products } = useContext(ShopContext);
+    console.log(products);
     return (
         <div></div>
     )
