@@ -3,3 +3,15 @@
 a.active hr {
     display: block;
 }
+
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+/* Smooth scrolling for carousel */
+.carousel-container {
+    scroll-behavior: smooth;
+}
