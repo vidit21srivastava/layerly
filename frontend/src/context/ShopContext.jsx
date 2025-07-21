@@ -6,7 +6,7 @@ const ShopContextProvider = (props) => {
 
     const currency = '₹';
     const value = {
-        currency
+        products, currency
 
     }
     return (
