@@ -3,7 +3,7 @@ import NewLaunch from '../components/NewLaunch'
 
 const Home = () => {
     return (
-        <div>
+        <div className=''>
             <NewLaunch />
         </div>
     )

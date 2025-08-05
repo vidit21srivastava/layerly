@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+body {
+    font-family: "Lilita One", sans-serif;
+}
+
 a.active hr {
     display: block;
 }
@@ -8,7 +12,7 @@ a.active hr {
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+
 }
 
 /* Smooth scrolling for carousel */
