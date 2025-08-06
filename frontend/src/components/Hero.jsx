@@ -23,8 +23,8 @@ const Hero = () => {
                         </h1>
                     </div>
 
-                    <h1 className='flex flex-col text-gray-600 font-mono mt-6 text-xl lg:text-xl sm:text-base max-w-md'>
-                        #Printing One Layer at a Time
+                    <h1 className='flex flex-col text-gray-600 ubuntu-sans-mono-italic  mt-6 text-md lg:text-xl sm:text-base max-w-md'>
+                        — step by step, one layer at a time.
 
                     </h1>
                 </div>
