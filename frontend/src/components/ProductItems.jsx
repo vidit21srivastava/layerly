@@ -28,7 +28,7 @@ const ProductItems = ({ id, name, price, product }) => {
 
                     {/* Bestseller Badge */}
                     {product?.bestseller && (
-                        <div className='absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs sm:text-xs font-semibold rounded shadow-sm'>
+                        <div className='absolute top-2 left-2 bg-orange-400 text-white px-2 py-1 text-xs sm:text-xs font-semibold rounded-2xl shadow-sm'>
                             BESTSELLER
                         </div>
                     )}

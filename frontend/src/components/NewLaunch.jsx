@@ -5,7 +5,7 @@ import ProductItems from './ProductItems';
 
 const NewLaunch = () => {
     const { products } = useContext(ShopContext);
-    const { latestProducts, setLatestProducts } = useState([]);
+    const [latestProducts, setLatestProducts] = useState([]);
 
     useEffect(() => {
         if (products) {
@@ -18,7 +18,7 @@ const NewLaunch = () => {
 
     return (
         <div className='my-10'>
-            <div className='delius-unicase-regular text-left py-2 text-xl'>
+            <div className='delius-unicase-regular text-left py-2 text-xl mb-4'>
                 <h1 className='text-md sm:text-l lg:text-xl font-normal text-gray-900'>
                     NEWLY LAUNCHED
                 </h1>

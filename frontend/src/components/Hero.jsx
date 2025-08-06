@@ -13,19 +13,20 @@ const Hero = () => {
                 <div className='text-left mb-6'>
                     <div className='text-left text-brand-orange text-4xl sm:text-4xl md:text-5xl leading-tight'>
                         <h1 id='hero-heading'>
-                            Design
+                            Design,
                         </h1>
                         <h1 id='hero-heading'>
-                            Develop
+                            Develop,
                         </h1>
                         <h1 id='hero-heading'>
                             Deliver
                         </h1>
                     </div>
 
-                    <p className='text-gray-600 font-mono font-bold mt-6 text-sm sm:text-base max-w-md'>
-                        #Printing one Layer at a Time.
-                    </p>
+                    <h1 className='flex flex-col text-gray-600 lilita-one-regular mt-6 text-3xl lg:text-3xl sm:text-base max-w-md'>
+                        one LAYER At a TIME
+
+                    </h1>
                 </div>
 
                 {/* Button Container - Left Aligned */}
