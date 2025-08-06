@@ -7,24 +7,24 @@ const Navbar = () => {
 
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
-            <Link to='/'><img src={assets.logo_slogan} className='w-28' alt="" /></Link>
+            <Link to='/'><img src={assets.logo_slogan} className='w-30' alt="" /></Link>
 
 
             <ul className='hidden sm:flex gap-5 text-sm text-grey-700'>
                 <NavLink to='/' className='flex flex-col items-center gap-1'>
-                    <p>HOME</p>
+                    <p className='delius-unicase-regular'>HOME</p>
                     <hr className='w-2/4 border-none h-[2.5px] bg-gray-700 hidden' />
                 </NavLink>
                 <NavLink to='/catalogue' className='flex flex-col items-center gap-1'>
-                    <p>CATALOGUE</p>
+                    <p className='delius-unicase-regular'>CATALOGUE</p>
                     <hr className='w-2/4 border-none h-[2.5px] bg-gray-700 hidden' />
                 </NavLink>
                 <NavLink to='/custom' className='flex flex-col items-center gap-1'>
-                    <p>CUSTOM</p>
+                    <p className='delius-unicase-regular'>CUSTOM</p>
                     <hr className='w-2/4 border-none h-[2.5px] bg-gray-700 hidden' />
                 </NavLink>
                 <NavLink to='/about' className='flex flex-col items-center gap-1'>
-                    <p>ABOUT</p>
+                    <p className='delius-unicase-regular'>ABOUT</p>
                     <hr className='w-2/4 border-none h-[2.5px] bg-gray-700 hidden' />
                 </NavLink>
             </ul>
@@ -35,15 +35,15 @@ const Navbar = () => {
                     <img className='w-5 cursor-pointer' src={assets.profile_icon} alt="" />
                     <div className='hidden group-hover:block absolute dropdown-menu right-0 pt-4'>
                         <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-white/30 backdrop-blur-sm text-gray-700 rounded'>
-                            <p className='cursor-pointer hover:text-orange-400 text-sm'>My Profile</p>
-                            <p className='cursor-pointer hover:text-orange-400 text-sm'>Orders</p>
-                            <p className='cursor-pointer hover:text-orange-400 text-sm'>Logout</p>
+                            <p className='cursor-pointer hover:text-brand-orange text-sm'>My Profile</p>
+                            <p className='cursor-pointer hover:text-brand-orange text-sm'>Orders</p>
+                            <p className='cursor-pointer hover:text-brand-orange text-sm'>Logout</p>
                         </div>
                     </div>
                 </div>
                 <Link to='/cart' className='relative'>
                     <img src={assets.cart_icon} className='w-5 min-w-5' alt="" />
-                    <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[12px]'>10</p>
+                    <p className='absolute right-[-6px] bottom-[-6px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[10px]'>10</p>
                 </Link>
                 <img onClick={() => setVisible(true)} src={assets.menu_icon} className='w-5 cursor-pointer sm:hidden' alt="" />
             </div>
@@ -53,10 +53,10 @@ const Navbar = () => {
                     <div onClick={() => setVisible(false)} className='flex items-center gap-4 p-3 cursor-pointer'>
                         <img className='h-4 rotate-180' src={assets.dropdown_icon} alt="" />
                     </div>
-                    <NavLink onClick={() => setVisible(false)} className='py-2 p1-6 flex items-center justify-center' to='/'>HOME</NavLink>
-                    <NavLink onClick={() => setVisible(false)} className='py-2 p1-6 flex items-center justify-center' to='/catalogue'>CATALOGUE</NavLink>
-                    <NavLink onClick={() => setVisible(false)} className='py-2 p1-6 flex items-center justify-center' to='/custom'>CUSTOM</NavLink>
-                    <NavLink onClick={() => setVisible(false)} className='py-2 p1-6 flex items-center justify-center' to='/about'>ABOUT</NavLink>
+                    <NavLink onClick={() => setVisible(false)} className='py-2 p1-6 flex items-center justify-center delius-unicase-regular' to='/'>HOME</NavLink>
+                    <NavLink onClick={() => setVisible(false)} className='py-2 p1-6 flex items-center justify-center delius-unicase-regular' to='/catalogue'>CATALOGUE</NavLink>
+                    <NavLink onClick={() => setVisible(false)} className='py-2 p1-6 flex items-center justify-center delius-unicase-regular' to='/custom'>CUSTOM</NavLink>
+                    <NavLink onClick={() => setVisible(false)} className='py-2 p1-6 flex items-center justify-center delius-unicase-regular' to='/about'>ABOUT</NavLink>
 
                 </div>
 
