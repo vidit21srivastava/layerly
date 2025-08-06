@@ -50,7 +50,6 @@ const Hero = () => {
                 <img
                     className='w-full h-full object-cover rounded-r-xl'
                     src={assets.poster_left}
-                    alt="Custom 3D printing solutions"
                     loading="lazy"
                 />
             </div>
