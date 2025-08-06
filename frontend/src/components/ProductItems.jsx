@@ -2,13 +2,11 @@ import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext'
 
-// Helper function to get hex colors for the color swatches
 
 const ProductItems = ({ id, name, price, product }) => {
     const { currency } = useContext(ShopContext)
     const [selectedColor, setSelectedColor] = useState(product?.availableColors[0] || 'Black')
 
-    // Get the current image based on selected color
     const currentImage = product?.imagesByColor[selectedColor]
 
     return (
@@ -46,8 +44,14 @@ const ProductItems = ({ id, name, price, product }) => {
                         </span>
                     </h3>
 
-                    {/* Color Selection */}
-                    <div className='mb-3 flex-shrink-0'>
+
+                    {/* <div className='mb-3 flex-shrink-0'>
+
+                    </div> */}
+
+                    {/* Color, Price and Category Container */}
+                    <div className='mt-auto'>
+                        {/* Color Selection */}
                         <p className='text-xs text-gray-500 mb-2'>Color:</p>
                         <div className='flex gap-1.5 sm:gap-2 flex-wrap'>
                             {product?.availableColors.map((color) => (
@@ -75,10 +79,6 @@ const ProductItems = ({ id, name, price, product }) => {
                         >
                             {selectedColor}
                         </p>
-                    </div>
-
-                    {/* Price and Category Container */}
-                    <div className='mt-auto'>
                         {/* Price */}
                         <p className='text-base sm:text-lg font-semibold text-gray-900 mb-1'>
                             <span className='overflow-hidden text-ellipsis whitespace-nowrap block'>

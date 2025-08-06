@@ -13,18 +13,18 @@ const Hero = () => {
                 <div className='text-left mb-6'>
                     <div className='text-left text-brand-orange text-4xl sm:text-4xl md:text-5xl leading-tight'>
                         <h1 id='hero-heading'>
-                            Design,
+                            Design
                         </h1>
                         <h1 id='hero-heading'>
-                            Develop,
+                            Develop
                         </h1>
                         <h1 id='hero-heading'>
                             Deliver
                         </h1>
                     </div>
 
-                    <h1 className='flex flex-col text-gray-600 lilita-one-regular mt-6 text-3xl lg:text-3xl sm:text-base max-w-md'>
-                        one LAYER At a TIME
+                    <h1 className='flex flex-col text-gray-600 font-mono mt-6 text-xl lg:text-xl sm:text-base max-w-md'>
+                        #Printing One Layer at a Time
 
                     </h1>
                 </div>
