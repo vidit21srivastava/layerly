@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layerly - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/dashboard.css">
+  <script src="scripts/main.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Header with Navigation -->
+  <header>
+    <div class="header-content">
+      <img src="images/logo.png" alt="Layerly Logo" class="logo">
+      <h1>LAYERLY</h1>
+      <nav>
+        <ul>
+          <li><a href="dashboard.html">Home</a></li>
+          <li><a href="catalogue.html">Catalogue</a></li>
+          <li><a href="custom.html">Custom 3D Print</a></li>
+          <li><a href="#profile">Profile</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li>
+            <a href="cart.html">
+                <i class="fas fa-shopping-cart"></i>
+                Cart
+                <span class="cart-counter">0</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Central Poster -->
+  <main>
+    <section class="poster">
+    <div class="poster-images">
+        <img src="images/poster_left.png" alt="Layerly Poster Left" class="poster-img">
+        <img src="images/poster_right.png" alt="Layerly Poster Right" class="poster-img">
+    </div>
+    <div class="poster-text">
+        <h2>Welcome to Layerly</h2>
+        <p>Discover the future of 3D printing. Customize, create, and bring your ideas to life!</p>
+        <p>Check out the catalogue page for pre-designed acessories!</p>
+        <p>Have you own design? Upload it in the 'Custom 3D Print' and get it 3D printed!</p>
+    </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="social-links">
+      <a href="https://www.instagram.com/l.a.y.e.r.l.y?igsh=NHlhNjNqMDNlaGg4" target="_blank">Instagram</a>
+      <a href="mailto:layerly2024@gmail.com">Gmail</a>
+      <a href="#privacy">Privacy Policy</a>
+      <a href="#" id="contact-us">Contact Us</a>
+    </div>
+  </footer>
+  <div class="modal" id="contact-modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h3>Contact Us</h3>
+    <p>Phone: <strong>+91-9664851323</strong></p>
+    <p>Email: <strong>layerly2024@gmail.com</strong></p>
+  </div>
+  </div>
+</body>
+</html>

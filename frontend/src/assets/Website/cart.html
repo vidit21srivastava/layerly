@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layerly - Cart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles/cart.css">
+  <script src="scripts/cart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <img src="images/logo.png" alt="Layerly Logo" class="logo">
+      <h1>LAYERLY</h1>
+      <nav>
+        <ul>
+          <li><a href="dashboard.html">Home</a></li>
+          <li><a href="catalogue.html">Catalogue</a></li>
+          <li><a href="custom.html">Custom Print</a></li>
+          <li><a href="dashboard.html#profile">Profile</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li>
+            <a href="cart.html">
+              <i class="fas fa-shopping-cart"></i>
+              Cart
+              <span class="cart-counter">0</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">Your Cart</h1>
+    <div class="cart-items" id="cartItems">
+      <!-- Cart items will be dynamically added here -->
+    </div>
+    <div class="cart-summary">
+      <h3>Total: ₹<span id="cartTotal">0</span></h3>
+      <button class="checkout-btn">Proceed to Checkout</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+  </div>
+</div>
+
+  </main>
+
+  <footer>
+    <div class="social-links">
+      <a href="https://www.instagram.com/l.a.y.e.r.l.y?igsh=NHlhNjNqMDNlaGg4" target="_blank">Instagram</a>
+      <a href="mailto:layerly2024@gmail.com">Gmail</a>
+      <a href="#privacy">Privacy Policy</a>
+      <a href="#" id="contact-us">Contact Us</a>
+    </div>
+  </footer>
+  <script src="scripts/cart.js"></script>
+</body>
+</html>

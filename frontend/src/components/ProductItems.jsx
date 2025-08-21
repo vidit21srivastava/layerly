@@ -5,7 +5,7 @@ import { ShopContext } from '../context/ShopContext'
 
 const ProductItems = ({ id, name, price, product }) => {
     const { currency } = useContext(ShopContext)
-    const [selectedColor, setSelectedColor] = useState(product?.availableColors[0] || 'Black')
+    const [selectedColor, setSelectedColor] = useState(product?.availableColors[0] || 'White')
 
     const currentImage = product?.imagesByColor[selectedColor]
 

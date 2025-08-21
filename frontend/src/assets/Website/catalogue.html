@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layerly - Catalogue</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/catalogue.css">
+  <script src="scripts/main.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <img src="images/logo.png" alt="Layerly Logo" class="logo">
+      <h1>LAYERLY</h1>
+      <nav>
+        <ul>
+          <li><a href="dashboard.html">Home</a></li>
+          <li><a href="catalogue.html" class="active">Catalogue</a></li>
+          <li><a href="custom.html">Custom 3D Print</a></li>
+          <li><a href="#profile">Profile</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li>
+            <a href="cart.html">
+                <i class="fas fa-shopping-cart"></i>
+                Cart
+                <span class="cart-counter">0</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">CATALOGUE</h1>
+    <div class="products-grid">
+      <!-- Adiyogi -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/adiyogi/Adiyogi_Black.jpg" alt="black" class="active">
+          <img src="images/adiyogi/Adiyogi_Gray.jpg" alt="gray">
+          <img src="images/adiyogi/Adiyogi_Orange.jpg" alt="orange">
+          <img src="images/adiyogi/Adiyogi_Red.jpg" alt="red">
+          <img src="images/adiyogi/Adiyogi_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Adiyogi Sculpture</h2>
+          <p><strong>Price:</strong> ₹75</p>
+          <p><strong>Dimensions:</strong> 11cm x 8cm x 7.5cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Admin Building -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/admin_building/AB_Black.jpg" alt="black">
+          <img src="images/admin_building/AB_Gray.jpg" alt="gray">
+          <img src="images/admin_building/AB_Orange.jpg" alt="orange">
+          <img src="images/admin_building/AB_Red.jpg" alt="red">
+          <img src="images/admin_building/AB_White.jpg" alt="white" class="active">
+        </div>
+        <div class="product-info">
+          <h2>Admin Building Model</h2>
+          <p><strong>Price:</strong> ₹200</p>
+          <p><strong>Dimensions:</strong> 5cm x 5cm x 6cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Admin Building Replica -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/admin_building_replica/AB_Black.jpg" alt="black">
+          <img src="images/admin_building_replica/AB_Gray.jpg" alt="gray" class="active">
+          <img src="images/admin_building_replica/AB_Orange.jpg" alt="orange">
+          <img src="images/admin_building_replica/AB_Red.jpg" alt="red">
+          <img src="images/admin_building_replica/AB_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Admin Building Model</h2>
+          <p><strong>Price:</strong> ₹300</p>
+          <p><strong>Dimensions:</strong> 12cm x 5cm x 6cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Batman -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/batman/Batman_Black.jpg" alt="black" data-color="black" class="active">
+          <img src="images/batman/Batman_Gray.jpg" alt="gray">
+          <img src="images/batman/Batman_Orange.jpg" alt="orange">
+          <img src="images/batman/Batman_Red.jpg" alt="red">
+          <img src="images/batman/Batman_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Batman Sculpture</h2>
+          <p><strong>Price:</strong> ₹50</p>
+          <p><strong>Dimensions:</strong> 5cm x 2.9cm x 7cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Black Widow -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/black_widow/Widow_Black.jpg" alt="black" class="active">
+          <img src="images/black_widow/Widow_Gray.jpg" alt="gray">
+          <img src="images/black_widow/Widow_Orange.jpg" alt="orange">
+          <img src="images/black_widow/Widow_Red.jpg" alt="red">
+          <img src="images/black_widow/Widow_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Black Widow Sculpture</h2>
+          <p><strong>Price:</strong> ₹60</p>
+          <p><strong>Dimensions:</strong> 4.8cm x 4.4cm x 6.2cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Cable Manager -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/cable_manager/CM_Black.jpg" alt="black" >
+          <img src="images/cable_manager/CM_Gray.jpg" alt="gray" class="active">
+          <img src="images/cable_manager/CM_Orange.jpg" alt="orange">
+          <img src="images/cable_manager/CM_Red.jpg" alt="red">
+          <img src="images/cable_manager/CM_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Cable Manager</h2>
+          <p><strong>Price:</strong> ₹20</p>
+          <p><strong>Dimensions:</strong> 5.6cm x 1.7cm x 1.6cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Captain America -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/captain_america/CA_Black.jpg" alt="black">
+          <img src="images/captain_america/CA_Gray.jpg" alt="gray">
+          <img src="images/captain_america/CA_Orange.jpg" alt="orange">
+          <img src="images/captain_america/CA_Red.jpg" alt="red">
+          <img src="images/captain_america/CA_White.jpg" alt="white" class="active">
+        </div>
+        <div class="product-info">
+          <h2>Captain America</h2>
+          <p><strong>Price:</strong> ₹60</p>
+          <p><strong>Dimensions:</strong> 4cm x 5.7cm x 5.9cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Davy Jones -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/davy_jones/DJ_Black.jpg" alt="black" class="active">
+          <img src="images/davy_jones/DJ_Gray.jpg" alt="gray">
+          <img src="images/davy_jones/DJ_Orange.jpg" alt="orange">
+          <img src="images/davy_jones/DJ_Red.jpg" alt="red">
+          <img src="images/davy_jones/DJ_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Davy Jones</h2>
+          <p><strong>Price:</strong> ₹50</p>
+          <p><strong>Dimensions:</strong> 3cm x 3cm x 7.5cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Door Name Plate -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/door_name_plate/DNP_Black.jpg" alt="black">
+          <img src="images/door_name_plate/DNP_Gray.jpg" alt="gray">
+          <img src="images/door_name_plate/DNP_Orange.jpg" alt="orange">
+          <img src="images/door_name_plate/DNP_Red.jpg" alt="red" class="active">
+          <img src="images/door_name_plate/DNP_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Door Name Plate</h2>
+          <p><strong>Price:</strong> ₹200</p>
+          <p><strong>Dimensions:</strong> 20cm x 10cm x 0.5cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Factorian Vase -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/factorian_vase/FV_Black.jpg" alt="black" class="active">
+          <img src="images/factorian_vase/FV_Gray.jpg" alt="gray">
+          <img src="images/factorian_vase/FV_Orange.jpg" alt="orange">
+          <img src="images/factorian_vase/FV_Red.jpg" alt="red">
+          <img src="images/factorian_vase/FV_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Fcatorian Vase</h2>
+          <p><strong>Price:</strong> ₹75</p>
+          <p><strong>Dimensions:</strong> 6cm x 6cm x 15cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Hand Wall Mount -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/hand_wall_mount/HWM_Black.jpg" alt="black">
+          <img src="images/hand_wall_mount/HWM_Gray.jpg" alt="gray">
+          <img src="images/hand_wall_mount/HWM_Orange.jpg" alt="orange">
+          <img src="images/hand_wall_mount/HWM_Red.jpg" alt="red">
+          <img src="images/hand_wall_mount/HWM_White.jpg" alt="white" class="active">
+        </div>
+        <div class="product-info">
+          <h2>Hand Wall Mount</h2>
+          <p><strong>Price:</strong> ₹125</p>
+          <p><strong>Dimensions:</strong> 8cm x 10cm x 15cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Hulk -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/hulk/Hulk_Black.jpg" alt="black" class="active">
+          <img src="images/hulk/Hulk_Gray.jpg" alt="gray">
+          <img src="images/hulk/Hulk_Orange.jpg" alt="orange">
+          <img src="images/hulk/Hulk_Red.jpg" alt="red">
+          <img src="images/hulk/Hulk_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Hulk</h2>
+          <p><strong>Price:</strong> ₹65</p>
+          <p><strong>Dimensions:</strong> 5.7cm x 3.7cm x 7.7cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Master Yodo -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/master_yodo/MY_Black.jpg" alt="black">
+          <img src="images/master_yodo/MY_Gray.jpg" alt="gray" class="active">
+          <img src="images/master_yodo/MY_Orange.jpg" alt="orange">
+          <img src="images/master_yodo/MY_Red.jpg" alt="red">
+          <img src="images/master_yodo/MY_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Master Yodo Sculpture</h2>
+          <p><strong>Price:</strong> ₹50</p>
+          <p><strong>Dimensions:</strong> 4.7cm x 3.3cm x 7cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Mobile Support -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/mobile_support/MS_Black.jpg" alt="black" class="active">
+          <img src="images/mobile_support/MS_Gray.jpg" alt="gray">
+          <img src="images/mobile_support/MS_Orange.jpg" alt="orange">
+          <img src="images/mobile_support/MS_Red.jpg" alt="red">
+          <img src="images/mobile_support/MS_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Mobile Support</h2>
+          <p><strong>Price:</strong> ₹40</p>
+          <p><strong>Dimensions:</strong> 7.5cm x 7.5cm x 5cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Moon Knight -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/moon_knight/MK_Black.jpg" alt="black">
+          <img src="images/moon_knight/MK_Gray.jpg" alt="gray">
+          <img src="images/moon_knight/MK_Orange.jpg" alt="orange">
+          <img src="images/moon_knight/MK_Red.jpg" alt="red">
+          <img src="images/moon_knight/MK_White.jpg" alt="white" class="active">
+        </div>
+        <div class="product-info">
+          <h2>Moon Knight Sculpture</h2>
+          <p><strong>Price:</strong> ₹60</p>
+          <p><strong>Dimensions:</strong> 5.4cm x 3.9cm x 6.2cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- PUBG -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/PUBG/PUBG_Black.jpg" alt="black">
+          <img src="images/PUBG/PUBG_Grey.jpg" alt="gray" class="active">
+          <img src="images/PUBG/PUBG_Orange.jpg" alt="orange">
+          <img src="images/PUBG/PUBG_Red.jpg" alt="red">
+          <img src="images/PUBG/PUBG_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>PUBG Sculpture</h2>
+          <p><strong>Price:</strong> ₹50</p>
+          <p><strong>Dimensions:</strong> 3.3cm x 2.8cm x 6cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Ram Idol -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/ram_idol/SRI_Black.jpg" alt="black" class="active">
+          <img src="images/ram_idol/SRI_Grey.jpg" alt="gray">
+          <img src="images/ram_idol/SRI_Orange.jpg" alt="orange">
+          <img src="images/ram_idol/SRI_Red.jpg" alt="red">
+          <img src="images/ram_idol/SRI_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Shree Ram Idol</h2>
+          <p><strong>Price:</strong> ₹200</p>
+          <p><strong>Dimensions:</strong> 10cm x 10cm x 5cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Scarlet Witch -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/scarlet_witch/SW_Black.jpg" alt="black">
+          <img src="images/scarlet_witch/SW_Gray.jpg" alt="gray">
+          <img src="images/scarlet_witch/SW_Orange.jpg" alt="orange">
+          <img src="images/scarlet_witch/SW_Red.jpg" alt="red" class="active">
+          <img src="images/scarlet_witch/SW_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Scarlet Witch</h2>
+          <p><strong>Price:</strong> ₹65</p>
+          <p><strong>Dimensions:</strong> 4.2cm x 5.2cm x 5.4cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Screw Measuring Tool -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/screw_measuring_tool/SMT_Black.jpg" alt="black" class="active">
+          <img src="images/screw_measuring_tool/SMT_Gray.jpg" alt="gray">
+          <img src="images/screw_measuring_tool/SMT_Orange.jpg" alt="orange">
+          <img src="images/screw_measuring_tool/SMT_Red.jpg" alt="red">
+          <img src="images/screw_measuring_tool/SMT_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Screw Measuring Tool</h2>
+          <p><strong>Price:</strong> ₹100</p>
+          <p><strong>Dimensions:</strong> 6.5cm x 14.2cm x 1.3cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Spiral Planter -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/spiral_planter/SP_Black.jpg" alt="black">
+          <img src="images/spiral_planter/SP_Gray.jpg" alt="gray">
+          <img src="images/spiral_planter/SP_Orange.jpg" alt="orange">
+          <img src="images/spiral_planter/SP_Red.jpg" alt="red">
+          <img src="images/spiral_planter/SP_White.jpg" alt="white" class="active">
+        </div>
+        <div class="product-info">
+          <h2>Spiral Planter</h2>
+          <p><strong>Price:</strong> ₹100</p>
+          <p><strong>Dimensions:</strong> 8cm x 8cm x 7.5cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Thanos -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/thanos/Thanos_Black.jpg" alt="black" class="active">
+          <img src="images/thanos/Thanos_Gray.jpg" alt="gray">
+          <img src="images/thanos/Thanos_Orange.jpg" alt="orange">
+          <img src="images/thanos/Thanos_Red.jpg" alt="red">
+          <img src="images/thanos/Thanos_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Thanos</h2>
+          <p><strong>Price:</strong> ₹65</p>
+          <p><strong>Dimensions:</strong> 4.5cm x 7.5cm x 5cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Walter White -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/walter_white/WW_Black.jpg" alt="black">
+          <img src="images/walter_white/WW_Gray.jpg" alt="gray">
+          <img src="images/walter_white/WW_Orange.jpg" alt="orange">
+          <img src="images/walter_white/WW_Red.jpg" alt="red">
+          <img src="images/walter_white/WW_White.jpg" alt="white" class="active">
+        </div>
+        <div class="product-info">
+          <h2>Walter White</h2>
+          <p><strong>Price:</strong> ₹60</p>
+          <p><strong>Dimensions:</strong> 5.8cm x 4.8cm x 6.6cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Keychain -->
+      <div class="product-card">
+        <div class="product-images">
+          <img src="images/keychain/K1_Black.jpg" alt="black">
+          <img src="images/keychain/K1_Gray.jpg" alt="gray">
+          <img src="images/keychain/K1_Orange.jpg" alt="orange" class="active">
+          <img src="images/keychain/K1_Red.jpg" alt="red">
+          <img src="images/keychain/K1_White.jpg" alt="white">
+        </div>
+        <div class="product-info">
+          <h2>Keychain</h2>
+          <p><strong>Price:</strong> ₹75</p>
+          <p><strong>Dimensions:</strong> 10cm x 10cm x 5cm</p>
+          <div class="color-selector">
+            <button class="color-btn" data-color="black" style="background: #000000;"></button>
+            <button class="color-btn" data-color="gray" style="background: #5b5b5b;"></button>
+            <button class="color-btn" data-color="orange" style="background: #ff8800;"></button>
+            <button class="color-btn" data-color="red" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="white" style="background: #ffffff;"></button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Add more products as needed -->
+    </div>
+  </main>
+
+  <footer>
+    <div class="social-links">
+      <a href="https://www.instagram.com/l.a.y.e.r.l.y?igsh=NHlhNjNqMDNlaGg4" target="_blank">Instagram</a>
+      <a href="mailto:layerly2024@gmail.com">Gmail</a>
+      <a href="#privacy">Privacy Policy</a>
+      <a href="#" id="contact-us">Contact Us</a>
+    </div>
+  </footer>
+  <div class="modal" id="contact-modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h3>Contact Us</h3>
+      <p>Phone: <strong>+91-9664851323</strong></p>
+      <p>Email: <strong>layerly2024@gmail.com</strong></p>
+    </div>
+  </div>
+  
+</body>
+</html>
+

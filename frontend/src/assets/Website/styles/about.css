@@ -1,0 +1,133 @@
+/* Header & Footer (same as other pages) */
+header {
+  width: 100%;
+  background: #383838;
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  gap: 1rem;
+}
+
+.logo {
+  width: 60px;
+  height: auto;
+}
+
+header h1 {
+  font-family: 'Lilita One', cursive;
+  color: #ffa800;
+  margin-right: 30%;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+}
+
+nav a {
+  text-decoration: none;
+  color: #ffa800;
+  font-family: 'Lilita One', cursive;
+  font-size: 1.1rem;
+}
+
+nav a:hover {
+  font-weight: bold;
+}
+
+.cart-counter {
+  background: #ffa800;
+  color: #fff;
+  border-radius: 50%;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+/* Main content */
+main {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.about-section {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.about-section h2 {
+  font-family: 'Lilita One', cursive;
+  color: #ffa800;
+  margin-top: 0;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.about-section h3 {
+  font-family: 'Lilita One', cursive;
+  color: #383838;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.about-section p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* Footer */
+footer {
+  width: 100%;
+  background: #383838;
+  padding: 1rem 0;
+  text-align: center;
+  margin-top: auto;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.social-links a {
+  color: #ffa800;
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .header-content {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

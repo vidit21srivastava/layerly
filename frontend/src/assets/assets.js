@@ -15,6 +15,11 @@ import search_icon from './search_icon.png';
 import star_dull_icon from './star_dull_icon.png';
 import star_icon from './star_icon.png';
 import support_img from './support_img.png';
+import instagram from './icons8-instagram.svg';
+import linkedin from './icons8-linkedin.svg';
+import xcom from './icons8-x.svg'
+import phone from './reshot-icon-phone-XVG9DMYSLJ.svg';
+import mail from './reshot-icon-message-5LPNC7XTWA.svg';
 
 // Adiyogi 
 import adiyogi_black from './adiyogi/Adiyogi_Black.jpg';
@@ -184,7 +189,13 @@ import walter_white_red from './walter_white/WW_Red.jpg';
 import walter_white_orange from './walter_white/WW_Orange.jpg';
 import walter_white_white from './walter_white/WW_White.jpg';
 
+
 export const assets = {
+    mail,
+    phone,
+    instagram,
+    linkedin,
+    xcom,
     bin_icon,
     cart_icon,
     cross_icon,
@@ -205,7 +216,7 @@ export const assets = {
 };
 
 // --- Data Initialization ---
-const ALL_COLORS = ['Black', 'Gray', 'Red', 'Orange', 'White'];
+const ALL_COLORS = ['White', 'Black', 'Gray', 'Red', 'Orange'];
 const productData = [];
 
 // --- Product Definitions ---
@@ -243,7 +254,7 @@ productData.push({
     description: "A high-quality, 3D printed model of a Batman Bust. Available in multiple colors.",
     price: 799,
     imagesByColor: { Black: batman_black, Gray: batman_gray, Red: batman_red, Orange: batman_orange, White: batman_white },
-    availableColors: ALL_COLORS, category: "Superheroes & Villains", date: new Date("2025-07-22T00:00:00"), bestseller: true
+    availableColors: ALL_COLORS, category: "Characters", date: new Date("2025-07-22T00:00:00"), bestseller: false
 });
 
 // 5. Black Widow Figure
@@ -252,7 +263,7 @@ productData.push({
     description: "A high-quality, 3D printed model of a Black Widow Figure. Available in multiple colors.",
     price: 699,
     imagesByColor: { Black: black_widow_black, Gray: black_widow_gray, Red: black_widow_red, Orange: black_widow_orange, White: black_widow_white },
-    availableColors: ALL_COLORS, category: "Superheroes & Villains", date: new Date("2025-07-19T00:00:00"), bestseller: false
+    availableColors: ALL_COLORS, category: "Characters", date: new Date("2025-07-19T00:00:00"), bestseller: false
 });
 
 // 6. Cable Manager
@@ -261,7 +272,7 @@ productData.push({
     description: "A high-quality, 3D printed Cable Manager. Available in multiple colors.",
     price: 249,
     imagesByColor: { Black: cable_manager_black, Gray: cable_manager_gray, Red: cable_manager_red, Orange: cable_manager_orange, White: cable_manager_white },
-    availableColors: ALL_COLORS, category: "Tools & Utilities", date: new Date("2025-07-22T00:00:00"), bestseller: true
+    availableColors: ALL_COLORS, category: "Tools & Utilities", date: new Date("2025-07-22T00:00:00"), bestseller: false
 });
 
 // 7. Captain America Figure
@@ -270,7 +281,7 @@ productData.push({
     description: "A high-quality, 3D printed model of a Captain America Figure. Available in multiple colors.",
     price: 799,
     imagesByColor: { Black: captain_america_black, Gray: captain_america_gray, Red: captain_america_red, Orange: captain_america_orange, White: captain_america_white },
-    availableColors: ALL_COLORS, category: "Superheroes & Villains", date: new Date("2025-07-21T00:00:00"), bestseller: true
+    availableColors: ALL_COLORS, category: "Characters", date: new Date("2025-07-21T00:00:00"), bestseller: true
 });
 
 // 8. Davy Jones Bust
@@ -288,7 +299,7 @@ productData.push({
     description: "A high-quality, 3D printed Custom Door Name Plate. Available in multiple colors.",
     price: 599,
     imagesByColor: { Black: door_name_plate_black, Gray: door_name_plate_gray, Red: door_name_plate_red, Orange: door_name_plate_orange, White: door_name_plate_white },
-    availableColors: ALL_COLORS, category: "Home & Office", date: new Date("2025-07-22T00:00:00"), bestseller: true
+    availableColors: ALL_COLORS, category: "Home & Office", date: new Date("2025-07-22T00:00:00"), bestseller: false
 });
 
 // 10. Factorian Vase
@@ -324,7 +335,7 @@ productData.push({
     description: "A high-quality, 3D printed model of a Hulk Figure. Available in multiple colors.",
     price: 899,
     imagesByColor: { Black: hulk_black, Gray: hulk_gray, Red: hulk_red, Orange: hulk_orange, White: hulk_white },
-    availableColors: ALL_COLORS, category: "Superheroes & Villains", date: new Date("2025-07-21T00:00:00"), bestseller: true
+    availableColors: ALL_COLORS, category: "Characters", date: new Date("2025-07-21T00:00:00"), bestseller: true
 });
 
 // 14. Customizable Keychain
@@ -360,7 +371,7 @@ productData.push({
     description: "A high-quality, 3D printed model of a Moon Knight Figure. Available in multiple colors.",
     price: 799,
     imagesByColor: { Black: moon_knight_black, Gray: moon_knight_gray, Red: moon_knight_red, Orange: moon_knight_orange, White: moon_knight_white },
-    availableColors: ALL_COLORS, category: "Superheroes & Villains", date: new Date("2025-07-17T00:00:00"), bestseller: false
+    availableColors: ALL_COLORS, category: "Characters", date: new Date("2025-07-17T00:00:00"), bestseller: false
 });
 
 // 18. PUBG Character Figure
@@ -387,7 +398,7 @@ productData.push({
     description: "A high-quality, 3D printed model of a Scarlet Witch Figure. Available in multiple colors.",
     price: 799,
     imagesByColor: { Black: scarlet_witch_black, Gray: scarlet_witch_gray, Red: scarlet_witch_red, Orange: scarlet_witch_orange, White: scarlet_witch_white },
-    availableColors: ALL_COLORS, category: "Superheroes & Villains", date: new Date("2025-07-19T00:00:00"), bestseller: false
+    availableColors: ALL_COLORS, category: "Characters", date: new Date("2025-07-19T00:00:00"), bestseller: true
 });
 
 // 21. Screw Measuring Tool
@@ -414,7 +425,7 @@ productData.push({
     description: "A high-quality, 3D printed model of a Thanos Bust. Available in multiple colors.",
     price: 999,
     imagesByColor: { Black: thanos_black, Gray: thanos_gray, Red: thanos_red, Orange: thanos_orange, White: thanos_white },
-    availableColors: ALL_COLORS, category: "Superheroes & Villains", date: new Date("2025-07-21T00:00:00"), bestseller: true
+    availableColors: ALL_COLORS, category: "Characters", date: new Date("2025-07-21T00:00:00"), bestseller: true
 });
 
 // 24. Walter White (Heisenberg) Bust

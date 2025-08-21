@@ -9,6 +9,11 @@ body {
     font-weight: 500;
 }
 
+body::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+}
+
 .delius-unicase-regular {
     font-family: "Delius Unicase", cursive;
     font-weight: 400;

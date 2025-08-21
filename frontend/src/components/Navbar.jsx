@@ -7,7 +7,7 @@ const Navbar = () => {
 
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
-            <Link to='/'><img src={assets.logo_slogan} className='w-30' alt="" /></Link>
+            <Link to='/'><img src={assets.logo_slogan} className='w-32' alt="" /></Link>
 
 
             <ul className='hidden sm:flex gap-5 text-sm text-grey-700'>
@@ -34,10 +34,10 @@ const Navbar = () => {
                 <div className='group relative'>
                     <img className='w-5 cursor-pointer' src={assets.profile_icon} alt="" />
                     <div className='hidden group-hover:block absolute dropdown-menu right-0 pt-4'>
-                        <div className='flex flex-col text-center gap-2 w-36 py-3 px-5 bg-white/30 backdrop-blur-sm text-gray-700 rounded'>
-                            <p className='cursor-pointer hover:text-brand-orange text-sm'>My Profile</p>
-                            <p className='cursor-pointer hover:text-brand-orange text-sm'>Orders</p>
-                            <p className='cursor-pointer hover:text-brand-orange text-sm'>Logout</p>
+                        <div className='relative z-10 flex flex-col text-center gap-2 w-36 py-3 px-5 bg-gray-400/10 backdrop-blur-sm text-gray-900 rounded'>
+                            <p className='cursor-pointer hover:text-orange-400 text-sm'>My Profile</p>
+                            <p className='cursor-pointer hover:text-orange-400 text-sm'>Orders</p>
+                            <p className='cursor-pointer hover:text-orange-400 text-sm'>Logout</p>
                         </div>
                     </div>
                 </div>
