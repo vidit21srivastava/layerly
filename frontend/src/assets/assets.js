@@ -1,6 +1,7 @@
 import bin_icon from './bin_icon.png';
 import cart_icon from './cart_icon.png';
 import cross_icon from './cross_icon.png';
+import cross_icon_24 from './icons8-cross-24.png';
 import dropdown_icon from './dropdown_icon.png';
 import exchange_icon from './exchange_icon.png';
 import logo_slogan from './logo_slogan.png';
@@ -12,6 +13,7 @@ import poster_right from './poster_right.png';
 import profile_icon from './profile_icon.png';
 import quality_icon from './quality_icon.png';
 import search_icon from './search_icon.png';
+import search_icon_30 from './icons8-search-30.png';
 import star_dull_icon from './star_dull_icon.png';
 import star_icon from './star_icon.png';
 import support_img from './support_img.png';
@@ -191,6 +193,8 @@ import walter_white_white from './walter_white/WW_White.jpg';
 
 
 export const assets = {
+    cross_icon_24,
+    search_icon_30,
     mail,
     phone,
     instagram,

@@ -1,19 +1,41 @@
-import React, { useState, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useContext, useEffect } from 'react'
 import { ShopContext } from '../context/ShopContext'
 
-
 const ProductItems = ({ id, name, price, product }) => {
-    const { currency } = useContext(ShopContext)
+    const { currency, addToCart, updateCartItemQuantity, cartItems } = useContext(ShopContext)
     const [selectedColor, setSelectedColor] = useState(product?.availableColors[0] || 'White')
+
+    // Check if item is in cart and get its quantity
+    const getCartQuantity = () => {
+        if (cartItems[id] && cartItems[id][selectedColor]) {
+            return cartItems[id][selectedColor];
+        }
+        return 0;
+    }
+
+    const currentQuantity = getCartQuantity();
+    const isInCart = currentQuantity > 0;
 
     const currentImage = product?.imagesByColor[selectedColor]
 
+    const handleAddToCart = () => {
+        addToCart(id, selectedColor, 1);
+    }
+
+    const handleQuantityChange = (change) => {
+        const newQuantity = currentQuantity + change;
+
+        if (newQuantity <= 0) {
+            // Remove from cart
+            updateCartItemQuantity(id, selectedColor, 0);
+        } else {
+            // Update quantity
+            updateCartItemQuantity(id, selectedColor, newQuantity);
+        }
+    }
+
     return (
-        <Link
-            className='text-gray-700 cursor-pointer group block w-full'
-            to={`/product/${id}`}
-        >
+        <div className='text-gray-700 group block w-full'>
             <div className='overflow-hidden bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 h-full flex flex-col'>
                 {/* Product Image */}
                 <div className='aspect-square bg-gray-50 relative overflow-hidden'>
@@ -43,11 +65,6 @@ const ProductItems = ({ id, name, price, product }) => {
                             {name}
                         </span>
                     </h3>
-
-
-                    {/* <div className='mb-3 flex-shrink-0'>
-
-                    </div> */}
 
                     {/* Color, Price and Category Container */}
                     <div className='mt-auto'>
@@ -79,26 +96,68 @@ const ProductItems = ({ id, name, price, product }) => {
                         >
                             {selectedColor}
                         </p>
-                        {/* Price */}
-                        <p className='text-base sm:text-lg font-semibold text-gray-900 mb-1'>
-                            <span className='overflow-hidden text-ellipsis whitespace-nowrap block'>
-                                {currency}{price}
-                            </span>
-                        </p>
 
                         {/* Category */}
                         <p
-                            className='text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap'
+                            className='text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap mt-1 mb-3'
                             title={product?.category}
                         >
                             {product?.category}
                         </p>
+
+                        {/* Price and Add to Cart / Quantity Controls */}
+                        <div className='flex items-center justify-between gap-3'>
+                            <p className='text-base sm:text-lg font-semibold text-gray-900 flex-shrink-0'>
+                                <span className='overflow-hidden text-ellipsis whitespace-nowrap block'>
+                                    {currency}{price}
+                                </span>
+                            </p>
+
+                            {!isInCart ? (
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        handleAddToCart()
+                                    }}
+                                    className='flex-shrink-0 cursor-pointer bg-gray-900 text-white py-2 px-4 rounded-lg text-sm font-bold hover:bg-orange-400 transition-colors duration-200 active:scale-95 transform'
+                                >
+                                    Add to Cart
+                                </button>
+                            ) : (
+                                <div className='flex items-center justify-between bg-gray-100 rounded-lg p-1 flex-shrink-0 min-w-[120px]'>
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            handleQuantityChange(-1)
+                                        }}
+                                        className='w-8 h-8 flex items-center justify-center bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200 active:scale-95 transform'
+                                    >
+                                        <span className='cursor-pointer text-gray-600 font-medium text-lg leading-none'>−</span>
+                                    </button>
+
+                                    <span className='text-sm font-medium text-gray-900 min-w-[2rem] text-center'>
+                                        {currentQuantity}
+                                    </span>
+
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            handleQuantityChange(1)
+                                        }}
+                                        className='w-8 h-8 flex items-center justify-center bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200 active:scale-95 transform'
+                                    >
+                                        <span className='cursor-pointer text-gray-600 font-medium text-lg leading-none'>+</span>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
-        </Link>
+        </div>
     )
 }
+
 const getColorHex = (colorName) => {
     const colorMap = {
         'Black': '#000000',

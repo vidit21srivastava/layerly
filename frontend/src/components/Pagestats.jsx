@@ -82,8 +82,8 @@ const Pagestats = () => {
     }, [hasAnimated]);
 
     return (
-        <section id="stats-section" className="py-20 px-5 border border-gray-200 rounded-xl bg-gradient-to-bl from-brand-orange to-orange-600  overflow-hidden">
-            <div className="max-w-6xl mx-auto text-center">
+        <section id="stats-section" className="py-19 px-5 border border-gray-200 rounded-xl bg-gradient-to-bl from-brand-orange to-orange-600  overflow-hidden">
+            <div className="mx-auto text-center">
                 <div className="mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
                         Trusted, Transformed, Transfered
