@@ -27,7 +27,7 @@ const Footer = () => {
                         <div className="flex items-center space-x-4 pt-2">
                             <span className="text-xs text-gray-500">Follow us:</span>
                             <div className="flex space-x-3">
-                                <a>
+                                <a href='https://www.instagram.com/l.a.y.e.r.l.y?igsh=NHlhNjNqMDNlaGg4'>
                                     <img src={assets.instagram} className='w-6' />
                                 </a>
                                 <a href='https://www.linkedin.com/company/layerly3d/posts/?feedView=all'>
@@ -66,7 +66,7 @@ const Footer = () => {
                     {/* Contact Section */}
                     <div className="space-y-4">
                         <h3 className='text-sm font-semibold text-gray-800 uppercase tracking-wider border-b border-gray-200 pb-2'>
-                            Get In Touch
+                            Contact Us
                         </h3>
                         <ul className='space-y-3'>
                             <li className='text-sm text-gray-600 flex items-start'>

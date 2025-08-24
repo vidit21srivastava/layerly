@@ -26,10 +26,10 @@ const ProductItems = ({ id, name, price, product }) => {
         const newQuantity = currentQuantity + change;
 
         if (newQuantity <= 0) {
-            // Remove from cart
+
             updateCartItemQuantity(id, selectedColor, 0);
         } else {
-            // Update quantity
+
             updateCartItemQuantity(id, selectedColor, newQuantity);
         }
     }
