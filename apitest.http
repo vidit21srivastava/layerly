@@ -1,0 +1,57 @@
+POST http://localhost:4000/api/product/add
+Content-Type: multipart/form-data; boundary=----FormBoundary7MA4YWxkTrZu0gW
+
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="productID"
+
+ADI001
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Adiyogi Shiva Statue
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+A high-quality, 3D printed model of Adiyogi Shiva Statue. Available in multiple colors.
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="price"
+
+499
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="category"
+
+Idols & Spirituality
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="bestseller"
+
+true
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="availableColors"
+
+["White","Black","Gray","Red","Orange"]
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image_white"; filename="Adiyogi_White.jpg"
+Content-Type: image/jpeg
+
+< /home/vidit/My_Stuff/layerly/frontend/src/assets/adiyogi/Adiyogi_White.jpg
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image_black"; filename="Adiyogi_Black.jpg"
+Content-Type: image/jpeg
+
+< /home/vidit/My_Stuff/layerly/frontend/src/assets/adiyogi/Adiyogi_Black.jpg
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image_gray"; filename="Adiyogi_Gray.jpg"
+Content-Type: image/jpeg
+
+< /home/vidit/My_Stuff/layerly/frontend/src/assets/adiyogi/Adiyogi_Gray.jpg
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image_red"; filename="Adiyogi_Red.jpg"
+Content-Type: image/jpeg
+
+< /home/vidit/My_Stuff/layerly/frontend/src/assets/adiyogi/Adiyogi_Red.jpg
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image_orange"; filename="Adiyogi_Orange.jpg"
+Content-Type: image/jpeg
+
+< /home/vidit/My_Stuff/layerly/frontend/src/assets/adiyogi/Adiyogi_Orange.jpg
+------FormBoundary7MA4YWxkTrZu0gW--
