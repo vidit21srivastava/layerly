@@ -4,6 +4,21 @@
 
 const addProduct = async (req, res) => {
 
+    try {
+        const { name,
+            description,
+            price,
+            category,
+            date,
+            bestseller } = req.body;
+
+
+
+
+    } catch (error) {
+
+    }
+
 }
 
 // LIST PRODUCT FUNCTION

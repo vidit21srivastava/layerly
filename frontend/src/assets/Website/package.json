@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "express": "^5.1.0",
-    "express-fileupload": "^1.5.1"
-  }
-}
