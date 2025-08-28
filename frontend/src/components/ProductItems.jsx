@@ -3,10 +3,7 @@ import { ShopContext } from '../context/ShopContext'
 
 const ProductItems = ({ id, name, price, product }) => {
     const { currency, addToCart, updateCartItemQuantity, cartItems } = useContext(ShopContext)
-
-    const availableColors = product?.availableColors || ['White'];
-    const [selectedColor, setSelectedColor] = useState(availableColors[0] || 'White');
-
+    const [selectedColor, setSelectedColor] = useState(product?.availableColors[0] || 'White')
 
     // Check if item is in cart and get its quantity
     const getCartQuantity = () => {
@@ -16,15 +13,10 @@ const ProductItems = ({ id, name, price, product }) => {
         return 0;
     }
 
-
     const currentQuantity = getCartQuantity();
     const isInCart = currentQuantity > 0;
 
-
-    const imagesByColor = product?.imagesByColor || {};
-    const currentImage = typeof imagesByColor.get === 'function'
-        ? imagesByColor.get(selectedColor)
-        : imagesByColor[selectedColor];
+    const currentImage = product?.imagesByColor[selectedColor]
 
     const handleAddToCart = () => {
         addToCart(id, selectedColor, 1);
