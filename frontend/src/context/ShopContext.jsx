@@ -1,22 +1,79 @@
 import { createContext, useEffect, useState } from "react";
-import { products } from "../assets/assets";
+import { products as localProducts } from "../assets/assets";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
     const currency = '₹';
     const delivery_fee = 60;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+
     const [search, setSearch] = useState('');
     const [cartItems, setCartItems] = useState({});
+    const [products, setProducts] = useState([]);
+    const [token, setToken] = useState('');
+    const [userData, setUserData] = useState(null);
     const navigate = useNavigate();
+
+    // Fetch products from API
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get(backendUrl + '/api/product/list');
+            if (response.data.success) {
+                setProducts(response.data.products);
+            } else {
+                // Fallback to local products if API fails
+                setProducts(localProducts);
+            }
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            // Use local products as fallback
+            setProducts(localProducts);
+        }
+    };
+
+    // Load user data
+    const loadUserData = async () => {
+        if (!token) return;
+
+        try {
+            const response = await axios.get(backendUrl + '/api/user/profile', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (response.data.success) {
+                setUserData(response.data.user);
+                if (response.data.user.cartData) {
+                    setCartItems(response.data.user.cartData);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading user data:', error);
+        }
+    };
+
+    // Sync cart with backend
+    const syncCart = async (cartData) => {
+        if (!token) return;
+
+        try {
+            await axios.post(
+                backendUrl + '/api/user/cart',
+                { cartData },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+        } catch (error) {
+            console.error('Error syncing cart:', error);
+        }
+    };
 
     const addToCart = async (itemId, color, quantity = 1) => {
         let cartData = structuredClone(cartItems);
 
-        // Find the product for toast notification
-        const product = products.find(p => p.id === itemId);
+        const product = products.find(p => p.id === itemId || p._id === itemId);
         const productName = product ? product.name : 'Item';
 
         if (cartData[itemId]) {
@@ -31,47 +88,29 @@ const ShopContextProvider = (props) => {
         }
 
         setCartItems(cartData);
+        await syncCart(cartData);
 
-        toast.success(`${productName} (${color}) added to cart!`, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            theme: "colored",
-            draggable: true,
-        });
+        toast.success(`${productName} (${color}) added to cart!`);
     }
 
     const updateCartItemQuantity = async (itemId, color, quantity) => {
         let cartData = structuredClone(cartItems);
 
-        // Find the product for toast notification
-        const product = products.find(p => p.id === itemId);
+        const product = products.find(p => p.id === itemId || p._id === itemId);
         const productName = product ? product.name : 'Item';
 
-        // Get previous quantity
         const previousQuantity = cartData[itemId] ? (cartData[itemId][color] || 0) : 0;
 
         if (quantity <= 0) {
             if (cartData[itemId]) {
                 delete cartData[itemId][color];
-
                 if (Object.keys(cartData[itemId]).length === 0) {
                     delete cartData[itemId];
                 }
             }
 
             if (previousQuantity > 0) {
-                toast.error(`${productName} (${color}) removed from cart!`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    theme: "colored",
-                    draggable: true,
-                });
+                toast.error(`${productName} (${color}) removed from cart!`);
             }
         } else {
             if (cartData[itemId]) {
@@ -79,26 +118,18 @@ const ShopContextProvider = (props) => {
             }
 
             if (previousQuantity !== quantity && previousQuantity > 0) {
-                toast.info(`${productName} (${color}) quantity updated to ${quantity}`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    theme: "colored",
-                    draggable: true,
-                });
+                toast.info(`${productName} (${color}) quantity updated to ${quantity}`);
             }
         }
 
         setCartItems(cartData);
+        await syncCart(cartData);
     }
 
     const removeFromCart = async (itemId, color) => {
         let cartData = structuredClone(cartItems);
 
-        // Find the product for toast notification
-        const product = products.find(p => p.id === itemId);
+        const product = products.find(p => p.id === itemId || p._id === itemId);
         const productName = product ? product.name : 'Item';
 
         if (cartData[itemId] && cartData[itemId][color]) {
@@ -108,18 +139,11 @@ const ShopContextProvider = (props) => {
                 delete cartData[itemId];
             }
 
-            toast.error(`${productName} (${color}) removed from cart!`, {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                theme: "colored",
-                draggable: true,
-            });
+            toast.error(`${productName} (${color}) removed from cart!`);
         }
 
         setCartItems(cartData);
+        await syncCart(cartData);
     }
 
     const getCartCount = () => {
@@ -135,7 +159,7 @@ const ShopContextProvider = (props) => {
     const getCartAmount = () => {
         let totalAmount = 0;
         for (const items in cartItems) {
-            let itemInfo = products.find((product) => product.id === items);
+            let itemInfo = products.find((product) => product.id === items || product._id === items);
             if (itemInfo) {
                 for (const item in cartItems[items]) {
                     totalAmount += itemInfo.price * cartItems[items][item];
@@ -145,15 +169,37 @@ const ShopContextProvider = (props) => {
         return totalAmount;
     }
 
+    const logout = () => {
+        setToken('');
+        setUserData(null);
+        setCartItems({});
+        localStorage.removeItem('token');
+        navigate('/login');
+        toast.success('Logged out successfully');
+    };
+
+    // Load token from localStorage on mount
     useEffect(() => {
-        console.log(cartItems);
-    }, [cartItems])
+        const savedToken = localStorage.getItem('token');
+        if (savedToken) {
+            setToken(savedToken);
+        }
+        fetchProducts();
+    }, []);
+
+    // Load user data when token changes
+    useEffect(() => {
+        if (token) {
+            loadUserData();
+        }
+    }, [token]);
 
     const value = {
-        products, currency, delivery_fee,
+        products, currency, delivery_fee, backendUrl,
         search, setSearch, cartItems, addToCart,
         updateCartItemQuantity, removeFromCart,
-        getCartCount, getCartAmount, navigate
+        getCartCount, getCartAmount, navigate,
+        token, setToken, userData, logout
     }
 
     return (
