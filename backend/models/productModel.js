@@ -4,7 +4,8 @@ const productSchema = new mongoose.Schema({
     productID: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     },
     name: {
         type: String,
@@ -56,8 +57,7 @@ const productSchema = new mongoose.Schema({
         default: false
     }
 }, {
-    timestamps: true,
-    versionKey: false
+    timestamps: true
 });
 
 const productModel = mongoose.models.product || mongoose.model("product", productSchema);

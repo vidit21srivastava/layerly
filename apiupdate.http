@@ -1,0 +1,12 @@
+PUT http://localhost:4000/api/product/update/68b0e02e6086c117e1ec7b0f
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Yoda Figurine
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="bestseller"
+
+false
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
