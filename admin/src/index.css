@@ -1,68 +1,64 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+@theme {
+    --color-brand-orange: #fea802;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    font-family: "Nunito", sans-serif;
+    font-weight: 500;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+body::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.delius-unicase-regular {
+    font-family: "Delius Unicase", cursive;
+    font-weight: 400;
+    font-style: normal;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.delius-unicase-bold {
+    font-family: "Delius Unicase", cursive;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.lilita-one-regular {
+    font-family: "Lilita One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.ubuntu-sans-mono-italic {
+    font-family: "Ubuntu Sans Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.ubuntu-sans-mono-regular {
+    font-family: "Ubuntu Sans Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+
+
+a.active hr {
+    display: block;
+}
+
+#hero-heading {
+    font-family: "Monoton", sans-serif;
+
+}
+
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+
 }
