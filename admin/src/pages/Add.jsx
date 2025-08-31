@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { backendURL } from '../App';
+import axios from 'axios';
 
 const Add = ({ setToken }) => {
     const [image_white, setImageW] = useState(null);
@@ -64,9 +65,10 @@ const Add = ({ setToken }) => {
             viewBox="0 0 16 16"
         >
             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 1-.708-.708z" />
+            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 0 1-.708-.708z" />
         </svg>
     );
+
 
     const UploadArea = ({ id, color, image, imageUrl, onChange, label }) => (
         <label htmlFor={id} className="cursor-pointer group">
@@ -103,13 +105,11 @@ const Add = ({ setToken }) => {
         setSuccess("");
 
         try {
-
             if (!productID || !name || !price || !description || !category) {
                 setError("Please fill in all required fields");
                 setLoading(false);
                 return;
             }
-
 
             const adminToken = localStorage.getItem('token');
 
@@ -121,7 +121,6 @@ const Add = ({ setToken }) => {
 
             const formData = new FormData();
 
-
             formData.append("productID", productID);
             formData.append("name", name);
             formData.append("price", price);
@@ -130,23 +129,20 @@ const Add = ({ setToken }) => {
             formData.append("bestseller", bestseller);
             formData.append("availableColors", JSON.stringify(availableColors));
 
-
             if (image_white) formData.append("image_white", image_white);
             if (image_black) formData.append("image_black", image_black);
             if (image_gray) formData.append("image_gray", image_gray);
             if (image_red) formData.append("image_red", image_red);
             if (image_orange) formData.append("image_orange", image_orange);
 
-            // API call
-            const response = await fetch(backendURL + '/api/product/add', {
-                method: 'POST',
+            // Axios API call
+            const response = await axios.post(backendURL + '/api/product/add', formData, {
                 headers: {
                     'token': adminToken
-                },
-                body: formData
+                }
             });
 
-            const data = await response.json();
+            const data = response.data;
 
             if (data.success) {
                 setSuccess("Product added successfully!");
@@ -171,19 +167,28 @@ const Add = ({ setToken }) => {
                 });
             } else {
                 setError(data.message || "Failed to add product");
+            }
+        } catch (error) {
+            console.error("Error adding product:", error);
 
-                // If token is invalid, handle logout
-                if (response.status === 401) {
+            if (error.response) {
+                const status = error.response.status;
+                const message = error.response.data?.message;
+
+                if (status === 401) {
                     localStorage.removeItem('token');
                     if (setToken) {
                         setToken('');
                     }
                     setError("Session expired. Please login again.");
+                } else {
+                    setError(message || "Failed to add product");
                 }
+            } else if (error.request) {
+                setError("Network error. Please try again.");
+            } else {
+                setError("An unexpected error occurred.");
             }
-        } catch (error) {
-            console.error("Error adding product:", error);
-            setError("Network error. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -203,15 +208,11 @@ const Add = ({ setToken }) => {
                 </div>
             )}
 
-
-
-
-
             {/* Images Section */}
             <h3 className="text-lg font-semibold mb-4 text-gray-800">Upload Images</h3>
 
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4 mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4 mb-4">
                 <UploadArea
                     id="image_white"
                     color="white"
@@ -258,78 +259,27 @@ const Add = ({ setToken }) => {
                 />
             </div>
             {/* Product ID Field */}
-            <div className="mb-6 space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                    Product ID *
-                </label>
-                <input
-                    onChange={(e) => setProductID(e.target.value)}
-                    value={productID}
-                    type="text"
-                    placeholder="ALL CAPS 3-alphabets-3-numbers (ex: XYZ123) for personal tracking purpose."
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400"
-                />
-            </div>
-            <div className="mt-8 space-y-6">
-                {/* Name and Price Row */}
-                <div className="flex flex-col md:flex-row gap-6">
-                    <div className="flex-1 space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Product Name *
-                        </label>
-                        <input
-                            onChange={(e) => setName(e.target.value)}
-                            value={name}
-                            type="text"
-                            placeholder="Enter product name"
-                            required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400"
-                        />
-                    </div>
 
-                    <div className="flex-1 md:flex-none md:w-48 space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Price *
-                        </label>
-                        <div className="relative">
-                            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
-                            <input
-                                onChange={(e) => setPrice(e.target.value)}
-                                value={price}
-                                type="number"
-                                min="0"
-                                step="0.01"
-                                placeholder="0.00"
-                                required
-                                className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Description */}
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                        Product Description *
+            <div className='flex flex-col lg:flex-row lg:items-start gap-6'>
+                <div className="flex-1 lg:flex-none lg:w-[45%] space-y-2">
+                    <label className="block text-md font-bold text-gray-800">
+                        Product ID *
                     </label>
-                    <textarea
-                        onChange={(e) => setDescription(e.target.value)}
-                        value={description}
-                        placeholder="Provide product description..."
+                    <input
+                        onChange={(e) => setProductID(e.target.value)}
+                        value={productID}
+                        type="text"
+                        placeholder="ALL CAPS 3-alphabets-3-numbers (ex: XYZ123) for personal tracking purpose."
                         required
-                        rows="4"
-                        maxLength="1000"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 resize-vertical"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400"
                     />
                 </div>
 
-                {/* Category Selection */}
-                <div className="space-y-3">
-                    <label className="block text-sm font-medium text-gray-700">
+                <div className="flex-1 lg:w-2/3 space-y-2">
+                    <label className="block text-md font-bold text-gray-800">
                         Product Category *
                     </label>
-                    <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
+                    <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 pt-3">
                         <label className="flex items-center cursor-pointer">
                             <input
                                 type="radio"
@@ -395,36 +345,94 @@ const Add = ({ setToken }) => {
                             <span className="ml-3 text-sm text-gray-700 whitespace-nowrap">Gaming</span>
                         </label>
                     </div>
+                </div>
+            </div>
 
-                    {/* Bestseller */}
-                    <div className="flex flex-col md:flex-row items-center justify-between pt-4 border-t border-gray-200">
-                        <div className="lg:mr-8">
-                            <label className="flex items-center cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    id="bestseller"
-                                    checked={bestseller}
-                                    onChange={(e) => setBestseller(e.target.checked)}
-                                    className="w-4 h-4"
-                                />
-                                <span className="ml-3 text-md text-gray-700 whitespace-nowrap">Add to Bestseller</span>
-                            </label>
-                        </div>
 
-                        <div className="flex justify-end pt-4 md:pt-0">
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className={`px-16 py-3 md:px-8 rounded-lg font-bold shadow-sm transition-colors duration-200 ${loading
-                                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                                    : 'bg-gray-900 text-white hover:bg-gray-700'
-                                    }`}
-                            >
-                                {loading ? 'Adding Product...' : 'Add Product'}
-                            </button>
+
+
+            <div className="mt-5 space-y-6">
+                {/* Name and Price Row */}
+                <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex-1 space-y-2">
+                        <label className="block text-md font-bold text-gray-800">
+                            Product Name *
+                        </label>
+                        <input
+                            onChange={(e) => setName(e.target.value)}
+                            value={name}
+                            type="text"
+                            placeholder="Enter product name"
+                            required
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400"
+                        />
+                    </div>
+
+                    <div className="flex-1 md:flex-none md:w-48 space-y-2">
+                        <label className="block text-md font-bold text-gray-800">
+                            Price *
+                        </label>
+                        <div className="relative">
+                            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                            <input
+                                onChange={(e) => setPrice(e.target.value)}
+                                value={price}
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                placeholder="0.00"
+                                required
+                                className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400"
+                            />
                         </div>
                     </div>
                 </div>
+
+                {/* Description */}
+                <div className="space-y-2">
+                    <label className="block text-md font-bold text-gray-800">
+                        Product Description *
+                    </label>
+                    <textarea
+                        onChange={(e) => setDescription(e.target.value)}
+                        value={description}
+                        placeholder="Provide product description..."
+                        required
+                        rows="4"
+                        maxLength="1000"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg placeholder-gray-400 resize-vertical"
+                    />
+                </div>
+
+                {/* Bestseller */}
+                <div className="flex flex-col md:flex-row items-center justify-between">
+                    <div className="lg:mr-8">
+                        <label className="flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                id="bestseller"
+                                checked={bestseller}
+                                onChange={(e) => setBestseller(e.target.checked)}
+                                className="w-4 h-4"
+                            />
+                            <span className="ml-3 text-md text-gray-700 whitespace-nowrap">Add to Bestseller</span>
+                        </label>
+                    </div>
+
+                    <div className="flex justify-end pt-4 md:pt-0">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className={`px-16 py-3 md:px-8 rounded-lg font-bold shadow-sm transition-colors duration-200 ${loading
+                                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                                : 'bg-gray-900 text-white hover:bg-gray-700'
+                                }`}
+                        >
+                            {loading ? 'Adding Product...' : 'Add Product'}
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </form>
     );
