@@ -22,8 +22,17 @@ import linkedin from './icons8-linkedin.svg';
 import xcom from './icons8-x.svg'
 import phone from './reshot-icon-phone-XVG9DMYSLJ.svg';
 import mail from './reshot-icon-message-5LPNC7XTWA.svg';
+import add_icon from './add_icon.png'
+import order_icon from './order_icon.png'
+import upload_area from './upload_area.png'
+import parcel_icon from './parcel_icon.svg'
+
 
 export const assets = {
+    add_icon,
+    order_icon,
+    upload_area,
+    parcel_icon,
     cross_icon_24,
     search_icon_30,
     mail,

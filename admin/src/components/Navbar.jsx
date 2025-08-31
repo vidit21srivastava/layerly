@@ -8,7 +8,7 @@ const Navbar = ({ setToken }) => {
                 <img className='w-32 md:w-42' src={assets.logo_slogan} alt="" />
                 <p className='text-lg font-bold text-gray-600'>ADMIN PANEL</p>
             </div>
-            <button onClick={() => setToken('')} className='bg-gray-700 text-white px-5 py-2 sm:px-7 sm:py-2 rounded-full text-xs sm:text-sm font-bold'>Logout</button>
+            <button onClick={() => setToken('')} className='bg-gray-900  text-white hover:bg-gray-700 transition-colors duration-200  px-5 py-2 sm:px-7 sm:py-2 rounded-full text-xs sm:text-sm font-bold'>Logout</button>
         </div>
     )
 }
