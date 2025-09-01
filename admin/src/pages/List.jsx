@@ -136,7 +136,7 @@ const List = ({ setToken }) => {
                 return;
             }
 
-            // Get the original product to preserve availableColors
+
             const originalProduct = list.find(p => p._id === productId);
 
             const formData = new FormData();

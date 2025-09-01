@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import axios from 'axios';
 import { products } from "../assets/assets";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -8,14 +9,17 @@ export const ShopContext = createContext();
 const ShopContextProvider = (props) => {
     const currency = '₹';
     const delivery_fee = 60;
+    const backendURL = import.meta.env.VITE_BACKEND_URL;
     const [search, setSearch] = useState('');
     const [cartItems, setCartItems] = useState({});
+    // const [products, setProducts] = useState([]);
+    const [token, setToken] = useState('');
     const navigate = useNavigate();
 
     const addToCart = async (itemId, color, quantity = 1) => {
         let cartData = structuredClone(cartItems);
 
-        // Find the product for toast notification
+
         const product = products.find(p => p.id === itemId);
         const productName = product ? product.name : 'Item';
 
@@ -46,11 +50,11 @@ const ShopContextProvider = (props) => {
     const updateCartItemQuantity = async (itemId, color, quantity) => {
         let cartData = structuredClone(cartItems);
 
-        // Find the product for toast notification
+
         const product = products.find(p => p.id === itemId);
         const productName = product ? product.name : 'Item';
 
-        // Get previous quantity
+
         const previousQuantity = cartData[itemId] ? (cartData[itemId][color] || 0) : 0;
 
         if (quantity <= 0) {
@@ -97,7 +101,7 @@ const ShopContextProvider = (props) => {
     const removeFromCart = async (itemId, color) => {
         let cartData = structuredClone(cartItems);
 
-        // Find the product for toast notification
+
         const product = products.find(p => p.id === itemId);
         const productName = product ? product.name : 'Item';
 
@@ -149,11 +153,31 @@ const ShopContextProvider = (props) => {
         console.log(cartItems);
     }, [cartItems])
 
+    // const getProductsData = async () => {
+    //     try {
+    //         const response = await axios.get(backendURL + '/api/product/list');
+    //         if (response.data.success) {
+    //             setProducts(response.data.products)
+    //         } else {
+    //             toast.error(response.data.message)
+    //         }
+
+
+    //     } catch (error) {
+
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     getProductsData();
+    // }, [])
+
+
     const value = {
         products, currency, delivery_fee,
         search, setSearch, cartItems, addToCart,
         updateCartItemQuantity, removeFromCart,
-        getCartCount, getCartAmount, navigate
+        getCartCount, getCartAmount, navigate, backendURL, setToken, token
     }
 
     return (
