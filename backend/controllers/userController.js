@@ -3,6 +3,8 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+// Add function to update password and name via mail confirmation registration process.
+
 const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET);
 }

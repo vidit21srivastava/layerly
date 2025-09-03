@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+// Contains Google Auth and for email confirmation otp via mail, and forget password update via mail, for which a mail of new generated password will be sent through mail and later could be updated via profile page.
+
 const Login = () => {
 
     const [currentState, setCurrentState] = useState('Sign Up');
