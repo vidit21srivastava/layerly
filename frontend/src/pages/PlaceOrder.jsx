@@ -103,7 +103,7 @@ const PlaceOrder = () => {
                     pinCode: formData.pinCode,
                     phone: formData.phone
                 },
-                // Optional: when you have real PhonePe transaction ID after payment success
+
                 phonePeTxnId: null
             };
 

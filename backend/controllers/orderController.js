@@ -2,7 +2,7 @@ import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Product from "../models/productModel.js";
 
-// PLACE ORDER - PHONEPE ONLY
+
 const placeOrderPhonepe = async (req, res) => {
     try {
         const { userID, items, address, phonePeTxnId } = req.body;
@@ -14,7 +14,7 @@ const placeOrderPhonepe = async (req, res) => {
             return res.status(400).json({ success: false, message: "Address is required" });
         }
 
-        // Calculate subtotal from DB to avoid client-side tampering
+
         let subtotal = 0;
         for (const item of items) {
             if (!item.productId || !item.quantity || !item.color) {
@@ -51,7 +51,7 @@ const placeOrderPhonepe = async (req, res) => {
         const newOrder = new orderModel(orderData);
         await newOrder.save();
 
-        // Clear user cart
+
         await userModel.findByIdAndUpdate(userID, { cartData: {} });
 
         res.status(201).json({

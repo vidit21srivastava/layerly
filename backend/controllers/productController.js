@@ -31,7 +31,7 @@ const addProduct = async (req, res) => {
         const colors = ['white', 'black', 'gray', 'red', 'orange'];
         const imagesByColor = new Map();
 
-        // Upload images using Cloudinary
+
         for (const color of colors) {
             if (req.files && req.files[`image_${color}`] && req.files[`image_${color}`][0]) {
                 try {
@@ -120,7 +120,7 @@ const updateProduct = async (req, res) => {
             date
         } = req.body || {};
 
-        // Prepare update object with only provided fields
+
         const updateData = {};
 
         if (productID !== undefined) updateData.productID = productID;
@@ -131,7 +131,7 @@ const updateProduct = async (req, res) => {
         if (date !== undefined) updateData.date = new Date(date);
         if (bestseller !== undefined) updateData.bestseller = bestseller === 'true' ? true : false;
 
-        // Handle availableColors
+
         if (availableColors !== undefined) {
             let colorArray = [];
             try {
@@ -146,7 +146,6 @@ const updateProduct = async (req, res) => {
             }
         }
 
-        // Handle image updates
         const colors = ['white', 'black', 'gray', 'red', 'orange'];
         const newImagesByColor = new Map(existingProduct.imagesByColor);
 
@@ -155,14 +154,13 @@ const updateProduct = async (req, res) => {
                 try {
                     const file = req.files[`image_${color}`][0];
 
-                    // Upload new image to Cloudinary
                     const uploaded = await cloudinary.uploader.upload(file.path, {
                         folder: 'products',
                         use_filename: true,
                         unique_filename: false
                     });
 
-                    // Update the image for this color
+
                     newImagesByColor.set(
                         color.charAt(0).toUpperCase() + color.slice(1),
                         uploaded.secure_url
@@ -179,12 +177,12 @@ const updateProduct = async (req, res) => {
             }
         }
 
-        // Add updated images to update data
+
         if (newImagesByColor.size > 0) {
             updateData.imagesByColor = newImagesByColor;
         }
 
-        // Update the product
+
         const updatedProduct = await Product.findByIdAndUpdate(
             id,
             updateData,

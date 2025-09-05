@@ -148,13 +148,13 @@ const Navbar = () => {
                         )}
                         {user && (
                             <span className='ml-2 text-sm text-gray-700 hidden sm:block'>
-                                Hi, {user.name?.split(' ')[0]}
+                                Hi, {user.name?.split(' ')[0]} !
                             </span>
                         )}
                     </div>
 
                     <div className='hidden group-hover:block absolute dropdown-menu right-0 pt-4 z-50'>
-                        <div className='relative flex flex-col text-center gap-2 w-40 py-3 px-5 bg-white border border-gray-200 shadow-lg rounded-lg text-gray-900'>
+                        <div className='relative z-10 flex flex-col text-center gap-2 w-36 py-3 px-5 bg-gray-400/10 backdrop-blur-sm text-gray-900 rounded'>
                             {token ? (
                                 <>
                                     <p

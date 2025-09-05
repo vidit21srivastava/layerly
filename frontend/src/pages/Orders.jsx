@@ -39,12 +39,11 @@ const Orders = () => {
         }
     }
 
-    // Helper function to get product details by ID
+
     const getProductById = (productId) => {
         return products.find(product => product.id === productId)
     }
 
-    // Calculate order totals
     const calculateOrderTotal = (order) => {
         return order.amount
     }
@@ -141,7 +140,7 @@ const Orders = () => {
                     <h1 className='delius-unicase-regular text-lg sm:text-lg lg:text-xl font-normal text-gray-700'>
                         YOUR ORDERS
                     </h1>
-                    <hr className='w-14 border-none h-[2px] sm:h-[2px] bg-gray-500' />
+                    <hr className='w-12 border-none h-[2px] sm:h-[2px] bg-gray-500 ml-21 md:ml-24' />
                 </div>
 
                 <div className='text-center py-12'>
@@ -165,7 +164,7 @@ const Orders = () => {
                 <h1 className='delius-unicase-regular text-lg sm:text-lg lg:text-xl font-normal text-gray-700'>
                     YOUR ORDERS
                 </h1>
-                <hr className='w-14 border-none h-[2px] sm:h-[2px] bg-gray-500' />
+                <hr className='w-12 border-none h-[2px] sm:h-[2px] bg-gray-500 ml-21 md:ml-24' />
             </div>
 
             <div className='space-y-4'>

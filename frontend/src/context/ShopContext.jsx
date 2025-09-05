@@ -17,12 +17,12 @@ const ShopContextProvider = (props) => {
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
 
-    // Fetch products from backend
+
     const fetchProducts = async () => {
         try {
             const res = await axios.get(`${backendURL}/api/product/list`);
             if (res.data.success) {
-                // Normalize for frontend
+
                 const normalized = (res.data.products || []).map(p => ({
                     id: p._id,
                     productID: p.productID,
@@ -43,7 +43,7 @@ const ShopContextProvider = (props) => {
         }
     };
 
-    // Initialize auth state and load products
+
     useEffect(() => {
         fetchProducts();
         const savedToken = localStorage.getItem('token');
@@ -53,7 +53,7 @@ const ShopContextProvider = (props) => {
         }
     }, []);
 
-    // Get user profile
+
     const getUserProfile = async (authToken = token) => {
         try {
             if (!authToken) return;
@@ -73,7 +73,7 @@ const ShopContextProvider = (props) => {
         }
     };
 
-    // Get user cart
+
     const getUserCart = async (authToken = token) => {
         try {
             if (!authToken) return;
@@ -88,10 +88,9 @@ const ShopContextProvider = (props) => {
         }
     };
 
-    // Helpers
+
     const findProductById = (id) => products.find(p => p.id === id);
 
-    // Add to cart
     const addToCart = async (itemId, color, quantity = 1) => {
         if (!token) {
             toast.error('Please login to add items to cart');
@@ -107,7 +106,7 @@ const ShopContextProvider = (props) => {
                 headers: { token }
             });
             if (response.data.success) {
-                // Update local cart
+
                 let cartData = structuredClone(cartItems);
                 if (cartData[itemId]) {
                     if (cartData[itemId][color]) {
@@ -120,7 +119,7 @@ const ShopContextProvider = (props) => {
                     cartData[itemId][color] = quantity;
                 }
                 setCartItems(cartData);
-                // Find product name for toast
+
                 const product = findProductById(itemId);
                 const productName = product ? product.name : 'Item';
                 toast.success(`${productName} (${color}) added to cart!`);
@@ -133,7 +132,7 @@ const ShopContextProvider = (props) => {
         }
     };
 
-    // Update cart item quantity
+
     const updateCartItemQuantity = async (itemId, color, quantity) => {
         if (!token) {
             toast.error('Please login to update cart');
@@ -148,7 +147,7 @@ const ShopContextProvider = (props) => {
                 headers: { token }
             });
             if (response.data.success) {
-                // Update local cart
+
                 let cartData = structuredClone(cartItems);
                 if (quantity <= 0) {
                     if (cartData[itemId]) {
@@ -164,7 +163,7 @@ const ShopContextProvider = (props) => {
                     cartData[itemId][color] = quantity;
                 }
                 setCartItems(cartData);
-                // Toast
+
                 const product = findProductById(itemId);
                 const productName = product ? product.name : 'Item';
                 if (quantity <= 0) {
@@ -181,12 +180,12 @@ const ShopContextProvider = (props) => {
         }
     };
 
-    // Remove from cart
+
     const removeFromCart = async (itemId, color) => {
         await updateCartItemQuantity(itemId, color, 0);
     };
 
-    // Get cart count
+
     const getCartCount = () => {
         let totalCount = 0;
         for (const items in cartItems) {
@@ -197,7 +196,7 @@ const ShopContextProvider = (props) => {
         return totalCount;
     };
 
-    // Get cart amount
+
     const getCartAmount = () => {
         let totalAmount = 0;
         for (const items in cartItems) {
@@ -211,7 +210,7 @@ const ShopContextProvider = (props) => {
         return totalAmount;
     };
 
-    // Login user
+
     const login = (authToken, userData = null) => {
         setToken(authToken);
         localStorage.setItem('token', authToken);
@@ -223,7 +222,6 @@ const ShopContextProvider = (props) => {
         }
     };
 
-    // Logout user
     const logout = () => {
         setToken('');
         setUser(null);

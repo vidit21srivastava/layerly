@@ -5,7 +5,7 @@ const ProductItems = ({ id, name, price, product }) => {
     const { currency, addToCart, updateCartItemQuantity, cartItems } = useContext(ShopContext)
     const [selectedColor, setSelectedColor] = useState(product?.availableColors[0] || 'White')
 
-    // Check if item is in cart and get its quantity
+
     const getCartQuantity = () => {
         if (cartItems[id] && cartItems[id][selectedColor]) {
             return cartItems[id][selectedColor];

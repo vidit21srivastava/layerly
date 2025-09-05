@@ -162,7 +162,7 @@ const Profile = () => {
                     <h1 className='delius-unicase-regular text-lg sm:text-lg lg:text-xl font-normal text-gray-700'>
                         MY PROFILE
                     </h1>
-                    <hr className='w-11 border-none h-[2px] sm:h-[2px] bg-gray-500' />
+                    <hr className='w-12 border-none h-[2px] sm:h-[2px] bg-gray-500 ml-16 md:ml-19' />
                 </div>
 
                 <div className='bg-white rounded-lg border border-gray-200 p-6 shadow-sm'>
@@ -199,23 +199,24 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        <div className='flex gap-2'>
-                            {!isEditing ? (
-                                <button
-                                    onClick={() => setIsEditing(true)}
-                                    className='bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium'
-                                >
-                                    Edit Profile
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={handleCancel}
-                                    className='border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium'
-                                >
-                                    Cancel
-                                </button>
-                            )}
-                        </div>
+
+                    </div>
+                    <div className='flex justify-end gap-2'>
+                        {!isEditing ? (
+                            <button
+                                onClick={() => setIsEditing(true)}
+                                className='bg-gray-900 text-white px-4 py-2 font-bold rounded-lg hover:bg-gray-700 transition-colors text-sm '
+                            >
+                                Edit Profile
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleCancel}
+                                className='border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium'
+                            >
+                                Cancel
+                            </button>
+                        )}
                     </div>
 
                     <form onSubmit={handleSubmit} className='space-y-6'>
@@ -347,14 +348,14 @@ const Profile = () => {
                     <div className='flex flex-col sm:flex-row gap-3'>
                         <button
                             onClick={logout}
-                            className='bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium'
+                            className='bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors font-bold'
                         >
                             Logout
                         </button>
 
                         <button
                             onClick={() => setPwdOpen(!pwdOpen)}
-                            className='border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors font-medium'
+                            className='border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors font-bold'
                         >
                             {pwdOpen ? 'Close Password Change' : 'Change Password'}
                         </button>
@@ -364,7 +365,7 @@ const Profile = () => {
                         <form onSubmit={submitPasswordChange} className='mt-4 bg-white border border-gray-200 rounded-lg p-4 space-y-3'>
                             {!user?.hasGoogleAccount && (
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 mb-1'>Current Password</label>
+                                    <label className='block text-sm font-bold text-gray-700 mb-1'>Current Password</label>
                                     <input
                                         type='password'
                                         value={pwdData.currentPassword}
@@ -381,7 +382,7 @@ const Profile = () => {
                                 </p>
                             )}
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 mb-1'>New Password</label>
+                                <label className='block text-sm font-bold text-gray-700 mb-1'>New Password</label>
                                 <input
                                     type='password'
                                     value={pwdData.newPassword}
@@ -393,7 +394,7 @@ const Profile = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 mb-1'>Confirm New Password</label>
+                                <label className='block text-sm font-bold text-gray-700 mb-1'>Confirm New Password</label>
                                 <input
                                     type='password'
                                     value={pwdData.confirmPassword}
@@ -406,7 +407,7 @@ const Profile = () => {
                             </div>
                             <div className='flex justify-end'>
                                 <button type='submit' disabled={pwdLoading}
-                                    className={`px-6 py-2 rounded-lg font-medium ${pwdLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-900 text-white hover:bg-gray-800'} transition-colors`}>
+                                    className={`px-6 py-2 rounded-lg font-bold ${pwdLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-900 text-white hover:bg-gray-800'} transition-colors`}>
                                     {pwdLoading ? 'Updating...' : 'Update Password'}
                                 </button>
                             </div>

@@ -62,7 +62,7 @@ const Cart = () => {
                 <div className='text-center py-12'>
 
                     <h2 className='text-2xl text-gray-600 mb-2'>Your cart is empty</h2>
-                    <p className='text-xl text-gray-500'>Add some products to get started!</p>
+                    <p className='text-xl text-gray-500'>Add some products to get started !</p>
                 </div>
             </div>
         )
