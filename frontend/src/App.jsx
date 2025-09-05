@@ -4,21 +4,25 @@ import Home from './pages/Home'
 import Catalogue from './pages/Catalogue'
 import About from './pages/About'
 import Custom from './pages/Custom'
-
 import Cart from './pages/Cart'
 import Login from './pages/Login'
 import PlaceOrder from './pages/PlaceOrder'
 import Orders from './pages/Orders'
+import Profile from './pages/Profile'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import { ToastContainer, toast } from 'react-toastify';
+import VerifyEmail from './pages/VerifyEmail'
+import ResetPassword from './pages/ResetPassword'
+import AuthSuccess from './pages/AuthSuccess'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
-    <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] '>
+    <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
       <ToastContainer
         position="top-center"
-        autoClose={2000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -26,10 +30,10 @@ const App = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="colored" />
+        theme="colored"
+      />
+
       <Navbar />
-
-
 
       <Routes>
         <Route path='/' element={<Home />} />
@@ -41,10 +45,11 @@ const App = () => {
         <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='/orders' element={<Orders />} />
         <Route path='/profile' element={<Profile />} />
-
-
-
+        <Route path='/verify-email' element={<VerifyEmail />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route path='/auth/success' element={<AuthSuccess />} />
       </Routes>
+
       <Footer />
     </div>
   )

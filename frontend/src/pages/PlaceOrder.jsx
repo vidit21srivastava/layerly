@@ -1,10 +1,164 @@
-import React, { useContext } from 'react'
-import { ShopContext } from '../context/ShopContext';
+import React, { useContext, useState } from 'react'
+import { ShopContext } from '../context/ShopContext'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const PlaceOrder = () => {
-    const { currency, getCartAmount, delivery_fee, navigate } = useContext(ShopContext);
-    const cartTotal = getCartAmount();
-    const finalTotal = cartTotal > 0 ? cartTotal + delivery_fee : 0;
+    const {
+        currency,
+        getCartAmount,
+        delivery_fee,
+        navigate,
+        token,
+        cartItems,
+        products,
+        backendURL
+    } = useContext(ShopContext)
+
+    const [loading, setLoading] = useState(false)
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        street: '',
+        city: '',
+        state: '',
+        pinCode: '',
+        phone: ''
+    })
+    const [paymentMethod, setPaymentMethod] = useState('cod')
+
+    const cartTotal = getCartAmount()
+    const finalTotal = cartTotal > 0 ? cartTotal + delivery_fee : 0
+
+    // Redirect if not logged in
+    React.useEffect(() => {
+        if (!token) {
+            navigate('/login')
+            return
+        }
+
+        // Check if cart is empty
+        if (cartTotal === 0) {
+            navigate('/cart')
+            return
+        }
+    }, [token, cartTotal])
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const validateForm = () => {
+        const required = ['firstName', 'lastName', 'email', 'street', 'city', 'state', 'pinCode', 'phone']
+
+        for (const field of required) {
+            if (!formData[field].trim()) {
+                toast.error(`${field.charAt(0).toUpperCase() + field.slice(1)} is required`)
+                return false
+            }
+        }
+
+        // Validate PIN code (6 digits)
+        if (!/^\d{6}$/.test(formData.pinCode)) {
+            toast.error('PIN code must be 6 digits')
+            return false
+        }
+
+        // Validate phone (10 digits)
+        if (!/^\d{10}$/.test(formData.phone)) {
+            toast.error('Phone number must be 10 digits')
+            return false
+        }
+
+        return true
+    }
+
+    // Convert cart items to order format
+    const getOrderItems = () => {
+        const orderItems = []
+
+        for (const itemId in cartItems) {
+            for (const color in cartItems[itemId]) {
+                const quantity = cartItems[itemId][color]
+                const product = products.find(p => p.id === itemId)
+
+                if (product && quantity > 0) {
+                    orderItems.push({
+                        productId: itemId,
+                        name: product.name,
+                        color: color,
+                        quantity: quantity,
+                        price: product.price
+                    })
+                }
+            }
+        }
+
+        return orderItems
+    }
+
+    const handlePlaceOrder = async (e) => {
+        e.preventDefault()
+
+        if (!validateForm()) return
+
+        setLoading(true)
+
+        try {
+            const orderData = {
+                items: getOrderItems(),
+                amount: finalTotal,
+                address: {
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    email: formData.email,
+                    street: formData.street,
+                    city: formData.city,
+                    state: formData.state,
+                    pinCode: formData.pinCode,
+                    phone: formData.phone
+                }
+            }
+
+            let response
+            if (paymentMethod === 'cod') {
+                response = await axios.post(`${backendURL}/api/order/place`, orderData, {
+                    headers: { token }
+                })
+            } else {
+                // PhonePe payment
+                response = await axios.post(`${backendURL}/api/order/phonepe`, orderData, {
+                    headers: { token }
+                })
+            }
+
+            if (response.data.success) {
+                toast.success('Order placed successfully!')
+                navigate('/orders')
+            } else {
+                toast.error(response.data.message || 'Failed to place order')
+            }
+        } catch (error) {
+            console.error('Place order error:', error)
+            const errorMessage = error.response?.data?.message || 'Failed to place order'
+            toast.error(errorMessage)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    if (!token || cartTotal === 0) {
+        return (
+            <div className='pt-8 sm:pt-14 border-t border-t-gray-300 min-h-[40vh] flex items-center justify-center'>
+                <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600'></div>
+            </div>
+        )
+    }
 
     return (
         <div className='border-t border-gray-300 pt-8 sm:pt-14 min-h-[48vh]'>
@@ -19,42 +173,66 @@ const PlaceOrder = () => {
                         <hr className='w-16 border-none h-[2px] bg-gray-500 ml-42 md:ml-48' />
                     </div>
 
-                    <div className='space-y-4'>
+                    <form onSubmit={handlePlaceOrder} className='space-y-4'>
                         <div className='flex flex-col sm:flex-row gap-3'>
                             <input
                                 className='border border-gray-300 rounded py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
                                 type='text'
-                                placeholder='First Name' required
+                                name='firstName'
+                                value={formData.firstName}
+                                onChange={handleInputChange}
+                                placeholder='First Name'
+                                required
                             />
                             <input
                                 className='border border-gray-300 rounded py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
                                 type='text'
-                                placeholder='Last Name' required
+                                name='lastName'
+                                value={formData.lastName}
+                                onChange={handleInputChange}
+                                placeholder='Last Name'
+                                required
                             />
                         </div>
 
                         <input
                             className='border border-gray-300 rounded py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
                             type='email'
-                            placeholder='Email Address' required
+                            name='email'
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            placeholder='Email Address'
+                            required
                         />
 
                         <input
                             className='border border-gray-300 rounded py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
                             type='text'
-                            placeholder='House No./Street' required
+                            name='street'
+                            value={formData.street}
+                            onChange={handleInputChange}
+                            placeholder='House No./Street'
+                            required
                         />
 
                         <div className='flex flex-col sm:flex-row gap-3'>
                             <input
                                 className='border border-gray-300 rounded py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
                                 type='text'
-                                placeholder='City' required
+                                name='city'
+                                value={formData.city}
+                                onChange={handleInputChange}
+                                placeholder='City'
+                                required
                             />
                             <input
                                 className='border border-gray-300 rounded py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
                                 type='text'
-                                placeholder='State' required
+                                name='state'
+                                value={formData.state}
+                                onChange={handleInputChange}
+                                placeholder='State'
+                                required
                             />
                         </div>
 
@@ -62,24 +240,119 @@ const PlaceOrder = () => {
                             <input
                                 className='border border-gray-300 rounded py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
                                 type='text'
+                                name='pinCode'
+                                value={formData.pinCode}
+                                onChange={handleInputChange}
                                 placeholder='PIN Code'
-                                maxLength='6' required
+                                maxLength='6'
+                                pattern='\d{6}'
+                                required
                             />
                             <input
                                 className='border border-gray-300 rounded py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
                                 type='tel'
+                                name='phone'
+                                value={formData.phone}
+                                onChange={handleInputChange}
                                 placeholder='Mobile No. (10-digits)'
-                                maxLength='10' required
+                                maxLength='10'
+                                pattern='\d{10}'
+                                required
                             />
                         </div>
-                    </div>
+
+                        {/* Payment Method Selection */}
+                        <div className='mt-6'>
+                            <h3 className='text-lg font-medium text-gray-900 mb-4'>Payment Method</h3>
+                            <div className='space-y-3'>
+                                <label className='flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50'>
+                                    <input
+                                        type='radio'
+                                        name='payment'
+                                        value='cod'
+                                        checked={paymentMethod === 'cod'}
+                                        onChange={(e) => setPaymentMethod(e.target.value)}
+                                        className='mr-3'
+                                    />
+                                    <div>
+                                        <p className='font-medium text-gray-900'>Cash on Delivery</p>
+                                        <p className='text-sm text-gray-600'>Pay when you receive your order</p>
+                                    </div>
+                                </label>
+
+                                <label className='flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50'>
+                                    <input
+                                        type='radio'
+                                        name='payment'
+                                        value='phonepe'
+                                        checked={paymentMethod === 'phonepe'}
+                                        onChange={(e) => setPaymentMethod(e.target.value)}
+                                        className='mr-3'
+                                    />
+                                    <div>
+                                        <p className='font-medium text-gray-900'>PhonePe Payment</p>
+                                        <p className='text-sm text-gray-600'>Pay online with PhonePe</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button
+                            type='submit'
+                            disabled={loading}
+                            className={`w-full mt-6 py-3 px-4 rounded-lg font-bold text-xl transition-colors ${loading
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-gray-900 text-white hover:bg-gray-800'
+                                }`}
+                        >
+                            {loading ? 'Placing Order...' : 'Place Order'}
+                        </button>
+                    </form>
                 </div>
 
                 {/* Right Section - Order Summary */}
                 <div className='flex-1 lg:flex-[1]'>
                     <div className='lg:sticky lg:top-4'>
                         <div className='bg-gray-50 rounded-lg p-6 shadow-sm'>
-                            <h2 className='text-xl font-semibold text-gray-900 mb-6'>Final Summary</h2>
+                            <h2 className='text-xl font-semibold text-gray-900 mb-6'>Order Summary</h2>
+
+                            {/* Cart Items Preview */}
+                            <div className='max-h-64 overflow-y-auto mb-4'>
+                                {Object.keys(cartItems).map(itemId => {
+                                    const product = products.find(p => p.id === itemId)
+                                    if (!product) return null
+
+                                    return Object.keys(cartItems[itemId]).map(color => {
+                                        const quantity = cartItems[itemId][color]
+                                        if (quantity <= 0) return null
+
+                                        const itemTotal = product.price * quantity
+
+                                        return (
+                                            <div key={`${itemId}-${color}`} className='flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0'>
+                                                <div className='flex items-center gap-3'>
+                                                    <img
+                                                        src={product.imagesByColor[color]}
+                                                        alt={product.name}
+                                                        className='w-12 h-12 object-cover rounded'
+                                                    />
+                                                    <div>
+                                                        <p className='text-sm font-medium text-gray-900 truncate max-w-32'>
+                                                            {product.name}
+                                                        </p>
+                                                        <p className='text-xs text-gray-600'>
+                                                            {color} × {quantity}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <p className='text-sm font-medium text-gray-900'>
+                                                    {currency}{itemTotal}
+                                                </p>
+                                            </div>
+                                        )
+                                    })
+                                })}
+                            </div>
 
                             <div className='space-y-4 mb-6'>
                                 <div className='flex justify-between items-center text-base'>
@@ -99,10 +372,6 @@ const PlaceOrder = () => {
                                     <span className='text-gray-900 font-semibold'>{currency}{finalTotal}</span>
                                 </div>
                             </div>
-
-                            <button onClick={() => navigate('/orders')} className='w-full bg-gray-900 text-white py-3 px-4 rounded-lg font-bold text-xl hover:bg-gray-800 transition-colors duration-200 active:scale-95 transform'>
-                                Place Order
-                            </button>
                         </div>
                     </div>
                 </div>

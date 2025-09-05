@@ -1,127 +1,175 @@
 import { createContext, useEffect, useState } from "react";
-import { products } from "../assets/assets";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
     const currency = '₹';
     const delivery_fee = 60;
+    const backendURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+
     const [search, setSearch] = useState('');
     const [cartItems, setCartItems] = useState({});
+    const [token, setToken] = useState('');
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
-    const addToCart = async (itemId, color, quantity = 1) => {
-        let cartData = structuredClone(cartItems);
-
-        // Find the product for toast notification
-        const product = products.find(p => p.id === itemId);
-        const productName = product ? product.name : 'Item';
-
-        if (cartData[itemId]) {
-            if (cartData[itemId][color]) {
-                cartData[itemId][color] += quantity;
-            } else {
-                cartData[itemId][color] = quantity;
-            }
-        } else {
-            cartData[itemId] = {};
-            cartData[itemId][color] = quantity;
+    // Initialize auth state
+    useEffect(() => {
+        const savedToken = localStorage.getItem('token');
+        if (savedToken) {
+            setToken(savedToken);
+            getUserProfile(savedToken);
         }
+    }, []);
 
-        setCartItems(cartData);
+    // Get user profile
+    const getUserProfile = async (authToken = token) => {
+        try {
+            if (!authToken) return;
 
-        toast.success(`${productName} (${color}) added to cart!`, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            theme: "colored",
-            draggable: true,
-        });
-    }
-
-    const updateCartItemQuantity = async (itemId, color, quantity) => {
-        let cartData = structuredClone(cartItems);
-
-        // Find the product for toast notification
-        const product = products.find(p => p.id === itemId);
-        const productName = product ? product.name : 'Item';
-
-        // Get previous quantity
-        const previousQuantity = cartData[itemId] ? (cartData[itemId][color] || 0) : 0;
-
-        if (quantity <= 0) {
-            if (cartData[itemId]) {
-                delete cartData[itemId][color];
-
-                if (Object.keys(cartData[itemId]).length === 0) {
-                    delete cartData[itemId];
-                }
-            }
-
-            if (previousQuantity > 0) {
-                toast.error(`${productName} (${color}) removed from cart!`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    theme: "colored",
-                    draggable: true,
-                });
-            }
-        } else {
-            if (cartData[itemId]) {
-                cartData[itemId][color] = quantity;
-            }
-
-            if (previousQuantity !== quantity && previousQuantity > 0) {
-                toast.info(`${productName} (${color}) quantity updated to ${quantity}`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    theme: "colored",
-                    draggable: true,
-                });
-            }
-        }
-
-        setCartItems(cartData);
-    }
-
-    const removeFromCart = async (itemId, color) => {
-        let cartData = structuredClone(cartItems);
-
-        // Find the product for toast notification
-        const product = products.find(p => p.id === itemId);
-        const productName = product ? product.name : 'Item';
-
-        if (cartData[itemId] && cartData[itemId][color]) {
-            delete cartData[itemId][color];
-
-            if (Object.keys(cartData[itemId]).length === 0) {
-                delete cartData[itemId];
-            }
-
-            toast.error(`${productName} (${color}) removed from cart!`, {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                theme: "colored",
-                draggable: true,
+            const response = await axios.get(`${backendURL}/api/user/profile`, {
+                headers: { token: authToken }
             });
+
+            if (response.data.success) {
+                setUser(response.data.user);
+                // Load cart data
+                getUserCart(authToken);
+            }
+        } catch (error) {
+            console.error('Get profile error:', error);
+            if (error.response?.status === 401) {
+                logout();
+            }
+        }
+    };
+
+    // Get user cart
+    const getUserCart = async (authToken = token) => {
+        try {
+            if (!authToken) return;
+
+            const response = await axios.get(`${backendURL}/api/cart/get`, {
+                headers: { token: authToken }
+            });
+
+            if (response.data.success) {
+                setCartItems(response.data.cartData);
+            }
+        } catch (error) {
+            console.error('Get cart error:', error);
+        }
+    };
+
+    // Add to cart
+    const addToCart = async (itemId, color, quantity = 1) => {
+        if (!token) {
+            toast.error('Please login to add items to cart');
+            navigate('/login');
+            return;
         }
 
-        setCartItems(cartData);
-    }
+        try {
+            const response = await axios.post(`${backendURL}/api/cart/add`, {
+                itemId,
+                color,
+                quantity
+            }, {
+                headers: { token }
+            });
 
+            if (response.data.success) {
+                // Update local cart
+                let cartData = structuredClone(cartItems);
+                if (cartData[itemId]) {
+                    if (cartData[itemId][color]) {
+                        cartData[itemId][color] += quantity;
+                    } else {
+                        cartData[itemId][color] = quantity;
+                    }
+                } else {
+                    cartData[itemId] = {};
+                    cartData[itemId][color] = quantity;
+                }
+                setCartItems(cartData);
+
+                // Find product name for toast
+                const product = products.find(p => p.id === itemId);
+                const productName = product ? product.name : 'Item';
+
+                toast.success(`${productName} (${color}) added to cart!`);
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            console.error('Add to cart error:', error);
+            toast.error('Failed to add item to cart');
+        }
+    };
+
+    // Update cart item quantity
+    const updateCartItemQuantity = async (itemId, color, quantity) => {
+        if (!token) {
+            toast.error('Please login to update cart');
+            return;
+        }
+
+        try {
+            const response = await axios.put(`${backendURL}/api/cart/update`, {
+                itemId,
+                color,
+                quantity
+            }, {
+                headers: { token }
+            });
+
+            if (response.data.success) {
+                // Update local cart
+                let cartData = structuredClone(cartItems);
+
+                if (quantity <= 0) {
+                    if (cartData[itemId]) {
+                        delete cartData[itemId][color];
+                        if (Object.keys(cartData[itemId]).length === 0) {
+                            delete cartData[itemId];
+                        }
+                    }
+                } else {
+                    if (!cartData[itemId]) {
+                        cartData[itemId] = {};
+                    }
+                    cartData[itemId][color] = quantity;
+                }
+
+                setCartItems(cartData);
+
+                // Find product name for toast
+                const product = products.find(p => p.id === itemId);
+                const productName = product ? product.name : 'Item';
+
+                if (quantity <= 0) {
+                    toast.error(`${productName} (${color}) removed from cart!`);
+                } else {
+                    toast.info(`${productName} (${color}) quantity updated to ${quantity}`);
+                }
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            console.error('Update cart error:', error);
+            toast.error('Failed to update cart');
+        }
+    };
+
+    // Remove from cart
+    const removeFromCart = async (itemId, color) => {
+        await updateCartItemQuantity(itemId, color, 0);
+    };
+
+    // Get cart count
     const getCartCount = () => {
         let totalCount = 0;
         for (const items in cartItems) {
@@ -130,8 +178,9 @@ const ShopContextProvider = (props) => {
             }
         }
         return totalCount;
-    }
+    };
 
+    // Get cart amount
     const getCartAmount = () => {
         let totalAmount = 0;
         for (const items in cartItems) {
@@ -143,24 +192,56 @@ const ShopContextProvider = (props) => {
             }
         }
         return totalAmount;
-    }
+    };
 
-    useEffect(() => {
-        console.log(cartItems);
-    }, [cartItems])
+    // Login user
+    const login = (authToken, userData = null) => {
+        setToken(authToken);
+        localStorage.setItem('token', authToken);
+        if (userData) {
+            setUser(userData);
+        } else {
+            getUserProfile(authToken);
+        }
+    };
+
+    // Logout user
+    const logout = () => {
+        setToken('');
+        setUser(null);
+        setCartItems({});
+        localStorage.removeItem('token');
+        toast.success('Logged out successfully');
+        navigate('/');
+    };
 
     const value = {
-        products, currency, delivery_fee,
-        search, setSearch, cartItems, addToCart,
-        updateCartItemQuantity, removeFromCart,
-        getCartCount, getCartAmount, navigate
-    }
+        products,
+        currency,
+        delivery_fee,
+        backendURL,
+        search,
+        setSearch,
+        cartItems,
+        addToCart,
+        updateCartItemQuantity,
+        removeFromCart,
+        getCartCount,
+        getCartAmount,
+        navigate,
+        token,
+        user,
+        login,
+        logout,
+        getUserProfile,
+        getUserCart
+    };
 
     return (
         <ShopContext.Provider value={value}>
             {props.children}
         </ShopContext.Provider>
-    )
-}
+    );
+};
 
 export default ShopContextProvider;
