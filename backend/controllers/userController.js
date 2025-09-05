@@ -1,121 +1,3 @@
-// import userModel from "../models/userModel.js";
-// import validator from 'validator';
-// import bcrypt from 'bcrypt';
-// import jwt from 'jsonwebtoken';
-
-// // Add function to update password and name via mail confirmation registration process.
-
-// const createToken = (id) => {
-//     return jwt.sign({ id }, process.env.JWT_SECRET);
-// }
-
-// const loginUser = async (req, res) => {
-//     try {
-//         const { email, password } = req.body;
-
-//         const user = await userModel.findOne({ email });
-//         if (!user) {
-//             return res.status(401).json({
-//                 success: false,
-//                 message: "Invalid credentials"
-//             });
-//         }
-
-//         const isMatch = await bcrypt.compare(password, user.password);
-
-//         if (isMatch) {
-//             const token = createToken(user._id);
-//             res.status(200).json({ success: true, token });
-//         } else {
-//             res.status(401).json({
-//                 success: false,
-//                 message: "Invalid credentials"
-//             });
-//         }
-
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({
-//             success: false,
-//             message: error.message
-//         });
-//     }
-// }
-
-// const registerUser = async (req, res) => {
-//     try {
-//         const { name, email, password } = req.body;
-
-//         const exists = await userModel.findOne({ email });
-
-//         if (exists) {
-//             return res.status(409).json({
-//                 success: false,
-//                 message: "User already exists"
-//             });
-//         }
-
-//         if (!validator.isEmail(email)) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: "Please enter a valid email"
-//             });
-//         }
-
-//         if (password.length < 8) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: "Please enter a strong password"
-//             });
-//         }
-
-//         const salt = await bcrypt.genSalt(10);
-//         const hashedPassword = await bcrypt.hash(password, salt);
-//         const newUser = new userModel({
-//             name,
-//             email,
-//             password: hashedPassword
-//         });
-
-//         const user = await newUser.save();
-//         const token = createToken(user._id);
-
-//         res.status(201).json({ success: true, token });
-
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({
-//             success: false,
-//             message: error.message
-//         });
-//     }
-// }
-
-// const adminLogin = async (req, res) => {
-//     try {
-//         const { email, password } = req.body;
-
-//         if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-//             const token = jwt.sign(email + password, process.env.JWT_SECRET);
-//             res.status(200).json({ success: true, token });
-//         } else {
-//             res.status(401).json({
-//                 success: false,
-//                 message: "Invalid admin credentials"
-//             });
-//         }
-
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({
-//             success: false,
-//             message: error.message
-//         });
-//     }
-// }
-
-// export { loginUser, registerUser, adminLogin };
-
 import userModel from "../models/userModel.js";
 import validator from 'validator';
 import bcrypt from 'bcrypt';
@@ -127,13 +9,17 @@ const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET);
 }
 
+// Generate OTP (6 digits)
+// const generateOTP = () => {
+//     return Math.floor(100000 + Math.random() * 900000).toString();
+// };
 
 // REGISTER USER
 const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-
+        // Check if user already exists
         const exists = await userModel.findOne({ email });
         if (exists) {
             return res.status(409).json({
@@ -142,7 +28,7 @@ const registerUser = async (req, res) => {
             });
         }
 
-
+        // Validate email
         if (!validator.isEmail(email)) {
             return res.status(400).json({
                 success: false,
@@ -150,7 +36,7 @@ const registerUser = async (req, res) => {
             });
         }
 
-
+        // Validate password
         if (password.length < 8) {
             return res.status(400).json({
                 success: false,
@@ -158,15 +44,15 @@ const registerUser = async (req, res) => {
             });
         }
 
-
+        // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-
+        // Generate email verification token
         const verificationToken = nanoid(32);
-        const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-
+        // Create new user
         const newUser = new userModel({
             name,
             email,
@@ -178,12 +64,12 @@ const registerUser = async (req, res) => {
 
         const user = await newUser.save();
 
-
+        // Send verification email
         try {
             await sendVerificationEmail(email, name, verificationToken);
         } catch (emailError) {
             console.error('Failed to send verification email:', emailError);
-
+            // Don't fail registration if email fails
         }
 
         res.status(201).json({
@@ -213,7 +99,7 @@ const verifyEmail = async (req, res) => {
             });
         }
 
-
+        // Find user with this verification token
         const user = await userModel.findOne({
             emailVerificationToken: token,
             emailVerificationExpires: { $gt: Date.now() }
@@ -226,20 +112,20 @@ const verifyEmail = async (req, res) => {
             });
         }
 
-
+        // Update user as verified
         user.isEmailVerified = true;
         user.emailVerificationToken = null;
         user.emailVerificationExpires = null;
         await user.save();
 
-
+        // Send welcome email
         try {
             await sendWelcomeEmail(user.email, user.name);
         } catch (emailError) {
             console.error('Failed to send welcome email:', emailError);
         }
 
-
+        // Generate auth token
         const authToken = createToken(user._id);
 
         res.status(200).json({
@@ -285,7 +171,7 @@ const resendVerificationEmail = async (req, res) => {
             });
         }
 
-
+        // Generate new verification token
         const verificationToken = nanoid(32);
         const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
@@ -293,7 +179,7 @@ const resendVerificationEmail = async (req, res) => {
         user.emailVerificationExpires = verificationExpires;
         await user.save();
 
-
+        // Send verification email
         await sendVerificationEmail(email, user.name, verificationToken);
 
         res.status(200).json({
@@ -323,7 +209,7 @@ const loginUser = async (req, res) => {
             });
         }
 
-
+        // Check if user registered with Google
         if (user.googleId && !user.password) {
             return res.status(400).json({
                 success: false,
@@ -331,7 +217,7 @@ const loginUser = async (req, res) => {
             });
         }
 
-
+        // Check password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({
@@ -340,7 +226,7 @@ const loginUser = async (req, res) => {
             });
         }
 
-
+        // Check if email is verified
         if (!user.isEmailVerified) {
             return res.status(403).json({
                 success: false,
@@ -390,7 +276,7 @@ const forgotPassword = async (req, res) => {
             });
         }
 
-
+        // Check if user registered with Google only
         if (user.googleId && !user.password) {
             return res.status(400).json({
                 success: false,
@@ -398,7 +284,7 @@ const forgotPassword = async (req, res) => {
             });
         }
 
-
+        // Generate reset token
         const resetToken = nanoid(32);
         const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
@@ -406,7 +292,7 @@ const forgotPassword = async (req, res) => {
         user.passwordResetExpires = resetExpires;
         await user.save();
 
-
+        // Send reset email
         await sendPasswordResetEmail(email, user.name, resetToken);
 
         res.status(200).json({
@@ -435,7 +321,7 @@ const resetPassword = async (req, res) => {
             });
         }
 
-
+        // Validate new password
         if (newPassword.length < 8) {
             return res.status(400).json({
                 success: false,
@@ -443,7 +329,7 @@ const resetPassword = async (req, res) => {
             });
         }
 
-
+        // Find user with valid reset token
         const user = await userModel.findOne({
             passwordResetToken: token,
             passwordResetExpires: { $gt: Date.now() }
@@ -456,11 +342,11 @@ const resetPassword = async (req, res) => {
             });
         }
 
-
+        // Hash new password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-
+        // Update user password
         user.password = hashedPassword;
         user.passwordResetToken = null;
         user.passwordResetExpires = null;
@@ -480,7 +366,7 @@ const resetPassword = async (req, res) => {
     }
 };
 
-
+// GOOGLE AUTH SUCCESS
 const googleAuthSuccess = async (req, res) => {
     try {
         if (!req.user) {
@@ -489,7 +375,7 @@ const googleAuthSuccess = async (req, res) => {
 
         const token = createToken(req.user._id);
 
-
+        // Redirect to frontend with token
         res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}`);
 
     } catch (error) {
@@ -498,7 +384,7 @@ const googleAuthSuccess = async (req, res) => {
     }
 };
 
-
+// GET USER PROFILE
 const getUserProfile = async (req, res) => {
     try {
         const user = await userModel.findById(req.body.userID).select('-password -emailVerificationToken -passwordResetToken');
@@ -599,6 +485,66 @@ const adminLogin = async (req, res) => {
     }
 };
 
+// CHANGE/SET PASSWORD (profile page)
+const updatePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const userId = req.body.userID;
+
+        if (!newPassword || newPassword.length < 8) {
+            return res.status(400).json({
+                success: false,
+                message: "New password must be at least 8 characters long"
+            });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        // If user has a password (normal/email signup), verify current password
+        if (user.password) {
+            if (!currentPassword) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Current password is required"
+                });
+            }
+            const isMatch = await bcrypt.compare(currentPassword, user.password);
+            if (!isMatch) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Current password is incorrect"
+                });
+            }
+        } else {
+            // If user is Google-only account without password, allow setting a fresh password
+            // no currentPassword required
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        user.password = hashedPassword;
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: user.googleId && !user.password ? "Password set successfully" : "Password updated successfully"
+        });
+    } catch (error) {
+        console.error('Update password error:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+
 export {
     loginUser,
     registerUser,
@@ -609,6 +555,7 @@ export {
     resetPassword,
     googleAuthSuccess,
     getUserProfile,
-    updateUserProfile
+    updateUserProfile,
+    updatePassword
 };
 

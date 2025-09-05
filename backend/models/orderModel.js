@@ -8,7 +8,7 @@ const orderSchema = new mongoose.Schema({
     items: {
         type: Array,
         required: true
-    },
+    }, // [{ productId, name?, color, quantity, price? }]
     amount: {
         type: Number,
         required: true
@@ -20,12 +20,23 @@ const orderSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        default: 'Order Placed'
+        default: 'Order Placed',
+        enum: ['Order Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
     },
     payment: {
         type: Boolean,
         required: true,
         default: false
+    },
+    paymentMethod: {
+        type: String,
+        required: true,
+        enum: ['PHONEPE'],
+        default: 'PHONEPE'
+    },
+    phonePeTxnId: {
+        type: String,
+        default: null
     },
     date: {
         type: Date,

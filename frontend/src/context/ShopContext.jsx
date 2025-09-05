@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -14,10 +14,38 @@ const ShopContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState('');
     const [user, setUser] = useState(null);
+    const [products, setProducts] = useState([]);
     const navigate = useNavigate();
 
-    // Initialize auth state
+    // Fetch products from backend
+    const fetchProducts = async () => {
+        try {
+            const res = await axios.get(`${backendURL}/api/product/list`);
+            if (res.data.success) {
+                // Normalize for frontend
+                const normalized = (res.data.products || []).map(p => ({
+                    id: p._id,
+                    productID: p.productID,
+                    name: p.name,
+                    description: p.description,
+                    price: p.price,
+                    imagesByColor: p.imagesByColor || {},
+                    availableColors: p.availableColors || ['White', 'Black', 'Gray', 'Red', 'Orange'],
+                    category: p.category,
+                    date: p.date,
+                    bestseller: !!p.bestseller
+                }));
+                setProducts(normalized);
+            }
+        } catch (err) {
+            console.error('Fetch products error:', err);
+            toast.error('Failed to load products');
+        }
+    };
+
+    // Initialize auth state and load products
     useEffect(() => {
+        fetchProducts();
         const savedToken = localStorage.getItem('token');
         if (savedToken) {
             setToken(savedToken);
@@ -29,11 +57,9 @@ const ShopContextProvider = (props) => {
     const getUserProfile = async (authToken = token) => {
         try {
             if (!authToken) return;
-
             const response = await axios.get(`${backendURL}/api/user/profile`, {
                 headers: { token: authToken }
             });
-
             if (response.data.success) {
                 setUser(response.data.user);
                 // Load cart data
@@ -51,18 +77,19 @@ const ShopContextProvider = (props) => {
     const getUserCart = async (authToken = token) => {
         try {
             if (!authToken) return;
-
             const response = await axios.get(`${backendURL}/api/cart/get`, {
                 headers: { token: authToken }
             });
-
             if (response.data.success) {
-                setCartItems(response.data.cartData);
+                setCartItems(response.data.cartData || {});
             }
         } catch (error) {
             console.error('Get cart error:', error);
         }
     };
+
+    // Helpers
+    const findProductById = (id) => products.find(p => p.id === id);
 
     // Add to cart
     const addToCart = async (itemId, color, quantity = 1) => {
@@ -71,7 +98,6 @@ const ShopContextProvider = (props) => {
             navigate('/login');
             return;
         }
-
         try {
             const response = await axios.post(`${backendURL}/api/cart/add`, {
                 itemId,
@@ -80,7 +106,6 @@ const ShopContextProvider = (props) => {
             }, {
                 headers: { token }
             });
-
             if (response.data.success) {
                 // Update local cart
                 let cartData = structuredClone(cartItems);
@@ -95,11 +120,9 @@ const ShopContextProvider = (props) => {
                     cartData[itemId][color] = quantity;
                 }
                 setCartItems(cartData);
-
                 // Find product name for toast
-                const product = products.find(p => p.id === itemId);
+                const product = findProductById(itemId);
                 const productName = product ? product.name : 'Item';
-
                 toast.success(`${productName} (${color}) added to cart!`);
             } else {
                 toast.error(response.data.message);
@@ -116,7 +139,6 @@ const ShopContextProvider = (props) => {
             toast.error('Please login to update cart');
             return;
         }
-
         try {
             const response = await axios.put(`${backendURL}/api/cart/update`, {
                 itemId,
@@ -125,11 +147,9 @@ const ShopContextProvider = (props) => {
             }, {
                 headers: { token }
             });
-
             if (response.data.success) {
                 // Update local cart
                 let cartData = structuredClone(cartItems);
-
                 if (quantity <= 0) {
                     if (cartData[itemId]) {
                         delete cartData[itemId][color];
@@ -143,13 +163,10 @@ const ShopContextProvider = (props) => {
                     }
                     cartData[itemId][color] = quantity;
                 }
-
                 setCartItems(cartData);
-
-                // Find product name for toast
-                const product = products.find(p => p.id === itemId);
+                // Toast
+                const product = findProductById(itemId);
                 const productName = product ? product.name : 'Item';
-
                 if (quantity <= 0) {
                     toast.error(`${productName} (${color}) removed from cart!`);
                 } else {
@@ -184,10 +201,10 @@ const ShopContextProvider = (props) => {
     const getCartAmount = () => {
         let totalAmount = 0;
         for (const items in cartItems) {
-            let itemInfo = products.find((product) => product.id === items);
+            const itemInfo = findProductById(items);
             if (itemInfo) {
-                for (const item in cartItems[items]) {
-                    totalAmount += itemInfo.price * cartItems[items][item];
+                for (const color in cartItems[items]) {
+                    totalAmount += itemInfo.price * cartItems[items][color];
                 }
             }
         }
@@ -200,6 +217,7 @@ const ShopContextProvider = (props) => {
         localStorage.setItem('token', authToken);
         if (userData) {
             setUser(userData);
+            getUserCart(authToken);
         } else {
             getUserProfile(authToken);
         }
@@ -215,7 +233,7 @@ const ShopContextProvider = (props) => {
         navigate('/');
     };
 
-    const value = {
+    const value = useMemo(() => ({
         products,
         currency,
         delivery_fee,
@@ -234,8 +252,8 @@ const ShopContextProvider = (props) => {
         login,
         logout,
         getUserProfile,
-        getUserCart
-    };
+        getUserCart,
+    }), [products, currency, delivery_fee, backendURL, search, cartItems, token, user]);
 
     return (
         <ShopContext.Provider value={value}>

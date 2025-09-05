@@ -1,62 +1,50 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
+import Product from "../models/productModel.js";
 
-// PLACE ORDER FOR COD
-const placeOrder = async (req, res) => {
-    try {
-        const { userID, items, amount, address } = req.body;
-
-        if (!items || !amount || !address) {
-            return res.status(400).json({
-                success: false,
-                message: "Items, amount, and address are required"
-            });
-        }
-
-        const orderData = {
-            userID,
-            items,
-            amount,
-            address,
-            status: "Order Placed",
-            payment: false,
-            date: Date.now()
-        };
-
-        const newOrder = new orderModel(orderData);
-        await newOrder.save();
-
-        // Clear user cart
-        await userModel.findByIdAndUpdate(userID, { cartData: {} });
-
-        res.status(201).json({
-            success: true,
-            message: "Order placed successfully",
-            orderId: newOrder._id
-        });
-
-    } catch (error) {
-        console.error('Place order error:', error);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-};
-
-// PLACE ORDER FOR PHONEPE
+// PLACE ORDER - PHONEPE ONLY
 const placeOrderPhonepe = async (req, res) => {
     try {
-        const { userID, items, amount, address } = req.body;
+        const { userID, items, address, phonePeTxnId } = req.body;
 
-        // For now, just place the order as paid
+        if (!items || !Array.isArray(items) || items.length === 0) {
+            return res.status(400).json({ success: false, message: "Items are required" });
+        }
+        if (!address) {
+            return res.status(400).json({ success: false, message: "Address is required" });
+        }
+
+        // Calculate subtotal from DB to avoid client-side tampering
+        let subtotal = 0;
+        for (const item of items) {
+            if (!item.productId || !item.quantity || !item.color) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Each item must include productId, color, and quantity"
+                });
+            }
+            const product = await Product.findById(item.productId);
+            if (!product) {
+                return res.status(404).json({
+                    success: false,
+                    message: `Product not found: ${item.productId}`
+                });
+            }
+            subtotal += product.price * Number(item.quantity);
+        }
+
+        const deliveryFee = 60;
+        const totalAmount = subtotal + deliveryFee;
+
         const orderData = {
             userID,
             items,
-            amount,
+            amount: totalAmount,
             address,
             status: "Order Placed",
-            payment: true, // PhonePe payment assumed successful
+            payment: true,
+            paymentMethod: "PHONEPE",
+            phonePeTxnId: phonePeTxnId || null,
             date: Date.now()
         };
 
@@ -69,15 +57,12 @@ const placeOrderPhonepe = async (req, res) => {
         res.status(201).json({
             success: true,
             message: "Order placed and payment successful",
-            orderId: newOrder._id
+            orderId: newOrder._id,
+            amount: totalAmount
         });
-
     } catch (error) {
         console.error('PhonePe order error:', error);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -85,18 +70,10 @@ const placeOrderPhonepe = async (req, res) => {
 const allOrders = async (req, res) => {
     try {
         const orders = await orderModel.find({}).sort({ date: -1 });
-
-        res.status(200).json({
-            success: true,
-            orders
-        });
-
+        res.status(200).json({ success: true, orders });
     } catch (error) {
         console.error('Get all orders error:', error);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -104,20 +81,11 @@ const allOrders = async (req, res) => {
 const userOrders = async (req, res) => {
     try {
         const { userID } = req.body;
-
         const orders = await orderModel.find({ userID }).sort({ date: -1 });
-
-        res.status(200).json({
-            success: true,
-            orders
-        });
-
+        res.status(200).json({ success: true, orders });
     } catch (error) {
         console.error('Get user orders error:', error);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -125,36 +93,22 @@ const userOrders = async (req, res) => {
 const updateStatus = async (req, res) => {
     try {
         const { orderId, status } = req.body;
-
         if (!orderId || !status) {
-            return res.status(400).json({
-                success: false,
-                message: "Order ID and status are required"
-            });
+            return res.status(400).json({ success: false, message: "Order ID and status are required" });
         }
-
         const order = await orderModel.findByIdAndUpdate(orderId, { status }, { new: true });
-
         if (!order) {
-            return res.status(404).json({
-                success: false,
-                message: "Order not found"
-            });
+            return res.status(404).json({ success: false, message: "Order not found" });
         }
-
         res.status(200).json({
             success: true,
             message: "Order status updated successfully",
             order
         });
-
     } catch (error) {
         console.error('Update status error:', error);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
-export { placeOrder, placeOrderPhonepe, allOrders, userOrders, updateStatus };
+export { placeOrderPhonepe, allOrders, userOrders, updateStatus };

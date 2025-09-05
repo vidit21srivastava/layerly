@@ -10,7 +10,6 @@
 
 // export default userRouter;
 
-
 import express from 'express';
 import {
     loginUser,
@@ -22,8 +21,10 @@ import {
     resetPassword,
     googleAuthSuccess,
     getUserProfile,
-    updateUserProfile
+    updateUserProfile,
+    updatePassword
 } from '../controllers/userController.js';
+
 import passport from '../config/passport.js';
 import userAuth from '../middleware/userAuth.js';
 
@@ -59,5 +60,6 @@ userRouter.get('/auth/google/callback',
 // Protected routes
 userRouter.get('/profile', userAuth, getUserProfile);
 userRouter.put('/profile', userAuth, updateUserProfile);
+userRouter.put('/password', userAuth, updatePassword);
 
 export default userRouter;
