@@ -28,6 +28,11 @@ const Catalogue = () => {
         if (category.length > 0) {
             productsCopy = productsCopy.filter(item => category.includes(item.category));
         }
+        if (sortType === 'low-high') {
+            productsCopy.sort((a, b) => a.price - b.price);
+        } else if (sortType === 'high-low') {
+            productsCopy.sort((a, b) => b.price - a.price);
+        }
         setFilterProducts(productsCopy);
     }
 
@@ -54,11 +59,11 @@ const Catalogue = () => {
 
     useEffect(() => {
         applyFilter();
-    }, [category, search])
+    }, [products, category, search, sortType]);
 
-    useEffect(() => {
-        sortProduct();
-    }, [sortType])
+    // useEffect(() => {
+    //     sortProduct();
+    // }, [sortType])
 
 
 

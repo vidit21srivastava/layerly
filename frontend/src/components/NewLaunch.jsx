@@ -9,9 +9,9 @@ const NewLaunch = () => {
 
     useEffect(() => {
         if (products) {
-            const sortedProducts = products
+            const sortedProducts = [...products]
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 6)
+                .slice(0, 6);
             setLatestProducts(sortedProducts)
         }
     }, [products])

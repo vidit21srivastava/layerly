@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
@@ -8,6 +9,17 @@ const Orders = () => {
     const [orders, setOrders] = useState([])
     const [loading, setLoading] = useState(true)
     const [selectedOrder, setSelectedOrder] = useState(null)
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        const payment = searchParams.get('payment');
+        if (payment === 'success') {
+            toast.success('Payment successful! Your order has been placed.');
+        } else if (payment === 'failed') {
+            toast.error('Payment failed or cancelled.');
+        }
+    }, [searchParams]);
+
 
     useEffect(() => {
         if (!token) {

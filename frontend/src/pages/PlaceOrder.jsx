@@ -86,10 +86,12 @@ const PlaceOrder = () => {
         return orderItems;
     };
 
+
     const handlePlaceOrder = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
         setLoading(true);
+
         try {
             const orderData = {
                 items: getOrderItems(),
@@ -102,29 +104,29 @@ const PlaceOrder = () => {
                     state: formData.state,
                     pinCode: formData.pinCode,
                     phone: formData.phone
-                },
-
-                phonePeTxnId: null
+                }
             };
 
-            const response = await axios.post(`${backendURL}/api/order/phonepe`, orderData, {
+
+            const response = await axios.post(`${backendURL}/api/payment/phonepe/initiate`, orderData, {
                 headers: { token }
             });
 
-            if (response.data.success) {
-                toast.success('Order placed successfully!');
-                navigate('/orders');
+            if (response.data.success && response.data.redirectUrl) {
+
+                window.location.href = response.data.redirectUrl;
             } else {
-                toast.error(response.data.message || 'Failed to place order');
+                toast.error(response.data.message || 'Failed to initiate payment');
             }
         } catch (error) {
-            console.error('Place order error:', error);
-            const errorMessage = error.response?.data?.message || 'Failed to place order';
+            console.error('Initiate payment error:', error);
+            const errorMessage = error.response?.data?.message || 'Failed to initiate payment';
             toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
     };
+
 
     if (!token || cartTotal === 0) {
         return (
