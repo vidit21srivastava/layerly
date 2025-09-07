@@ -12,7 +12,7 @@ const StatusBadge = ({ status }) => {
     return <span className={`px-2 py-1 text-xs rounded-full font-semibold ${cls}`}>{status}</span>;
 };
 
-const Quotes = () => {
+const Quotes = ({ setToken }) => {
     const [quotes, setQuotes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expanded, setExpanded] = useState(null);
@@ -31,6 +31,10 @@ const Quotes = () => {
             }
         } catch (err) {
             console.error('Fetch quotes error:', err);
+            if (err.response?.status === 401) {
+                localStorage.removeItem('token');
+                setToken('');
+            }
             toast.error('Failed to fetch quotes');
         } finally {
             setLoading(false);
@@ -88,6 +92,10 @@ const Quotes = () => {
             }
         } catch (err) {
             console.error('Close quote error:', err);
+            if (err.response?.status === 401) {
+                localStorage.removeItem('token');
+                setToken('');
+            }
             toast.error('Failed to close quote');
         }
     };

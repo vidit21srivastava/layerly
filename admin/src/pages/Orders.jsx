@@ -3,7 +3,7 @@ import axios from 'axios';
 import { backendURL } from '../App';
 import { toast } from 'react-toastify';
 
-const Orders = () => {
+const Orders = ({ setToken }) => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(null);
@@ -23,6 +23,10 @@ const Orders = () => {
             }
         } catch (err) {
             console.error('Admin fetch orders error:', err);
+            if (err.response?.status === 401) {
+                localStorage.removeItem('token');
+                setToken('');
+            }
             toast.error('Failed to fetch orders');
         } finally {
             setLoading(false);
@@ -48,6 +52,10 @@ const Orders = () => {
             }
         } catch (err) {
             console.error('Status update error:', err);
+            if (err.response?.status === 401) {
+                localStorage.removeItem('token');
+                setToken('');
+            }
             toast.error('Failed to update status');
         } finally {
             setUpdating(null);
