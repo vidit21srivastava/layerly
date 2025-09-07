@@ -1,3 +1,4 @@
+// admin/src/pages/Quotes.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { backendURL } from '../App';
@@ -10,6 +11,20 @@ const StatusBadge = ({ status }) => {
         CLOSED: 'bg-gray-100 text-gray-800',
     }[status] || 'bg-gray-100 text-gray-800';
     return <span className={`px-2 py-1 text-xs rounded-full font-semibold ${cls}`}>{status}</span>;
+};
+
+const normalizeForViewer = (url) => {
+    if (!url) return '';
+    try {
+        const u = new URL(url);
+        if (u.pathname.endsWith('/view')) {
+            u.pathname = u.pathname.replace(/\/view$/i, '');
+        }
+        u.search = '';
+        return u.toString();
+    } catch {
+        return url.replace(/\/view(\?.*)?$/i, '');
+    }
 };
 
 const Quotes = ({ setToken }) => {
@@ -45,9 +60,7 @@ const Quotes = ({ setToken }) => {
         fetchQuotes();
     }, []);
 
-    const toggleExpand = (id) => {
-        setExpanded(expanded === id ? null : id);
-    };
+    const toggleExpand = (id) => setExpanded(expanded === id ? null : id);
 
     const handleReplyChange = (id, key, value) => {
         setReplyState(prev => ({ ...prev, [id]: { ...(prev[id] || {}), [key]: value } }));
@@ -102,9 +115,7 @@ const Quotes = ({ setToken }) => {
 
     const fmtDate = (d) => new Date(d).toLocaleString('en-IN');
 
-    if (loading) {
-        return <div className='p-4 text-gray-600'>Loading quotes...</div>;
-    }
+    if (loading) return <div className='p-4 text-gray-600'>Loading quotes...</div>;
 
     return (
         <div className='p-4'>
@@ -162,17 +173,29 @@ const Quotes = ({ setToken }) => {
                                                         <p className='text-sm text-gray-700'>Raft: {q.raft ? 'Yes' : 'No'}</p>
                                                     </div>
 
-                                                    <div className='bg-white p-3 rounded border'>
-                                                        <h4 className='font-semibold text-sm mb-2'>File</h4>
+                                                    <div className='bg-white p-3 rounded border break-all'>
+                                                        <h4 className='font-semibold text-sm mb-2'>STL File</h4>
                                                         <a
                                                             href={q.fileUrl}
                                                             target='_blank'
                                                             rel='noopener noreferrer'
                                                             className='text-blue-600 hover:underline text-sm'
                                                         >
-                                                            Download STL
+                                                            Open Original (Google Drive)
                                                         </a>
-                                                        <p className='text-xs text-gray-500 mt-2 break-all'>{q.fileUrl}</p>
+                                                        <p className='text-xs text-gray-500 mt-2'>{q.fileUrl}</p>
+
+                                                        <h5 className='font-semibold text-sm mt-4 mb-1'>Viewer URL (trimmed)</h5>
+                                                        <a
+                                                            href={normalizeForViewer(q.fileUrl)}
+                                                            target='_blank'
+                                                            rel='noopener noreferrer'
+                                                            className='text-blue-600 hover:underline text-sm'
+                                                        >
+                                                            Open Viewer URL
+                                                        </a>
+                                                        <p className='text-xs text-gray-500 mt-1'>{normalizeForViewer(q.fileUrl)}</p>
+
                                                         {q.instructions && (
                                                             <>
                                                                 <h4 className='font-semibold text-sm mt-4 mb-2'>Instructions</h4>
@@ -217,7 +240,7 @@ const Quotes = ({ setToken }) => {
                                                         </div>
                                                         {q.adminRemark && (
                                                             <p className='text-xs text-gray-500 mt-2'>
-                                                                Last remark: {q.adminRemark} {q.price ? `| ₹ ${q.price}` : ''}
+                                                                Last remark: {q.adminRemark}{q.price ? ` | ₹${q.price}` : ''}
                                                             </p>
                                                         )}
                                                     </div>

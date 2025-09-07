@@ -1,9 +1,10 @@
-import { v2 as cloudinary } from 'cloudinary';
+// backend/controllers/customController.js
 import CustomQuote from '../models/customQuoteModel.js';
 import userModel from '../models/userModel.js';
 import { sendCustomQuoteReplyEmail } from '../config/email.js';
+import axios from 'axios';
 
-// Create a new custom quote with STL upload to Cloudinary
+// Create a new custom quote using a Google Drive public link
 const createCustomQuote = async (req, res) => {
     try {
         const {
@@ -18,25 +19,17 @@ const createCustomQuote = async (req, res) => {
             brim,
             raft,
             color,
-            instructions
+            instructions,
+            fileUrl, // Google Drive public link
         } = req.body || {};
 
+        // Validate required fields
         if (!name || !email || !material || !layerHeight || infill === undefined || !infillPattern || !color) {
             return res.status(400).json({ success: false, message: 'Missing required fields' });
         }
-
-        if (!req.file) {
-            return res.status(400).json({ success: false, message: 'STL file is required' });
+        if (!fileUrl || typeof fileUrl !== 'string') {
+            return res.status(400).json({ success: false, message: 'Google Drive public link (fileUrl) is required' });
         }
-
-        // Upload STL to Cloudinary as raw resource
-        const uploadRes = await cloudinary.uploader.upload(req.file.path, {
-            folder: 'custom-models',
-            resource_type: 'raw',
-            use_filename: true,
-            unique_filename: true,
-            allowed_formats: ['stl']
-        });
 
         const doc = await CustomQuote.create({
             userID: req.body.userID || null, // filled by userAuth if token is present
@@ -52,8 +45,7 @@ const createCustomQuote = async (req, res) => {
             raft: raft === 'true' || raft === true,
             color,
             instructions: instructions || '',
-            fileUrl: uploadRes.secure_url,
-            filePublicId: uploadRes.public_id,
+            fileUrl, // store the original link as given
             status: 'PENDING'
         });
 
@@ -97,7 +89,7 @@ const replyToCustomQuote = async (req, res) => {
         quote.status = 'REPLIED';
         await quote.save();
 
-
+        // Optional: try to pick nicer name from user record
         let name = quote.name;
         if (quote.userID) {
             try {
@@ -105,7 +97,6 @@ const replyToCustomQuote = async (req, res) => {
                 if (user?.name) name = user.name;
             } catch { }
         }
-
 
         await sendCustomQuoteReplyEmail({
             to: quote.email,
@@ -121,7 +112,6 @@ const replyToCustomQuote = async (req, res) => {
         return res.status(500).json({ success: false, message: err.message });
     }
 };
-
 
 const closeCustomQuote = async (req, res) => {
     try {
@@ -141,4 +131,74 @@ const closeCustomQuote = async (req, res) => {
     }
 };
 
-export { closeCustomQuote, replyToCustomQuote, listCustomQuotes, createCustomQuote };
+
+
+
+function normalizeDriveUrl(src) {
+    try {
+        const u = new URL(src);
+
+        if (u.hostname === 'drive.google.com') {
+            const match = u.pathname.match(/\/file\/d\/([^/]+)/i);
+            if (match && match[1]) {
+                return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+            }
+
+            if (u.pathname.startsWith('/uc')) return u.toString();
+        }
+        return src;
+    } catch {
+        return src;
+    }
+}
+
+
+const ALLOWED_HOSTS = new Set([
+    'drive.google.com',
+    'googleusercontent.com',
+    'lh3.googleusercontent.com',
+]);
+
+const proxyStl = async (req, res) => {
+    try {
+        const { url } = req.query;
+        if (!url) return res.status(400).json({ success: false, message: 'Missing url' });
+
+        const direct = normalizeDriveUrl(url);
+        let parsed;
+        try {
+            parsed = new URL(direct);
+        } catch {
+            return res.status(400).json({ success: false, message: 'Invalid url' });
+        }
+        if (!['http:', 'https:'].includes(parsed.protocol)) {
+            return res.status(400).json({ success: false, message: 'Invalid protocol' });
+        }
+        // Only allow specific hosts
+        const hostOk = [...ALLOWED_HOSTS].some(h => parsed.hostname === h || parsed.hostname.endsWith(`.${h}`));
+        if (!hostOk) {
+            return res.status(403).json({ success: false, message: 'Host not allowed' });
+        }
+
+        const upstream = await axios.get(parsed.toString(), {
+            responseType: 'stream',
+            // A UA helps avoid some drive blockers
+            headers: { 'User-Agent': 'Layerly-STL-Proxy' },
+            // Optional: follow redirects automatically
+            maxRedirects: 5,
+        });
+
+        res.set('Content-Type', upstream.headers['content-type'] || 'model/stl');
+        res.set('Cache-Control', 'public, max-age=3600');
+        upstream.data.pipe(res);
+    } catch (err) {
+        console.error('proxyStl error:', err.message);
+        res.status(502).json({ success: false, message: 'Failed to fetch STL' });
+    }
+};
+
+
+
+
+export { closeCustomQuote, replyToCustomQuote, listCustomQuotes, createCustomQuote, proxyStl };
+

@@ -1,15 +1,16 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+// frontend/src/pages/Custom.jsx
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { StlViewer } from 'react-stl-viewer';
 import { ShopContext } from '../context/ShopContext';
+import StlCanvas from '../components/StlCanvas';
 
 const Custom = () => {
     const { backendURL, user, token } = useContext(ShopContext);
 
-    const [file, setFile] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState('');
-    const fileInputRef = useRef(null);
+    // Google Drive link provided by user
+    const [driveLink, setDriveLink] = useState('');
+    const [viewerUrl, setViewerUrl] = useState('');
 
     // requester
     const [name, setName] = useState('');
@@ -26,7 +27,6 @@ const Custom = () => {
     const [raft, setRaft] = useState(false);
     const [selectedColor, setSelectedColor] = useState('red');
     const [instructions, setInstructions] = useState('');
-
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
@@ -37,32 +37,32 @@ const Custom = () => {
         }
     }, [user]);
 
-    useEffect(() => {
-        return () => {
-            if (previewUrl) URL.revokeObjectURL(previewUrl);
-        };
-    }, [previewUrl]);
-
-    const handleFileChange = (e) => {
-        const f = e.target.files?.[0];
-        if (!f) {
-            setFile(null);
-            setPreviewUrl('');
-            return;
+    // Normalize Google Drive link for react-stl-viewer
+    // Instruction: remove '/view' from the end for the viewer
+    const normalizeForViewer = (url) => {
+        if (!url) return '';
+        try {
+            const u = new URL(url);
+            if (u.pathname.endsWith('/view')) u.pathname = u.pathname.replace(/\/view$/i, '');
+            u.search = ''; // trim query for viewer
+            return u.toString();
+        } catch {
+            return url.replace(/\/view(\?.*)?$/i, '');
         }
-        if (!f.name.toLowerCase().endsWith('.stl')) {
-            toast.error('Please upload an .stl file');
-            return;
-        }
-        setFile(f);
-        const url = URL.createObjectURL(f);
-        setPreviewUrl(url);
     };
+
+    const viewerProxyUrl = driveLink
+        ? `${backendURL}/api/custom/proxy-stl?url=${encodeURIComponent(normalizeForViewer(driveLink))}`
+        : '';
+
+    useEffect(() => {
+        setViewerUrl(normalizeForViewer(driveLink));
+    }, [driveLink]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!file) {
-            toast.error('Please upload an STL file');
+        if (!driveLink) {
+            toast.error('Please enter a public Google Drive link to your STL file');
             return;
         }
         if (!name || !email) {
@@ -71,26 +71,19 @@ const Custom = () => {
         }
         setSubmitting(true);
         try {
-            const fd = new FormData();
-            fd.append('model', file);
-            fd.append('name', name);
-            fd.append('email', email);
-            if (phone) fd.append('phone', phone);
-            fd.append('material', material);
-            fd.append('layerHeight', layerHeight);
-            fd.append('infill', String(infill));
-            fd.append('infillPattern', infillPattern);
-            fd.append('supports', String(supports));
-            fd.append('brim', String(brim));
-            fd.append('raft', String(raft));
-            fd.append('color', selectedColor);
-            fd.append('instructions', instructions || '');
-
+            const payload = {
+                name, email, phone,
+                material, layerHeight, infill: String(infill), infillPattern,
+                supports: String(supports), brim: String(brim), raft: String(raft),
+                color: selectedColor,
+                instructions: instructions || '',
+                fileUrl: driveLink // original link
+            };
             const headers = token ? { token } : {};
-            const res = await axios.post(`${backendURL}/api/custom/quote`, fd, { headers });
+            const res = await axios.post(`${backendURL}/api/custom/quote`, payload, { headers });
             if (res.data.success) {
                 toast.success('Quote submitted! We will email you with remarks soon.');
-                // reset minimal
+                // keep the link visible so user can continue viewing
                 setInstructions('');
             } else {
                 toast.error(res.data.message || 'Failed to submit quote');
@@ -103,10 +96,10 @@ const Custom = () => {
         }
     };
 
-    const viewerStyle = useMemo(
-        () => ({ width: '100%', height: '360px', backgroundColor: '#f8fafc', borderRadius: '8px' }),
-        []
-    );
+    // const viewerStyle = useMemo(
+    //     () => ({ width: '100%', height: '360px', backgroundColor: '#f8fafc', borderRadius: '8px' }),
+    //     []
+    // );
 
     const getColorStyle = (color) => {
         const map = { red: '#ef4444', orange: '#f97316', gray: '#6b7280', white: '#ffffff', black: '#000000' };
@@ -123,31 +116,27 @@ const Custom = () => {
                     <div className='flex justify-center mb-8'>
                         <hr className='w-16 border-none h-[2px] bg-gray-500' />
                     </div>
-
                     <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
                         {/* Form */}
                         <div className='lg:col-span-2'>
                             <form onSubmit={handleSubmit} className='space-y-8'>
-                                {/* Upload */}
+                                {/* Drive Link */}
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>
-                                        Upload 3D Model
+                                        3D Model Link (Google Drive Public)
                                     </h2>
                                     <input
-                                        type='file'
-                                        ref={fileInputRef}
-                                        accept='.stl'
-                                        onChange={handleFileChange}
-                                        className='hidden'
+                                        type='url'
+                                        value={driveLink}
+                                        onChange={(e) => setDriveLink(e.target.value)}
+                                        placeholder='Paste your Google Drive public link here'
+                                        className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                        required
                                     />
-                                    <div
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className='border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-orange-400 transition-colors duration-200'
-                                    >
-                                        <p className='text-gray-600 font-medium'>Choose STL File</p>
-                                        <p className='text-sm text-gray-500'>Drag and drop or click to browse</p>
-                                    </div>
-                                    <p className='text-sm text-gray-600 mt-2'>{file ? file.name : 'No file selected'}</p>
+                                    <p className='text-xs text-gray-600 mt-2'>
+                                        Make sure the file is publicly accessible. We’ll use the original link when sending your request.
+                                        The viewer below will auto-trim a trailing “/view” to render the model.
+                                    </p>
                                 </div>
 
                                 {/* Requester info */}
@@ -214,7 +203,6 @@ const Custom = () => {
                                                 <option value='0.28'>0.28mm (Low Quality)</option>
                                             </select>
                                         </div>
-
                                         <div className='sm:col-span-2'>
                                             <label className='block text-sm font-medium text-gray-700 mb-2'>Infill Density</label>
                                             <div className='flex items-center gap-4'>
@@ -229,7 +217,6 @@ const Custom = () => {
                                                 <span className='text-sm font-medium text-gray-700 min-w-[3rem]'>{infill}%</span>
                                             </div>
                                         </div>
-
                                         <div className='sm:col-span-2'>
                                             <label className='block text-sm font-medium text-gray-700 mb-2'>Infill Pattern</label>
                                             <select
@@ -275,7 +262,8 @@ const Custom = () => {
                                                 type='button'
                                                 key={c}
                                                 onClick={() => setSelectedColor(c)}
-                                                className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColor === c ? 'border-gray-800 scale-110' : 'border-gray-300 hover:border-gray-500'}`}
+                                                className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColor === c ? 'border-gray-800 scale-110' : 'border-gray-300 hover:border-gray-500'
+                                                    }`}
                                                 style={{ backgroundColor: getColorStyle(c) }}
                                                 title={c}
                                             />
@@ -298,7 +286,8 @@ const Custom = () => {
                                 <button
                                     type='submit'
                                     disabled={submitting}
-                                    className={`w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-400 transition-colors duration-200 ${submitting ? 'opacity-80 cursor-not-allowed' : ''}`}
+                                    className={`w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-400 transition-colors duration-200 ${submitting ? 'opacity-80 cursor-not-allowed' : ''
+                                        }`}
                                 >
                                     {submitting ? 'Submitting...' : 'Get Quote & Proceed'}
                                 </button>
@@ -310,27 +299,25 @@ const Custom = () => {
                             <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm sticky top-4'>
                                 <h3 className='text-lg font-semibold text-gray-900 mb-4'>3D Model Preview</h3>
                                 <div className='aspect-square bg-gray-50 rounded-lg border border-gray-200 overflow-hidden'>
-                                    {previewUrl ? (
-                                        <StlViewer
-                                            url={previewUrl}
-                                            style={viewerStyle}
-                                            shadows
-                                            showAxes
-                                            ground
-                                            modelProps={{ color: getColorStyle(selectedColor) }}
+                                    {viewerProxyUrl ? (
+                                        <StlCanvas
+                                            url={viewerProxyUrl}
+                                            color={getColorStyle(selectedColor)}
+                                            background="#f8fafc"
+                                            height={360}
                                         />
                                     ) : (
                                         <div className='w-full h-[360px] flex items-center justify-center text-gray-500'>
                                             <div className='text-center'>
-                                                <div className='text-3xl mb-2'>⬆️</div>
-                                                <p className='text-sm'>Upload STL file to preview</p>
+                                                <p className='text-sm'>Paste a public Google Drive link to preview</p>
                                             </div>
                                         </div>
                                     )}
                                 </div>
+
                                 <div className='mt-4 text-sm text-gray-600'>
-                                    <p className='mb-2'><strong>Supported formats:</strong> STL</p>
-                                    <p><strong>Max file size:</strong> 100MB</p>
+                                    <p className='mb-2'><strong>Tip:</strong> Ensure “Anyone with the link” can view.</p>
+                                    <p><strong>Note:</strong> Viewer trims a trailing “/view” automatically.</p>
                                 </div>
                             </div>
                         </div>

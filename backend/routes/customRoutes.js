@@ -1,5 +1,6 @@
+// backend/routes/customRoutes.js
+import { proxyStl } from '../controllers/customController.js';
 import express from 'express';
-import upload from '../middleware/multer.js';
 import adminAuth from '../middleware/adminAuth.js';
 import userAuth from '../middleware/userAuth.js';
 import {
@@ -11,7 +12,7 @@ import {
 
 const customRouter = express.Router();
 
-
+// Create quote — if token exists, attach userID; otherwise allow anonymous
 customRouter.post(
     '/quote',
     (req, res, next) => {
@@ -19,7 +20,6 @@ customRouter.post(
         if (token) return userAuth(req, res, next);
         next();
     },
-    upload.single('model'),
     createCustomQuote
 );
 
@@ -31,5 +31,8 @@ customRouter.post('/quote/:id/reply', adminAuth, replyToCustomQuote);
 
 // Admin close
 customRouter.post('/quote/:id/close', adminAuth, closeCustomQuote);
+
+// Public STL proxy (no auth)
+customRouter.get('/proxy-stl', proxyStl);
 
 export default customRouter;

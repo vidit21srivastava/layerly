@@ -1,3 +1,4 @@
+// backend/models/customQuoteModel.js
 import mongoose from "mongoose";
 
 const customQuoteSchema = new mongoose.Schema(
@@ -25,18 +26,15 @@ const customQuoteSchema = new mongoose.Schema(
         brim: { type: Boolean, default: false },
         raft: { type: Boolean, default: false },
         color: { type: String, required: true, enum: ['red', 'orange', 'gray', 'white', 'black'] },
-
         instructions: { type: String, default: '' },
 
-        // cloudinary file
+        // Google Drive link to STL
         fileUrl: { type: String, required: true },
-        filePublicId: { type: String, required: true },
 
         // admin workflow
         status: { type: String, enum: ['PENDING', 'REPLIED', 'CLOSED'], default: 'PENDING' },
         adminRemark: { type: String, default: '' },
         price: { type: Number, default: null },
-
     },
     { timestamps: true }
 );
