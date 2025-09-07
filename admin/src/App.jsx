@@ -1,3 +1,4 @@
+// admin/src/App.jsx
 import React, { useEffect, useState } from 'react'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar.jsx'
@@ -5,14 +6,15 @@ import { Routes, Route } from 'react-router-dom'
 import Add from './pages/Add.jsx'
 import List from './pages/List.jsx'
 import Orders from './pages/Orders.jsx'
+import Quotes from './pages/Quotes.jsx'
 import Login from './components/Login.jsx'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 export const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : '');
+
   useEffect(() => {
     localStorage.setItem('token', token)
   }, [token])
@@ -29,7 +31,8 @@ const App = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="colored" />
+        theme="colored"
+      />
       {token === "" ? (
         <Login setToken={setToken} />
       ) : (
@@ -42,6 +45,7 @@ const App = () => {
                 <Route path='/add' element={<Add setToken={setToken} />} />
                 <Route path='/list' element={<List setToken={setToken} />} />
                 <Route path='/orders' element={<Orders setToken={setToken} />} />
+                <Route path='/quotes' element={<Quotes setToken={setToken} />} />
               </Routes>
             </div>
           </div>
@@ -50,5 +54,4 @@ const App = () => {
     </div>
   )
 }
-
 export default App

@@ -234,3 +234,54 @@ export const sendWelcomeEmail = async (email, name) => {
         throw new Error('Failed to send welcome email');
     }
 };
+
+export const sendCustomQuoteReplyEmail = async ({ to, name, remark, price, stlUrl }) => {
+    const transporter = createTransporter();
+
+    const safeRemark = remark ? remark : 'Please review our remarks above.';
+    const priceLine = (price !== null && price !== undefined && !isNaN(price))
+        ? `<p style="font-size: 16px; margin: 12px 0;"><strong>Estimated Price:</strong> ₹ ${Number(price).toLocaleString('en-IN')}</p>`
+        : '';
+
+    const mailOptions = {
+        from: {
+            name: 'Layerly',
+            address: process.env.EMAIL_USER
+        },
+        to,
+        subject: 'Your Custom 3D Print Quote - Layerly',
+        html: `
+      <div style="max-width:620px;margin:0 auto;font-family:Arial,sans-serif;color:#333;line-height:1.6">
+        <div style="background:#111;color:#fff;padding:18px 22px;border-radius:8px 8px 0 0">
+          <h2 style="margin:0;font-size:20px;">Custom Quote Details</h2>
+        </div>
+        <div style="background:#fff;border:1px solid #eee;padding:22px;border-radius:0 0 8px 8px">
+          <p style="font-size:16px;">Hi ${name || 'there'},</p>
+          <p style="font-size:16px;">Thanks for sharing your STL with us. Here are our remarks:</p>
+          <div style="background:#f8f9fa;border:1px solid #eee;padding:12px 14px;border-radius:6px;margin:10px 0">
+            <p style="margin:0;white-space:pre-wrap;">${safeRemark}</p>
+          </div>
+          ${priceLine}
+          <p style="font-size:16px;margin:12px 0">
+            STL File: <a href="${stlUrl}" target="_blank" rel="noopener">Download / View</a>
+          </p>
+          <p style="font-size:14px;color:#666;margin:16px 0">If you have any changes or need clarification, just reply to this email.</p>
+          <p style="font-size:14px;color:#666;margin:4px 0">Regards,<br/>Layerly Team</p>
+        </div>
+        <div style="text-align:center;color:#999;font-size:12px;margin-top:12px">
+          <p>© ${new Date().getFullYear()} Layerly. All rights reserved.</p>
+        </div>
+      </div>
+    `
+    };
+
+    try {
+        const result = await transporter.sendMail(mailOptions);
+        console.log('Custom quote reply email sent:', result.messageId);
+        return { success: true, messageId: result.messageId };
+    } catch (error) {
+        console.error('Error sending custom quote reply email:', error);
+        throw new Error('Failed to send custom quote reply email');
+    }
+};
+

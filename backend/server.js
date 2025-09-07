@@ -10,6 +10,7 @@ import cartRouter from './routes/cartRoutes.js';
 import orderRouter from './routes/orderRoutes.js';
 import passport from './config/passport.js';
 import paymentRouter from './routes/paymentRoutes.js';
+import customRouter from './routes/customRoutes.js';
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -48,6 +49,8 @@ app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/payment', paymentRouter);
+app.use('/api/custom', customRouter);
+
 
 // Checking
 app.get('/', (req, res) => {

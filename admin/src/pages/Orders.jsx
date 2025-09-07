@@ -133,7 +133,7 @@ const Orders = () => {
                                         {expanded === order._id && (
                                             <tr className='bg-gray-50'>
                                                 <td className='p-3' colSpan={8}>
-                                                    <div className='space-y-2'>
+                                                    <div className='space-y-3'>
                                                         {(order.items || []).map((item, idx) => (
                                                             <div key={idx} className='flex flex-wrap justify-between border border-gray-200 rounded p-2 bg-white'>
                                                                 <div className='text-sm'>
@@ -141,18 +141,47 @@ const Orders = () => {
                                                                     <div className='text-gray-600'>Color: {item.color} | Qty: {item.quantity}</div>
                                                                 </div>
                                                                 <div className='text-sm text-gray-800 font-semibold'>
-                                                                    ₹{(item.price || 0) * (item.quantity || 0)}
+                                                                    {(item.price || 0) * (item.quantity || 0)} ₹
                                                                 </div>
                                                             </div>
                                                         ))}
-                                                        <div className='text-right text-sm text-gray-700 mt-2'>
-                                                            Payment Method: <b>{order.paymentMethod || 'PHONEPE'}</b>
-                                                            {order.phonePeTxnId ? <> | Txn: <span className='font-mono'>{order.phonePeTxnId}</span></> : null}
+
+                                                        {/* New: order & payment & address details */}
+                                                        <div className='grid grid-cols-1 md:grid-cols-3 gap-3'>
+                                                            <div className='bg-white border border-gray-200 rounded p-3'>
+                                                                <h4 className='font-semibold text-sm mb-2'>Order</h4>
+                                                                <p className='text-sm text-gray-700'>Order No: #{order._id}</p>
+                                                                <p className='text-sm text-gray-700'>Placed: {formatDate(order.date)}</p>
+                                                                <p className='text-sm text-gray-700'>User ID: {order.userID}</p>
+                                                            </div>
+                                                            <div className='bg-white border border-gray-200 rounded p-3'>
+                                                                <h4 className='font-semibold text-sm mb-2'>Payment</h4>
+                                                                <p className='text-sm text-gray-700'>Method: {order.paymentMethod || 'PHONEPE'}</p>
+                                                                <p className='text-sm text-gray-700'>Txn ID: {order.phonePeTxnId || '-'}</p>
+                                                                <p className='text-sm text-gray-700'>Status: {order.payment ? 'Paid' : 'Unpaid'}</p>
+                                                            </div>
+                                                            <div className='bg-white border border-gray-200 rounded p-3'>
+                                                                <h4 className='font-semibold text-sm mb-2'>Customer</h4>
+                                                                <p className='text-sm text-gray-700'>
+                                                                    {(order.address?.firstName || '') + ' ' + (order.address?.lastName || '')}
+                                                                </p>
+                                                                {order.address?.email && <p className='text-sm text-gray-700'>{order.address.email}</p>}
+                                                                {order.address?.phone && <p className='text-sm text-gray-700'>+91 {order.address.phone}</p>}
+                                                            </div>
+                                                        </div>
+
+                                                        <div className='bg-white border border-gray-200 rounded p-3'>
+                                                            <h4 className='font-semibold text-sm mb-2'>Shipping Address</h4>
+                                                            <p className='text-sm text-gray-700'>{order.address?.street || ''}</p>
+                                                            <p className='text-sm text-gray-700'>
+                                                                {(order.address?.city || '')}{order.address?.city ? ', ' : ''}{order.address?.state || ''} {order.address?.pinCode || ''}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </td>
                                             </tr>
                                         )}
+
                                     </React.Fragment>
                                 );
                             })}

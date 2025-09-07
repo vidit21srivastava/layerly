@@ -1,44 +1,116 @@
-import React, { useState, useRef } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { StlViewer } from 'react-stl-viewer';
+import { ShopContext } from '../context/ShopContext';
 
 const Custom = () => {
-    const [fileName, setFileName] = useState('No file selected');
-    const [infill, setInfill] = useState(20);
-    const [selectedColor, setSelectedColor] = useState('red');
-    const [showContactModal, setShowContactModal] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const { backendURL, user, token } = useContext(ShopContext);
+
+    const [file, setFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState('');
     const fileInputRef = useRef(null);
 
+    // requester
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+
+    // print params (default values match UI)
+    const [material, setMaterial] = useState('PLA');
+    const [layerHeight, setLayerHeight] = useState('0.20');
+    const [infill, setInfill] = useState(20);
+    const [infillPattern, setInfillPattern] = useState('grid');
+    const [supports, setSupports] = useState(false);
+    const [brim, setBrim] = useState(false);
+    const [raft, setRaft] = useState(false);
+    const [selectedColor, setSelectedColor] = useState('red');
+    const [instructions, setInstructions] = useState('');
+
+    const [submitting, setSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (user) {
+            setName((prev) => prev || user.name || '');
+            setEmail((prev) => prev || user.email || '');
+            setPhone((prev) => prev || user.phone || '');
+        }
+    }, [user]);
+
+    useEffect(() => {
+        return () => {
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+        };
+    }, [previewUrl]);
+
     const handleFileChange = (e) => {
-        const files = e.target.files;
-        if (files.length > 0) {
-            setFileName(files[0].name);
-        } else {
-            setFileName('No file selected');
+        const f = e.target.files?.[0];
+        if (!f) {
+            setFile(null);
+            setPreviewUrl('');
+            return;
+        }
+        if (!f.name.toLowerCase().endsWith('.stl')) {
+            toast.error('Please upload an .stl file');
+            return;
+        }
+        setFile(f);
+        const url = URL.createObjectURL(f);
+        setPreviewUrl(url);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!file) {
+            toast.error('Please upload an STL file');
+            return;
+        }
+        if (!name || !email) {
+            toast.error('Name and Email are required');
+            return;
+        }
+        setSubmitting(true);
+        try {
+            const fd = new FormData();
+            fd.append('model', file);
+            fd.append('name', name);
+            fd.append('email', email);
+            if (phone) fd.append('phone', phone);
+            fd.append('material', material);
+            fd.append('layerHeight', layerHeight);
+            fd.append('infill', String(infill));
+            fd.append('infillPattern', infillPattern);
+            fd.append('supports', String(supports));
+            fd.append('brim', String(brim));
+            fd.append('raft', String(raft));
+            fd.append('color', selectedColor);
+            fd.append('instructions', instructions || '');
+
+            const headers = token ? { token } : {};
+            const res = await axios.post(`${backendURL}/api/custom/quote`, fd, { headers });
+            if (res.data.success) {
+                toast.success('Quote submitted! We will email you with remarks soon.');
+                // reset minimal
+                setInstructions('');
+            } else {
+                toast.error(res.data.message || 'Failed to submit quote');
+            }
+        } catch (err) {
+            console.error('Submit custom quote error:', err);
+            toast.error(err.response?.data?.message || 'Failed to submit quote');
+        } finally {
+            setSubmitting(false);
         }
     };
 
-    const handleInfillChange = (e) => {
-        setInfill(e.target.value);
-    };
-
-    const handleColorSelect = (color) => {
-        setSelectedColor(color);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setShowSuccessModal(true);
-    };
+    const viewerStyle = useMemo(
+        () => ({ width: '100%', height: '360px', backgroundColor: '#f8fafc', borderRadius: '8px' }),
+        []
+    );
 
     const getColorStyle = (color) => {
-        const colorMap = {
-            'red': '#ef4444',
-            'orange': '#f97316',
-            'gray': '#6b7280',
-            'white': '#ffffff',
-            'black': '#000000'
-        };
-        return colorMap[color] || '#ef4444';
+        const map = { red: '#ef4444', orange: '#f97316', gray: '#6b7280', white: '#ffffff', black: '#000000' };
+        return map[color] || '#ef4444';
     };
 
     return (
@@ -53,200 +125,208 @@ const Custom = () => {
                     </div>
 
                     <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-                        {/* Form Section */}
+                        {/* Form */}
                         <div className='lg:col-span-2'>
                             <form onSubmit={handleSubmit} className='space-y-8'>
-                                {/* File Upload */}
+                                {/* Upload */}
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>
-                                        <i className="fas fa-file-upload text-orange-400"></i>
                                         Upload 3D Model
                                     </h2>
-                                    <div className='space-y-4'>
+                                    <input
+                                        type='file'
+                                        ref={fileInputRef}
+                                        accept='.stl'
+                                        onChange={handleFileChange}
+                                        className='hidden'
+                                    />
+                                    <div
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className='border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-orange-400 transition-colors duration-200'
+                                    >
+                                        <p className='text-gray-600 font-medium'>Choose STL File</p>
+                                        <p className='text-sm text-gray-500'>Drag and drop or click to browse</p>
+                                    </div>
+                                    <p className='text-sm text-gray-600 mt-2'>{file ? file.name : 'No file selected'}</p>
+                                </div>
+
+                                {/* Requester info */}
+                                <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
+                                    <h2 className='text-lg font-semibold text-gray-900 mb-4'>Your Details</h2>
+                                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                                         <input
-                                            type="file"
-                                            ref={fileInputRef}
-                                            accept=".stl"
+                                            type='text'
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            placeholder='Full Name'
                                             required
-                                            onChange={handleFileChange}
-                                            className="hidden"
+                                            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
                                         />
-                                        <div
-                                            onClick={() => fileInputRef.current?.click()}
-                                            className='border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-orange-400 transition-colors duration-200'
-                                        >
-                                            <i className="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
-                                            <p className='text-gray-600 font-medium'>Choose STL File</p>
-                                            <p className='text-sm text-gray-500'>Drag and drop or click to browse</p>
-                                        </div>
-                                        <p className='text-sm text-gray-600'>{fileName}</p>
+                                        <input
+                                            type='email'
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder='Email Address'
+                                            required
+                                            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                        />
+                                        <input
+                                            type='tel'
+                                            value={phone}
+                                            onChange={(e) => setPhone(e.target.value)}
+                                            placeholder='Phone (optional)'
+                                            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none sm:col-span-2'
+                                        />
                                     </div>
                                 </div>
 
-                                {/* Print Settings */}
+                                {/* Print settings */}
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>
-                                        <i className="fas fa-cogs text-orange-400"></i>
                                         Print Settings
                                     </h2>
-
                                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-                                        {/* Material Selection */}
                                         <div>
-                                            <label htmlFor="material" className='block text-sm font-medium text-gray-700 mb-2'>
-                                                Material
-                                                <span className='ml-1 text-xs text-gray-500 cursor-help' title="Choose your desired material">ⓘ</span>
-                                            </label>
-                                            <select id="material" required className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'>
-                                                <option value="PLA">PLA</option>
-                                                <option value="PETG">PETG</option>
-                                                <option value="ABS">ABS</option>
-                                                <option value="TPU">TPU</option>
+                                            <label className='block text-sm font-medium text-gray-700 mb-2'>Material</label>
+                                            <select
+                                                value={material}
+                                                onChange={(e) => setMaterial(e.target.value)}
+                                                required
+                                                className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                            >
+                                                <option value='PLA'>PLA</option>
+                                                <option value='PETG'>PETG</option>
+                                                <option value='ABS'>ABS</option>
+                                                <option value='TPU'>TPU</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className='block text-sm font-medium text-gray-700 mb-2'>Layer Height</label>
+                                            <select
+                                                value={layerHeight}
+                                                onChange={(e) => setLayerHeight(e.target.value)}
+                                                required
+                                                className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                            >
+                                                <option value='0.12'>0.12mm (Super Quality)</option>
+                                                <option value='0.16'>0.16mm (Dynamic Quality)</option>
+                                                <option value='0.20'>0.20mm (Standard Quality)</option>
+                                                <option value='0.28'>0.28mm (Low Quality)</option>
                                             </select>
                                         </div>
 
-                                        {/* Layer Height */}
-                                        <div>
-                                            <label htmlFor="layerHeight" className='block text-sm font-medium text-gray-700 mb-2'>
-                                                Layer Height
-                                                <span className='ml-1 text-xs text-gray-500 cursor-help' title="Higher = Faster, Lower = Detailed">ⓘ</span>
-                                            </label>
-                                            <select id="layerHeight" required className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'>
-                                                <option value="0.12">0.12mm (Super Quality)</option>
-                                                <option value="0.16">0.16mm (Dynamic Quality)</option>
-                                                <option value="0.20">0.20mm (Standard Quality)</option>
-                                                <option value="0.28">0.28mm (Low Quality)</option>
-                                            </select>
-                                        </div>
-
-                                        {/* Infill Density */}
                                         <div className='sm:col-span-2'>
-                                            <label htmlFor="infill" className='block text-sm font-medium text-gray-700 mb-2'>
-                                                Infill Density
-                                                <span className='ml-1 text-xs text-gray-500 cursor-help' title="Higher value will give more strength but increased mass">ⓘ</span>
-                                            </label>
+                                            <label className='block text-sm font-medium text-gray-700 mb-2'>Infill Density</label>
                                             <div className='flex items-center gap-4'>
                                                 <input
-                                                    type="range"
-                                                    id="infill"
-                                                    min="0"
-                                                    max="100"
+                                                    type='range'
+                                                    min='0'
+                                                    max='100'
                                                     value={infill}
-                                                    onChange={handleInfillChange}
-                                                    required
-                                                    className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                                    onChange={(e) => setInfill(Number(e.target.value))}
+                                                    className='flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
                                                 />
                                                 <span className='text-sm font-medium text-gray-700 min-w-[3rem]'>{infill}%</span>
                                             </div>
                                         </div>
 
-                                        {/* Infill Pattern */}
                                         <div className='sm:col-span-2'>
-                                            <label htmlFor="infillPattern" className='block text-sm font-medium text-gray-700 mb-2'>Infill Pattern</label>
-                                            <select id="infillPattern" className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'>
-                                                <option value="grid">Grid</option>
-                                                <option value="lines">Lines</option>
-                                                <option value="triangles">Triangles</option>
-                                                <option value="tri-hexagon">Tri-Hexagon</option>
-                                                <option value="cubic">Cubic</option>
-                                                <option value="cubic-subdivision">Cubic Subdivision</option>
-                                                <option value="octet">Octet</option>
-                                                <option value="quarter-cubic">Quarter Cubic</option>
-                                                <option value="concentric">Concentric</option>
-                                                <option value="zig-zag">Zig-Zag</option>
-                                                <option value="cross">Cross</option>
-                                                <option value="cross-3d">Cross 3D</option>
-                                                <option value="gyroid">Gyroid</option>
-                                                <option value="lightning">Lightning</option>
+                                            <label className='block text-sm font-medium text-gray-700 mb-2'>Infill Pattern</label>
+                                            <select
+                                                value={infillPattern}
+                                                onChange={(e) => setInfillPattern(e.target.value)}
+                                                className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                            >
+                                                {[
+                                                    'grid', 'lines', 'triangles', 'tri-hexagon', 'cubic', 'cubic-subdivision',
+                                                    'octet', 'quarter-cubic', 'concentric', 'zig-zag', 'cross', 'cross-3d',
+                                                    'gyroid', 'lightning'
+                                                ].map(x => <option key={x} value={x}>{x}</option>)}
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Additional Options */}
+                                {/* Add-ons */}
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
-                                    <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>
-                                        <i className="fas fa-tools text-orange-400"></i>
-                                        Additional Options
-                                    </h2>
-
+                                    <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>Additional Options</h2>
                                     <div className='space-y-3'>
-                                        <div className='flex items-center gap-2'>
-                                            <input type="checkbox" id="supports" className='rounded border-gray-300 focus:ring-orange-400' />
-                                            <label htmlFor="supports" className='text-sm text-gray-700'>
-                                                Generate Support Structures
-                                                <span className='ml-1 text-xs text-gray-500 cursor-help' title="Recommended for overhangs >45°">ⓘ</span>
-                                            </label>
-                                        </div>
-                                        <div className='flex items-center gap-2'>
-                                            <input type="checkbox" id="brim" className='rounded border-gray-300 focus:ring-orange-400' />
-                                            <label htmlFor="brim" className='text-sm text-gray-700'>
-                                                Add Brim
-                                                <span className='ml-1 text-xs text-gray-500 cursor-help' title="Improves bed adhesion">ⓘ</span>
-                                            </label>
-                                        </div>
-                                        <div className='flex items-center gap-2'>
-                                            <input type="checkbox" id="raft" className='rounded border-gray-300 focus:ring-orange-400' />
-                                            <label htmlFor="raft" className='text-sm text-gray-700'>
-                                                Add Raft
-                                                <span className='ml-1 text-xs text-gray-500 cursor-help' title="For better first layer adhesion">ⓘ</span>
-                                            </label>
-                                        </div>
+                                        <label className='flex items-center gap-2'>
+                                            <input type='checkbox' checked={supports} onChange={(e) => setSupports(e.target.checked)} />
+                                            <span className='text-sm text-gray-700'>Generate Support Structures</span>
+                                        </label>
+                                        <label className='flex items-center gap-2'>
+                                            <input type='checkbox' checked={brim} onChange={(e) => setBrim(e.target.checked)} />
+                                            <span className='text-sm text-gray-700'>Add Brim</span>
+                                        </label>
+                                        <label className='flex items-center gap-2'>
+                                            <input type='checkbox' checked={raft} onChange={(e) => setRaft(e.target.checked)} />
+                                            <span className='text-sm text-gray-700'>Add Raft</span>
+                                        </label>
                                     </div>
                                 </div>
 
-                                {/* Color Selection */}
+                                {/* Color */}
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <label className='block text-sm font-medium text-gray-700 mb-3'>Choose Color</label>
                                     <div className='flex gap-3'>
-                                        {['red', 'orange', 'gray', 'white', 'black'].map(color => (
+                                        {['red', 'orange', 'gray', 'white', 'black'].map(c => (
                                             <button
-                                                key={color}
-                                                type="button"
-                                                onClick={() => handleColorSelect(color)}
-                                                className={`w-8 h-8 rounded-full border-2 transition-all ${color === selectedColor ? 'border-gray-800 scale-110' : 'border-gray-300 hover:border-gray-500'
-                                                    }`}
-                                                style={{ backgroundColor: getColorStyle(color) }}
-                                                title={color.charAt(0).toUpperCase() + color.slice(1)}
+                                                type='button'
+                                                key={c}
+                                                onClick={() => setSelectedColor(c)}
+                                                className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColor === c ? 'border-gray-800 scale-110' : 'border-gray-300 hover:border-gray-500'}`}
+                                                style={{ backgroundColor: getColorStyle(c) }}
+                                                title={c}
                                             />
                                         ))}
                                     </div>
-                                    <p className='text-sm text-gray-600 mt-2'>Selected: {selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1)}</p>
+                                    <p className='text-sm text-gray-600 mt-2'>Selected: {selectedColor}</p>
                                 </div>
 
-                                {/* Special Instructions */}
+                                {/* Instructions */}
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
-                                    <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>
-                                        <i className="fas fa-comment-alt text-orange-400"></i>
-                                        Special Instructions
-                                    </h2>
+                                    <h2 className='text-lg font-semibold text-gray-900 mb-4'>Special Instructions</h2>
                                     <textarea
-                                        id="instructions"
-                                        placeholder="Any special requirements or instructions for your print..."
+                                        value={instructions}
+                                        onChange={(e) => setInstructions(e.target.value)}
+                                        placeholder='Any special requirements or instructions for your print...'
                                         className='w-full border border-gray-300 rounded-lg px-3 py-2 h-24 resize-none focus:border-orange-400 focus:outline-none'
                                     />
                                 </div>
 
-                                {/* Submit Button */}
                                 <button
-                                    type="submit"
-                                    className='w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-400 transition-colors duration-200 flex items-center justify-center gap-2'
+                                    type='submit'
+                                    disabled={submitting}
+                                    className={`w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-400 transition-colors duration-200 ${submitting ? 'opacity-80 cursor-not-allowed' : ''}`}
                                 >
-                                    <i className="fas fa-calculator"></i>
-                                    Get Quote & Proceed
+                                    {submitting ? 'Submitting...' : 'Get Quote & Proceed'}
                                 </button>
                             </form>
                         </div>
 
-                        {/* Preview Section */}
+                        {/* Preview */}
                         <div className='lg:col-span-1'>
                             <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm sticky top-4'>
                                 <h3 className='text-lg font-semibold text-gray-900 mb-4'>3D Model Preview</h3>
-                                <div className='aspect-square bg-gray-50 rounded-lg flex items-center justify-center border border-gray-200'>
-                                    <div className='text-center text-gray-500'>
-                                        <i className="fas fa-cube text-3xl mb-2"></i>
-                                        <p className='text-sm'>Upload STL file to preview</p>
-                                    </div>
+                                <div className='aspect-square bg-gray-50 rounded-lg border border-gray-200 overflow-hidden'>
+                                    {previewUrl ? (
+                                        <StlViewer
+                                            url={previewUrl}
+                                            style={viewerStyle}
+                                            shadows
+                                            showAxes
+                                            ground
+                                            modelProps={{ color: getColorStyle(selectedColor) }}
+                                        />
+                                    ) : (
+                                        <div className='w-full h-[360px] flex items-center justify-center text-gray-500'>
+                                            <div className='text-center'>
+                                                <div className='text-3xl mb-2'>⬆️</div>
+                                                <p className='text-sm'>Upload STL file to preview</p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className='mt-4 text-sm text-gray-600'>
                                     <p className='mb-2'><strong>Supported formats:</strong> STL</p>
@@ -256,50 +336,9 @@ const Custom = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Contact Modal */}
-                {showContactModal && (
-                    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50' onClick={() => setShowContactModal(false)}>
-                        <div className='bg-white p-6 rounded-lg max-w-md w-full mx-4' onClick={e => e.stopPropagation()}>
-                            <div className='flex justify-between items-center mb-4'>
-                                <h3 className='text-lg font-semibold text-gray-900'>Contact Us</h3>
-                                <button onClick={() => setShowContactModal(false)} className='text-gray-500 hover:text-gray-700'>×</button>
-                            </div>
-                            <div className='space-y-2'>
-                                <p><strong>Phone:</strong> +91-9664851323</p>
-                                <p><strong>Email:</strong> layerly2024@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Success Modal */}
-                {showSuccessModal && (
-                    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50' onClick={() => setShowSuccessModal(false)}>
-                        <div className='bg-white p-6 rounded-lg max-w-md w-full mx-4' onClick={e => e.stopPropagation()}>
-                            <div className='text-center'>
-                                <i className="fas fa-check-circle text-green-500 text-4xl mb-4"></i>
-                                <h3 className='text-lg font-semibold text-gray-900 mb-2'>Request Submitted Successfully!</h3>
-                                <p className='text-gray-600 mb-6'>
-                                    Thank you for your custom 3D print request. Our team will review your STL file and settings,
-                                    and we'll send you a personalized quote within 24 hours.
-                                </p>
-                                <button
-                                    onClick={() => setShowSuccessModal(false)}
-                                    className='bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-orange-400 transition-colors duration-200'
-                                >
-                                    Continue
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </main>
-
-
-
         </div>
-    )
-}
+    );
+};
 
-export default Custom
+export default Custom;
