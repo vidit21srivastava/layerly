@@ -136,7 +136,6 @@ const List = ({ setToken }) => {
                 return;
             }
 
-            // Get the original product to preserve availableColors
             const originalProduct = list.find(p => p._id === productId);
 
             const formData = new FormData();
@@ -146,10 +145,10 @@ const List = ({ setToken }) => {
             formData.append('price', editFormData.price);
             formData.append('category', editFormData.category);
             formData.append('bestseller', editFormData.bestseller);
-            // Keep the original available colors
+
             formData.append('availableColors', JSON.stringify(originalProduct.availableColors || []));
 
-            // Append images if they were changed
+
             Object.entries(editImages).forEach(([color, file]) => {
                 if (file) {
                     formData.append(`image_${color.toLowerCase()}`, file);
@@ -219,7 +218,6 @@ const List = ({ setToken }) => {
         <div className="p-4">
             <h2 className="text-xl text-gray-800 font-bold mb-6">All Products</h2>
 
-            {/* Desktop View */}
             <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full border-collapse">
                     <thead>
@@ -270,14 +268,13 @@ const List = ({ setToken }) => {
                                     </td>
                                 </tr>
 
-                                {/* Edit Form Row */}
+
                                 {editingProduct === item._id && (
                                     <tr>
                                         <td colSpan="7" className="p-4 bg-gray-50">
                                             <form onSubmit={(e) => handleEditSubmit(e, item._id)} className="space-y-4">
                                                 <h3 className="text-lg  text-gray-800 font-bold mb-2">Edit Product</h3>
 
-                                                {/* Images Upload Section */}
                                                 <div>
                                                     <label className="block text-sm text-gray-700 font-medium mb-1">Click below to update images  (optional)</label>
                                                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -295,9 +292,9 @@ const List = ({ setToken }) => {
                                                     </div>
                                                 </div>
 
-                                                {/* Product ID and Category Row - FIXED FLEX LAYOUT */}
+
                                                 <div className="flex flex-col lg:flex-row gap-4">
-                                                    {/* Product ID Section */}
+
                                                     <div className="flex-1 lg:flex-none lg:w-[55%]">
                                                         <label className="block text-sm text-gray-800 font-bold mb-1">Product ID</label>
                                                         <input
@@ -309,7 +306,7 @@ const List = ({ setToken }) => {
                                                         />
                                                     </div>
 
-                                                    {/* Category Section */}
+
                                                     <div className="flex-1">
                                                         <label className="block text-sm  text-gray-800 font-bold mb-1">Category</label>
                                                         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 pt-3">
@@ -331,7 +328,7 @@ const List = ({ setToken }) => {
                                                     </div>
                                                 </div>
 
-                                                {/* Name and Price Row */}
+
                                                 <div className="flex flex-col md:flex-row gap-4">
                                                     <div className="flex-1">
                                                         <label className="block text-sm  text-gray-800 font-bold mb-1">Name</label>
@@ -358,7 +355,7 @@ const List = ({ setToken }) => {
                                                     </div>
                                                 </div>
 
-                                                {/* Description */}
+
                                                 <div>
                                                     <label className="block text-sm  text-gray-800 font-bold mb-1">Description</label>
                                                     <textarea
@@ -370,7 +367,7 @@ const List = ({ setToken }) => {
                                                     />
                                                 </div>
 
-                                                {/* Bestseller Checkbox */}
+
                                                 <div className="flex items-center gap-3">
                                                     <label className="flex items-center text-gray-800 font-bold">
                                                         <input
@@ -383,7 +380,7 @@ const List = ({ setToken }) => {
                                                     </label>
                                                 </div>
 
-                                                {/* Action Buttons */}
+
                                                 <div className="flex gap-3 pt-2">
                                                     <button
                                                         type="submit"

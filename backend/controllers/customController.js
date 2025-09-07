@@ -1,10 +1,8 @@
-// backend/controllers/customController.js
 import CustomQuote from '../models/customQuoteModel.js';
 import userModel from '../models/userModel.js';
 import { sendCustomQuoteReplyEmail } from '../config/email.js';
 import axios from 'axios';
 
-// Create a new custom quote using a Google Drive public link
 const createCustomQuote = async (req, res) => {
     try {
         const {
@@ -20,10 +18,10 @@ const createCustomQuote = async (req, res) => {
             raft,
             color,
             instructions,
-            fileUrl, // Google Drive public link
+            fileUrl,
         } = req.body || {};
 
-        // Validate required fields
+
         if (!name || !email || !material || !layerHeight || infill === undefined || !infillPattern || !color) {
             return res.status(400).json({ success: false, message: 'Missing required fields' });
         }
@@ -32,7 +30,7 @@ const createCustomQuote = async (req, res) => {
         }
 
         const doc = await CustomQuote.create({
-            userID: req.body.userID || null, // filled by userAuth if token is present
+            userID: req.body.userID || null,
             name,
             email,
             phone: phone || null,
@@ -60,7 +58,7 @@ const createCustomQuote = async (req, res) => {
     }
 };
 
-// Admin: list all quotes
+
 const listCustomQuotes = async (req, res) => {
     try {
         const quotes = await CustomQuote.find({}).sort({ createdAt: -1 });
@@ -71,7 +69,6 @@ const listCustomQuotes = async (req, res) => {
     }
 };
 
-// Admin: reply to a quote (send email with remark & stl link)
 const replyToCustomQuote = async (req, res) => {
     try {
         const { id } = req.params;
@@ -131,9 +128,6 @@ const closeCustomQuote = async (req, res) => {
     }
 };
 
-
-
-
 function normalizeDriveUrl(src) {
     try {
         const u = new URL(src);
@@ -151,7 +145,6 @@ function normalizeDriveUrl(src) {
         return src;
     }
 }
-
 
 const ALLOWED_HOSTS = new Set([
     'drive.google.com',
@@ -182,9 +175,7 @@ const proxyStl = async (req, res) => {
 
         const upstream = await axios.get(parsed.toString(), {
             responseType: 'stream',
-            // A UA helps avoid some drive blockers
             headers: { 'User-Agent': 'Layerly-STL-Proxy' },
-            // Optional: follow redirects automatically
             maxRedirects: 5,
         });
 

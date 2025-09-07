@@ -99,10 +99,16 @@ const ProductItems = ({ id, name, price, product }) => {
 
                         {/* Category */}
                         <p
-                            className='text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap mt-1 mb-3'
+                            className='text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap mt-1'
                             title={product?.category}
                         >
                             {product?.category}
+                        </p>
+                        <p
+                            className='text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap mt-1 mb-3'
+                            title={product?.description}
+                        >
+                            {product?.description}
                         </p>
 
                         {/* Price and Add to Cart / Quantity Controls */}

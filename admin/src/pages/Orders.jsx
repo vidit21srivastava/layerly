@@ -90,8 +90,9 @@ const Orders = ({ setToken }) => {
                     <table className='w-full border-collapse'>
                         <thead>
                             <tr className='bg-gray-100 border-b border-gray-300 text-gray-800 font-semibold'>
-                                <th className='text-left p-3'>Order</th>
-                                <th className='text-left p-3'>User</th>
+                                <th className='text-left p-3'>OrderID</th>
+                                <th className='text-left p-3'>UserID</th>
+                                <th className='text-left p-3'>Customer Name</th>
                                 <th className='text-left p-3'>Items</th>
                                 <th className='text-left p-3'>Amount</th>
                                 <th className='text-left p-3'>Payment</th>
@@ -107,7 +108,8 @@ const Orders = ({ setToken }) => {
                                     <React.Fragment key={order._id}>
                                         <tr className='border-b border-gray-200 hover:bg-gray-50'>
                                             <td className='p-3 font-mono'>#{order._id.slice(-8)}</td>
-                                            <td className='p-3'>{order.userID}</td>
+                                            <td className='p-3'>#{order.userID.slice(-8)}</td>
+                                            <td className='p-3'>{(order.address?.firstName || '') + ' ' + (order.address?.lastName || '')}</td>
                                             <td className='p-3'>{totalItems}</td>
                                             <td className='p-3'>₹{order.amount}</td>
                                             <td className='p-3'>

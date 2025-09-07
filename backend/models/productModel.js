@@ -1,34 +1,11 @@
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
-    productID: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
-    },
-    name: {
-        type: String,
-        required: true,
-        trim: true,
-        maxlength: 200
-    },
-    description: {
-        type: String,
-        required: true,
-        trim: true,
-        maxlength: 1000
-    },
-    price: {
-        type: Number,
-        required: true,
-        min: 0
-    },
-    imagesByColor: {
-        type: Map,
-        of: String,
-        default: new Map()
-    },
+    productID: { type: String, required: true, trim: true, unique: true },
+    name: { type: String, required: true, trim: true, maxlength: 200 },
+    description: { type: String, required: true, trim: true, maxlength: 1000 },
+    price: { type: Number, required: true, min: 0 },
+    imagesByColor: { type: Map, of: String, default: new Map() },
     availableColors: [{
         type: String,
         required: true,
@@ -46,16 +23,8 @@ const productSchema = new mongoose.Schema({
         ],
         trim: true
     },
-    date: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
-    bestseller: {
-        type: Boolean,
-        required: true,
-        default: false
-    }
+    date: { type: Date, required: true, default: Date.now },
+    bestseller: { type: Boolean, required: true, default: false }
 }, {
     timestamps: true
 });

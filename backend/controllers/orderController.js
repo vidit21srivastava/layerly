@@ -130,7 +130,7 @@ const downloadInvoice = async (req, res) => {
             .text('Invoice', metaX, headerTop, { width: metaW, align: 'right' })
             .moveDown(0.2)
             .fontSize(10)
-            .text(`Invoice #: ${order._id}`, metaX, doc.y, { width: metaW, align: 'right' })
+            .text(`OrderID: #${order._id.toString().slice(-8)}`, metaX, doc.y, { width: metaW, align: 'right' })
             .text(`Date: ${new Date(order.date).toLocaleString('en-IN')}`, metaX, doc.y, { width: metaW, align: 'right' })
             .text(`PhonePe Txn: ${order.phonePeTxnId || '-'}`, metaX, doc.y, { width: metaW, align: 'right' });
 
@@ -215,19 +215,18 @@ const downloadInvoice = async (req, res) => {
             const line = price * qty;
             subtotal += line;
 
-            // Store current Y position for single-line alignment
+
             const rowY = doc.y;
 
             doc.fontSize(10).fillColor('#333');
 
-            // Render all columns on the same line using the stored Y position
             doc.text(it.name || it.productId || '-', colItemX, rowY, { width: colQtyX - colItemX - 10 })
                 .text(String(qty), colQtyX, rowY, { width: colPriceX - colQtyX - 10, align: 'right' })
                 .text(formatINR(price), colPriceX, rowY, { width: colTotalX - colPriceX - 10, align: 'right' })
                 .text(formatINR(line), colTotalX, rowY, { width: colTotalW, align: 'right' });
 
-            // Manually move to next row
-            doc.y = rowY + 15; // Adjust line height as needed
+
+            doc.y = rowY + 15;
         }
 
         // === TOTALS SECTION ===

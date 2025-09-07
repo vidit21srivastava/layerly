@@ -1,4 +1,3 @@
-// frontend/src/pages/Custom.jsx
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -8,16 +7,15 @@ import StlCanvas from '../components/StlCanvas';
 const Custom = () => {
     const { backendURL, user, token } = useContext(ShopContext);
 
-    // Google Drive link provided by user
+
     const [driveLink, setDriveLink] = useState('');
     const [viewerUrl, setViewerUrl] = useState('');
 
-    // requester
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
 
-    // print params (default values match UI)
+
     const [material, setMaterial] = useState('PLA');
     const [layerHeight, setLayerHeight] = useState('0.20');
     const [infill, setInfill] = useState(20);
@@ -37,14 +35,13 @@ const Custom = () => {
         }
     }, [user]);
 
-    // Normalize Google Drive link for react-stl-viewer
-    // Instruction: remove '/view' from the end for the viewer
+
     const normalizeForViewer = (url) => {
         if (!url) return '';
         try {
             const u = new URL(url);
             if (u.pathname.endsWith('/view')) u.pathname = u.pathname.replace(/\/view$/i, '');
-            u.search = ''; // trim query for viewer
+            u.search = '';
             return u.toString();
         } catch {
             return url.replace(/\/view(\?.*)?$/i, '');
@@ -83,7 +80,6 @@ const Custom = () => {
             const res = await axios.post(`${backendURL}/api/custom/quote`, payload, { headers });
             if (res.data.success) {
                 toast.success('Quote submitted! We will email you with remarks soon.');
-                // keep the link visible so user can continue viewing
                 setInstructions('');
             } else {
                 toast.error(res.data.message || 'Failed to submit quote');
@@ -96,10 +92,8 @@ const Custom = () => {
         }
     };
 
-    // const viewerStyle = useMemo(
-    //     () => ({ width: '100%', height: '360px', backgroundColor: '#f8fafc', borderRadius: '8px' }),
-    //     []
-    // );
+
+    const p = (infill / 100) * 100;
 
     const getColorStyle = (color) => {
         const map = { red: '#ef4444', orange: '#f97316', gray: '#6b7280', white: '#ffffff', black: '#000000' };
@@ -123,19 +117,18 @@ const Custom = () => {
                                 {/* Drive Link */}
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>
-                                        3D Model Link (Google Drive Public)
+                                        STL File Link - Google Drive
                                     </h2>
                                     <input
                                         type='url'
                                         value={driveLink}
                                         onChange={(e) => setDriveLink(e.target.value)}
                                         placeholder='Paste your Google Drive public link here'
-                                        className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                        className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-500'
                                         required
                                     />
                                     <p className='text-xs text-gray-600 mt-2'>
-                                        Make sure the file is publicly accessible. We’ll use the original link when sending your request.
-                                        The viewer below will auto-trim a trailing “/view” to render the model.
+                                        Make sure the file is publicly accessible. Ensure “Anyone with the link” can view.
                                     </p>
                                 </div>
 
@@ -147,24 +140,25 @@ const Custom = () => {
                                             type='text'
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
-                                            placeholder='Full Name'
+                                            placeholder='Full Name*'
                                             required
-                                            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-500'
                                         />
                                         <input
                                             type='email'
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            placeholder='Email Address'
+                                            placeholder='Email Address*'
                                             required
-                                            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-500'
                                         />
                                         <input
                                             type='tel'
                                             value={phone}
                                             onChange={(e) => setPhone(e.target.value)}
-                                            placeholder='Phone (optional)'
-                                            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none sm:col-span-2'
+                                            placeholder='Phone*'
+                                            required
+                                            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-gray-500 focus:outline-none sm:col-span-2'
                                         />
                                     </div>
                                 </div>
@@ -176,12 +170,12 @@ const Custom = () => {
                                     </h2>
                                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700 mb-2'>Material</label>
+                                            <label className='block text-md font-medium text-gray-700 mb-2'>Material</label>
                                             <select
                                                 value={material}
                                                 onChange={(e) => setMaterial(e.target.value)}
                                                 required
-                                                className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                                className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-gray-500 focus:outline-none'
                                             >
                                                 <option value='PLA'>PLA</option>
                                                 <option value='PETG'>PETG</option>
@@ -190,12 +184,12 @@ const Custom = () => {
                                             </select>
                                         </div>
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700 mb-2'>Layer Height</label>
+                                            <label className='block text-md font-medium text-gray-700 mb-2'>Layer Height</label>
                                             <select
                                                 value={layerHeight}
                                                 onChange={(e) => setLayerHeight(e.target.value)}
                                                 required
-                                                className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                                className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-gray-500 focus:outline-none'
                                             >
                                                 <option value='0.12'>0.12mm (Super Quality)</option>
                                                 <option value='0.16'>0.16mm (Dynamic Quality)</option>
@@ -204,30 +198,33 @@ const Custom = () => {
                                             </select>
                                         </div>
                                         <div className='sm:col-span-2'>
-                                            <label className='block text-sm font-medium text-gray-700 mb-2'>Infill Density</label>
+                                            <label className='block text-md font-medium text-gray-700 mb-2'>Infill Density</label>
                                             <div className='flex items-center gap-4'>
                                                 <input
-                                                    type='range'
-                                                    min='0'
-                                                    max='100'
+                                                    type="range"
+                                                    min="0"
+                                                    max="100"
                                                     value={infill}
                                                     onChange={(e) => setInfill(Number(e.target.value))}
-                                                    className='flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
+                                                    className="flex-1 h-2 rounded-lg appearance-none cursor-pointer"
+                                                    style={{
+                                                        background: `linear-gradient(to right, #8AC0FF 0%, #8AC0FF ${p}%, #e5e7eb ${p}%, #e5e7eb 100%)`
+                                                    }}
                                                 />
                                                 <span className='text-sm font-medium text-gray-700 min-w-[3rem]'>{infill}%</span>
                                             </div>
                                         </div>
                                         <div className='sm:col-span-2'>
-                                            <label className='block text-sm font-medium text-gray-700 mb-2'>Infill Pattern</label>
+                                            <label className='block text-md font-medium text-gray-700 mb-2'>Infill Pattern</label>
                                             <select
                                                 value={infillPattern}
                                                 onChange={(e) => setInfillPattern(e.target.value)}
-                                                className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-orange-400 focus:outline-none'
+                                                className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-gray-500 focus:outline-none'
                                             >
                                                 {[
-                                                    'grid', 'lines', 'triangles', 'tri-hexagon', 'cubic', 'cubic-subdivision',
-                                                    'octet', 'quarter-cubic', 'concentric', 'zig-zag', 'cross', 'cross-3d',
-                                                    'gyroid', 'lightning'
+                                                    'Grid', 'Lines', 'Triangles', 'Tri-hexagon', 'Cubic', 'Cubic-subdivision',
+                                                    'Octet', 'Quarter-cubic', 'Concentric', 'Zig-zag', 'Cross', 'Cross-3d',
+                                                    'Gyroid', 'Lightning'
                                                 ].map(x => <option key={x} value={x}>{x}</option>)}
                                             </select>
                                         </div>
@@ -236,19 +233,19 @@ const Custom = () => {
 
                                 {/* Add-ons */}
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
-                                    <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>Additional Options</h2>
+                                    <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>Add-ons</h2>
                                     <div className='space-y-3'>
                                         <label className='flex items-center gap-2'>
                                             <input type='checkbox' checked={supports} onChange={(e) => setSupports(e.target.checked)} />
-                                            <span className='text-sm text-gray-700'>Generate Support Structures</span>
+                                            <span className='text-md text-gray-700'>Generate Support Structures</span>
                                         </label>
                                         <label className='flex items-center gap-2'>
                                             <input type='checkbox' checked={brim} onChange={(e) => setBrim(e.target.checked)} />
-                                            <span className='text-sm text-gray-700'>Add Brim</span>
+                                            <span className='text-md text-gray-700'>Add Brim</span>
                                         </label>
                                         <label className='flex items-center gap-2'>
                                             <input type='checkbox' checked={raft} onChange={(e) => setRaft(e.target.checked)} />
-                                            <span className='text-sm text-gray-700'>Add Raft</span>
+                                            <span className='text-md text-gray-700'>Add Raft</span>
                                         </label>
                                     </div>
                                 </div>
@@ -262,7 +259,7 @@ const Custom = () => {
                                                 type='button'
                                                 key={c}
                                                 onClick={() => setSelectedColor(c)}
-                                                className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColor === c ? 'border-gray-800 scale-110' : 'border-gray-300 hover:border-gray-500'
+                                                className={`w-6 h-6 rounded-full border-2 transition-all ${selectedColor === c ? 'border-gray-800 scale-110' : 'border-gray-300 hover:border-gray-500'
                                                     }`}
                                                 style={{ backgroundColor: getColorStyle(c) }}
                                                 title={c}
@@ -279,14 +276,14 @@ const Custom = () => {
                                         value={instructions}
                                         onChange={(e) => setInstructions(e.target.value)}
                                         placeholder='Any special requirements or instructions for your print...'
-                                        className='w-full border border-gray-300 rounded-lg px-3 py-2 h-24 resize-none focus:border-orange-400 focus:outline-none'
+                                        className='w-full border border-gray-300 rounded-lg px-3 py-2 h-24 resize-none focus:border-gray-500 focus:outline-none'
                                     />
                                 </div>
 
                                 <button
                                     type='submit'
                                     disabled={submitting}
-                                    className={`w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-400 transition-colors duration-200 ${submitting ? 'opacity-80 cursor-not-allowed' : ''
+                                    className={`w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-bold hover:bg-orange-400 transition-colors duration-200 ${submitting ? 'opacity-80 cursor-not-allowed' : ''
                                         }`}
                                 >
                                     {submitting ? 'Submitting...' : 'Get Quote & Proceed'}
@@ -309,15 +306,15 @@ const Custom = () => {
                                     ) : (
                                         <div className='w-full h-[360px] flex items-center justify-center text-gray-500'>
                                             <div className='text-center'>
-                                                <p className='text-sm'>Paste a public Google Drive link to preview</p>
+                                                <p className='text-sm'>Paste a public STL file Google Drive link to preview</p>
                                             </div>
                                         </div>
                                     )}
                                 </div>
 
                                 <div className='mt-4 text-sm text-gray-600'>
-                                    <p className='mb-2'><strong>Tip:</strong> Ensure “Anyone with the link” can view.</p>
-                                    <p><strong>Note:</strong> Viewer trims a trailing “/view” automatically.</p>
+                                    <p className='mb-2'><strong>Tip:</strong> You can Rotate/Zoom-in/Zoom-out the model above for better preview.</p>
+
                                 </div>
                             </div>
                         </div>

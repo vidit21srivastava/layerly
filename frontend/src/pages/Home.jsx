@@ -11,7 +11,6 @@ const Home = () => {
             <Hero />
             <NewLaunch />
             <Bestseller />
-            {/* <CategoryGrid /> */}
             <Pagestats />
         </div>
     )

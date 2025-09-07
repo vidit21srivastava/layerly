@@ -6,9 +6,9 @@ const StlCanvas = ({
     url,
     color = '#ef4444',
     background = '#f8fafc',
-    height = 360,
-    initialZoom = 1,
-    minZoom = 0.5,
+    height = 400,
+    initialZoom = 0.5,
+    minZoom = 0.25,
     maxZoom = 3
 }) => {
     const containerRef = useRef(null);

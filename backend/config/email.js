@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
 
-
 const createTransporter = () => {
     return nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
@@ -16,8 +15,7 @@ const createTransporter = () => {
     });
 };
 
-
-export const sendVerificationEmail = async (email, name, token) => {
+const sendVerificationEmail = async (email, name, token) => {
     const transporter = createTransporter();
 
     const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
@@ -30,8 +28,8 @@ export const sendVerificationEmail = async (email, name, token) => {
         to: email,
         subject: 'Verify Your Email - Layerly',
         html: `
-        <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+               <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <div style="background: linear-gradient(135deg, #fea802 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
                 <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to Layerly!</h1>
                 <p style="color: #f0f0f0; margin: 10px 0 0 0; font-size: 16px;">3D Printing Made Simple</p>
             </div>
@@ -44,7 +42,7 @@ export const sendVerificationEmail = async (email, name, token) => {
                 </p>
                 
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="${verificationUrl}" style="background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; display: inline-block; transition: background 0.3s ease;">
+                    <a href="${verificationUrl}" style="background: #fea802; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; display: inline-block; transition: background 0.3s ease;">
                         Verify Email Address
                     </a>
                 </div>
@@ -52,7 +50,7 @@ export const sendVerificationEmail = async (email, name, token) => {
                 <p style="font-size: 14px; color: #666; margin: 25px 0;">
                     If the button doesn't work, copy and paste this link into your browser:
                 </p>
-                <p style="font-size: 14px; color: #667eea; word-break: break-all; background: #f8f9fa; padding: 10px; border-radius: 5px;">
+                <p style="font-size: 14px; color: #fea802; word-break: break-all; background: #f8f9fa; padding: 10px; border-radius: 5px;">
                     ${verificationUrl}
                 </p>
                 
@@ -83,7 +81,7 @@ export const sendVerificationEmail = async (email, name, token) => {
     };
 
     try {
-        const result = await transporter.sendMail(mailOptions);
+        const result = transporter.sendMail(mailOptions);
         console.log('Verification email sent:', result.messageId);
         return { success: true, messageId: result.messageId };
     } catch (error) {
@@ -93,7 +91,7 @@ export const sendVerificationEmail = async (email, name, token) => {
 };
 
 
-export const sendPasswordResetEmail = async (email, name, token) => {
+const sendPasswordResetEmail = async (email, name, token) => {
     const transporter = createTransporter();
 
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
@@ -107,7 +105,7 @@ export const sendPasswordResetEmail = async (email, name, token) => {
         subject: 'Reset Your Password - Layerly',
         html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+            <div style="background: linear-gradient(135deg, #fea802 0%, #f5576c 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
                 <h1 style="color: white; margin: 0; font-size: 28px;">Password Reset</h1>
                 <p style="color: #f0f0f0; margin: 10px 0 0 0; font-size: 16px;">Layerly Account Security</p>
             </div>
@@ -120,7 +118,7 @@ export const sendPasswordResetEmail = async (email, name, token) => {
                 </p>
                 
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="${resetUrl}" style="background: #f5576c; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; display: inline-block;">
+                    <a href="${resetUrl}" style="background: #f5576c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; display: inline-block;">
                         Reset Password
                     </a>
                 </div>
@@ -165,19 +163,19 @@ export const sendPasswordResetEmail = async (email, name, token) => {
 };
 
 
-export const sendWelcomeEmail = async (email, name) => {
+const sendWelcomeEmail = async (email, name) => {
     const transporter = createTransporter();
 
     const mailOptions = {
         from: {
-            name: 'Layerly Team',
+            name: 'Layerly',
             address: process.env.EMAIL_USER
         },
         to: email,
         subject: 'Welcome to Layerly! Your account is now active',
         html: `
-        <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <div style="background: linear-gradient(135deg, #fea802 0%, #7A072E 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
                 <h1 style="color: white; margin: 0; font-size: 28px;">🎉 Welcome to Layerly!</h1>
                 <p style="color: #f0f0f0; margin: 10px 0 0 0; font-size: 16px;">Your 3D printing journey starts here</p>
             </div>
@@ -190,9 +188,9 @@ export const sendWelcomeEmail = async (email, name) => {
                     You're all set to explore our amazing 3D printing services.
                 </p>
                 
-                <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 15px; margin: 25px 0; border-radius: 0 5px 5px 0;">
-                    <h3 style="margin: 0 0 10px 0; color: #2e7d32;">What you can do now:</h3>
-                    <ul style="margin: 0; padding-left: 20px; color: #2e7d32;">
+                <div style="background: #FAFCE8; border-left: 4px solid #7A072E; padding: 15px; margin: 25px 0; border-radius: 0 5px 5px 0;">
+                    <h3 style="margin: 0 0 10px 0; color: #7A072E;">What you can do now:</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #7A072E;">
                         <li>Browse our product catalog</li>
                         <li>Upload your custom 3D designs</li>
                         <li>Get instant quotes</li>
@@ -201,10 +199,10 @@ export const sendWelcomeEmail = async (email, name) => {
                 </div>
                 
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="${process.env.FRONTEND_URL}/catalogue" style="background: #4facfe; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; display: inline-block; margin-right: 10px;">
+                    <a href="${process.env.FRONTEND_URL}/catalogue" style="background: #fea802; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; display: inline-block; margin-right: 10px;">
                         Browse Catalog
                     </a>
-                    <a href="${process.env.FRONTEND_URL}/custom" style="background: #00f2fe; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; display: inline-block;">
+                    <a href="${process.env.FRONTEND_URL}/custom" style="background: #7A072E; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; display: inline-block;">
                         Custom Order
                     </a>
                 </div>
@@ -212,7 +210,7 @@ export const sendWelcomeEmail = async (email, name) => {
                 <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
                     <p style="font-size: 14px; color: #666; margin: 10px 0;">
                         Questions? We're here to help!<br>
-                        📧 layerly2024@gmail.com | 📞 +91 96648 51323
+                        layerly2024@gmail.com | +91 96648 51323
                     </p>
                 </div>
             </div>
@@ -235,7 +233,7 @@ export const sendWelcomeEmail = async (email, name) => {
     }
 };
 
-export const sendCustomQuoteReplyEmail = async ({ to, name, remark, price, stlUrl }) => {
+const sendCustomQuoteReplyEmail = async ({ to, name, remark, price, stlUrl }) => {
     const transporter = createTransporter();
 
     const safeRemark = remark ? remark : 'Please review our remarks above.';
@@ -284,4 +282,6 @@ export const sendCustomQuoteReplyEmail = async ({ to, name, remark, price, stlUr
         throw new Error('Failed to send custom quote reply email');
     }
 };
+
+export { sendVerificationEmail, sendPasswordResetEmail, sendCustomQuoteReplyEmail, sendWelcomeEmail };
 
