@@ -25,12 +25,36 @@ connectCloudinary();
 
 // JSON/CORS
 app.use(express.json());
+
+const allowed = [
+    process.env.FRONTEND_URL,
+    process.env.ADMIN_URL,
+];
+
+if (process.env.NODE_ENV !== 'production') {
+    allowed.push('http://localhost:5173', 'http://localhost:5174');
+}
+
+const allowPreview = process.env.ALLOW_VERCEL_PREVIEWS === 'true';
+
 app.use(cors({
-    origin: [process.env.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:5174'],
+    origin: (origin, cb) => {
+        try {
+            if (!origin) return cb(null, true); // mobile apps/cURL
+            if (allowed.filter(Boolean).includes(origin)) return cb(null, true);
+            if (allowPreview && /\.vercel\.app$/.test(new URL(origin).hostname)) {
+                return cb(null, true);
+            }
+        } catch (e) {
+
+        }
+        return cb(new Error('Not allowed by CORS: ' + origin));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'token'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'token']
 }));
+
 
 async function start() {
     const redisClient = createClient({
