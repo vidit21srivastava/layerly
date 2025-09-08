@@ -37,11 +37,6 @@ app.use(cors({
 // Redis client 
 const redisClient = createClient({
     url: process.env.REDIS_URL,
-    socket: {
-        tls: true,
-
-        // servername: new URL(process.env.REDIS_URL).hostname
-    },
 });
 
 redisClient.on('error', (err) => console.error('Redis error:', err));
