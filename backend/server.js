@@ -31,16 +31,20 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'token'],
 }));
+
 async function start() {
-
     const redisClient = createClient({
-        url: process.env.REDIS_URL,
-
-        socket: process.env.REDIS_HOST ? { tls: true, servername: process.env.REDIS_HOST } : undefined,
+        username: 'default',
+        password: process.env.REDIS_PASSWORD,
+        socket: {
+            host: process.env.REDIS_HOST,
+            port: process.env.REDIS_PORT
+        }
     });
 
     redisClient.on('error', (err) => console.error('Redis error:', err));
     await redisClient.connect();
+    console.log('Redis connected successfully');
 
     const store = new RedisStore({
         client: redisClient,
@@ -55,8 +59,8 @@ async function start() {
         name: 'layerly.sid',
         cookie: {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // requires HTTPS and trust proxy [7]
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' for cross-site over HTTPS [7]
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 24 * 60 * 60 * 1000,
         },
     }));
@@ -75,7 +79,7 @@ async function start() {
 
     app.get('/', (req, res) => res.send('API Working'));
 
-    // Errors
+    // Error handler
     app.use((err, req, res, next) => {
         console.error('Error:', err);
         res.status(500).json({ success: false, message: 'Internal server error' });
@@ -88,3 +92,5 @@ start().catch((e) => {
     console.error('Failed to start server', e);
     process.exit(1);
 });
+
+
