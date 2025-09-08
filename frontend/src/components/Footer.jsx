@@ -49,8 +49,8 @@ const Footer = () => {
                             {[
                                 { text: 'Home', href: '/' },
                                 { text: 'About Us', href: '/about' },
-                                { text: 'Privacy Policy', href: '/privacy-policy' },
-                                { text: 'Terms of Service', href: '/terms-of-service' }
+                                { text: 'Privacy Policy', href: 'https://drive.google.com/file/d/1dEs4bZUw6OO9YX2FCj7t1VDnmHdGUH-Q/view?usp=sharing' },
+                                { text: 'Terms of Service', href: 'https://drive.google.com/file/d/1kEuwZ05TV9xh1cMKbw8t-6m9r9j49FwA/view?usp=sharing' }
                             ].map((item, index) => (
                                 <li key={index}>
                                     <a href={item.href} className='text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200 cursor-pointer flex items-center group'>
