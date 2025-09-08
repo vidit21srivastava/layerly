@@ -142,7 +142,7 @@ const Orders = ({ setToken }) => {
 
                                         {expanded === order._id && (
                                             <tr className='bg-gray-50'>
-                                                <td className='p-3' colSpan={8}>
+                                                <td className='p-3' colSpan={9}>
                                                     <div className='space-y-3'>
                                                         {(order.items || []).map((item, idx) => (
                                                             <div key={idx} className='flex flex-wrap justify-between border border-gray-200 rounded p-2 bg-white'>

@@ -1,10 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
-import { RedisStore } from 'connect-redis';
 import { createClient } from 'redis';
 import 'dotenv/config';
-
 import connectDB from './config/mongodb.js';
 import connectCloudinary from './config/cloudinary.js';
 import userRouter from './routes/userRoutes.js';
@@ -62,6 +60,17 @@ app.use(session({
         maxAge: 24 * 60 * 60 * 1000,
     },
 }));
+
+
+// app.use(session({
+//     secret: process.env.JWT_SECRET || 'layerly-session-secret',
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         secure: process.env.NODE_ENV === 'production',
+//         maxAge: 24 * 60 * 60 * 1000
+//     }
+// }));
 
 // Passport
 app.use(passport.initialize());
