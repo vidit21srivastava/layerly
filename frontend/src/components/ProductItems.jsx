@@ -125,23 +125,23 @@ const ProductItems = ({ id, name, price, product }) => {
                                         e.preventDefault()
                                         handleAddToCart()
                                     }}
-                                    className='flex-shrink-0 cursor-pointer bg-gray-900 text-white py-2 px-4 rounded-lg text-sm font-bold hover:bg-orange-400 transition-colors duration-200 active:scale-95 transform'
+                                    className='flex-shrink-0 cursor-pointer bg-gray-900 text-white py-1.5 px-3 md:py-2 md:px-4 rounded-lg text-xs md:text-sm font-bold hover:bg-orange-400 transition-colors duration-200 active:scale-95 transform'
                                 >
                                     Add to Cart
                                 </button>
                             ) : (
-                                <div className='flex items-center justify-between bg-gray-100 rounded-lg p-1 flex-shrink-0 min-w-[120px]'>
+                                <div className='flex items-center justify-between bg-gray-100 rounded-lg p-0.5 md:p-1 flex-shrink-0 min-w-[100px] md:min-w-[120px]'>
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault()
                                             handleQuantityChange(-1)
                                         }}
-                                        className='w-8 h-8 flex items-center justify-center bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200 active:scale-95 transform'
+                                        className='w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200 active:scale-95 transform'
                                     >
-                                        <span className='cursor-pointer text-gray-600 font-medium text-lg leading-none'>−</span>
+                                        <span className='cursor-pointer text-gray-600 font-medium text-base md:text-lg leading-none'>−</span>
                                     </button>
 
-                                    <span className='text-sm font-medium text-gray-900 min-w-[2rem] text-center'>
+                                    <span className='text-xs md:text-sm font-medium text-gray-900 min-w-[1.5rem] md:min-w-[2rem] text-center'>
                                         {currentQuantity}
                                     </span>
 
@@ -150,12 +150,13 @@ const ProductItems = ({ id, name, price, product }) => {
                                             e.preventDefault()
                                             handleQuantityChange(1)
                                         }}
-                                        className='w-8 h-8 flex items-center justify-center bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200 active:scale-95 transform'
+                                        className='w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200 active:scale-95 transform'
                                     >
-                                        <span className='cursor-pointer text-gray-600 font-medium text-lg leading-none'>+</span>
+                                        <span className='cursor-pointer text-gray-600 font-medium text-base md:text-lg leading-none'>+</span>
                                     </button>
                                 </div>
                             )}
+
                         </div>
                     </div>
                 </div>
