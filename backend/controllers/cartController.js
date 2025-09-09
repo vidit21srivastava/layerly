@@ -73,17 +73,17 @@ const updateCart = async (req, res) => {
         let cartData = user.cartData || {};
 
         if (parseInt(quantity) <= 0) {
-            // Remove item from cart
+
             if (cartData[itemId]) {
                 delete cartData[itemId][color];
 
-                // Remove the item entirely if no colors left
+
                 if (Object.keys(cartData[itemId]).length === 0) {
                     delete cartData[itemId];
                 }
             }
         } else {
-            // Update quantity
+
             if (!cartData[itemId]) {
                 cartData[itemId] = {};
             }

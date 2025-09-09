@@ -169,7 +169,7 @@ const ShopContextProvider = (props) => {
                 if (quantity <= 0) {
                     toast.error(`${productName} (${color}) removed from cart!`);
                 } else {
-                    toast.info(`${productName} (${color}) quantity updated to ${quantity}`);
+                    // toast.info(`${productName} (${color}) quantity updated to ${quantity}`);
                 }
             } else {
                 toast.error(response.data.message);

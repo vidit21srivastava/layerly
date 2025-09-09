@@ -160,6 +160,7 @@ const Orders = ({ setToken }) => {
                                                         <div className='grid grid-cols-1 md:grid-cols-3 gap-3'>
                                                             <div className='bg-white border border-gray-200 rounded p-3'>
                                                                 <h4 className='font-semibold text-sm mb-2'>Order</h4>
+                                                                <p className='text-sm text-gray-700'>Custom Instruction: {order.address?.instruction || ''}</p>
                                                                 <p className='text-sm text-gray-700'>Order No: #{order._id}</p>
                                                                 <p className='text-sm text-gray-700'>Placed: {formatDate(order.date)}</p>
                                                                 <p className='text-sm text-gray-700'>User ID: {order.userID}</p>

@@ -123,7 +123,7 @@ const Catalogue = () => {
                                 <select
                                     onChange={(e) => setSortType(e.target.value)}
                                     id="sort-select"
-                                    className='border-2 border-gray-300 text-sm px-3 py-2 pr-8 bg-white'
+                                    className='border-2 border-gray-300 text-sm px-3 py-2 pr-2 md:pr-8 bg-white'
                                 >
                                     <option value="relevant">Relevance</option>
                                     <option value="low-high">Price: Low to High</option>

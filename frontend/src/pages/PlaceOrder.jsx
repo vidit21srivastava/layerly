@@ -25,7 +25,8 @@ const PlaceOrder = () => {
         city: '',
         state: '',
         pinCode: '',
-        phone: ''
+        phone: '',
+        instruction: ''
     });
 
     const cartTotal = getCartAmount();
@@ -104,7 +105,8 @@ const PlaceOrder = () => {
                     city: formData.city,
                     state: formData.state,
                     pinCode: formData.pinCode,
-                    phone: formData.phone
+                    phone: formData.phone,
+                    instruction: formData.instruction
                 }
             };
 
@@ -154,7 +156,7 @@ const PlaceOrder = () => {
                             <input className='border border-gray-300 rounded-lg py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
                                 type='text' name='firstName' value={formData.firstName} onChange={handleInputChange} placeholder='First Name' required />
                             <input className='border border-gray-300 rounded-lg py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
-                                type='text' name='lastName' value={formData.lastName} onChange={handleInputChange} placeholder='Last Name' required />
+                                type='text' name='lastName' value={formData.lastName} onChange={handleInputChange} placeholder='Last Name' />
                         </div>
 
                         <input className='border border-gray-300 rounded-lg py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
@@ -178,6 +180,9 @@ const PlaceOrder = () => {
                                 type='tel' name='phone' value={formData.phone} onChange={handleInputChange}
                                 placeholder='Mobile No. (10-digits)' maxLength='10' pattern='\d{10}' required />
                         </div>
+                        <textarea className='border border-gray-300 rounded-lg py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
+                            rows="2" maxLength="100" name='instruction' value={formData.instruction} onChange={handleInputChange} placeholder='Instruction for Custom Order (if any)' />
+
                     </form>
                 </div>
 

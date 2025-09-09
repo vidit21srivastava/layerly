@@ -32,13 +32,13 @@ const Hero = () => {
                 {/* Button Container - Left Aligned */}
                 <div className='flex justify-start gap-4'>
                     <button
-                        className="bg-gray-800 font-sans text-gray-200 px-6 py-3 font-medium hover:bg-opacity-90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                        className="bg-gray-800 font-sans text-gray-200 text-sm md:text-lg px-3 py-3 md:px-6 md:py-3 font-medium hover:bg-opacity-90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
                         onClick={() => navigate('/catalogue')}
                     >
                         Shop Now
                     </button>
                     <button
-                        className="bg-tranparent font-sans text-gray-800 border-2 border-gray-800 px-6 py-3 font-medium hover:bg-opacity-90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                        className="bg-tranparent font-sans text-gray-800 border-2 border-gray-800 text-sm md:text-lg px-3 py-3 md:px-6 md:py-3 font-medium hover:bg-opacity-90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
                         onClick={() => navigate('/custom')}
                     >
                         Order Custom

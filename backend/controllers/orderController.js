@@ -57,7 +57,7 @@ const COMPANY = {
 };
 
 async function fetchLogoBuffer() {
-    // Try absolute URL first
+
     if (COMPANY.logoUrl && /^https?:\/\//i.test(COMPANY.logoUrl)) {
         try {
             const resp = await axios.get(COMPANY.logoUrl, { responseType: 'arraybuffer', timeout: 8000 });
@@ -75,15 +75,15 @@ function formatINR(n) {
 
 const downloadInvoice = async (req, res) => {
     try {
-        const { id } = req.params; // order id
-        const userID = req.body.userID; // from userAuth
+        const { id } = req.params;
+        const userID = req.body.userID;
 
-        // Validate order and permissions
+
         const order = await orderModel.findById(id);
         if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
         if (order.userID !== userID) return res.status(403).json({ success: false, message: 'Forbidden' });
 
-        // Initialize PDF document with A4 margins
+
         const doc = new PDFDocument({ size: 'A4', margin: 50 });
         const filename = `Invoice_${order._id}.pdf`;
         res.setHeader('Content-Type', 'application/pdf');

@@ -113,7 +113,7 @@ const ProductItems = ({ id, name, price, product }) => {
 
                         {/* Price and Add to Cart / Quantity Controls */}
                         <div className='flex items-center justify-between gap-3'>
-                            <p className='text-base sm:text-lg font-semibold text-gray-900 flex-shrink-0'>
+                            <p className='text-base md:text-xl font-semibold text-gray-900 flex-shrink-0'>
                                 <span className='overflow-hidden text-ellipsis whitespace-nowrap block'>
                                     {currency}{price}
                                 </span>
