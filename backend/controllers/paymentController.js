@@ -1,5 +1,3 @@
-// controllers/paymentController.js
-
 import axios from "axios";
 import orderModel from "../models/orderModel.js";
 import Product from "../models/productModel.js";
@@ -19,7 +17,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 let accessToken = null;
 let accessTokenExpiry = 0;
 
-// fetch new OAuth token if expired
+// fetching new OAuth token if expired
 async function getPhonePeToken() {
     const now = Math.floor(Date.now() / 1000);
 
@@ -54,7 +52,7 @@ export const initiatePhonePe = async (req, res) => {
             return res.status(400).json({ success: false, message: "Address is required" });
         }
 
-        // calculate total
+
         let subtotal = 0;
         for (const item of items) {
             if (!item.productId || !item.quantity || !item.color) {
@@ -74,7 +72,7 @@ export const initiatePhonePe = async (req, res) => {
         const totalAmount = subtotal + deliveryFee;
         const merchantOrderId = "MO-" + Date.now();
 
-        // save pending intent
+
         await PaymentIntent.create({
             merchantTransactionId: merchantOrderId,
             userID,
@@ -84,7 +82,7 @@ export const initiatePhonePe = async (req, res) => {
             status: "PENDING",
         });
 
-        // prepare request
+
         const token = await getPhonePeToken();
 
         const payload = {
@@ -199,60 +197,5 @@ export const phonePeCallback = async (req, res) => {
     } catch (err) {
         console.error("PhonePe callback error:", err.response?.data || err.message);
         return res.redirect(`${FRONTEND_URL}/orders?payment=failed`);
-    }
-};
-
-export const checkPhonePeStatus = async (req, res) => {
-    try {
-        const { merchantOrderId } = req.params;
-        if (!merchantOrderId) {
-            return res.status(400).json({ success: false, message: "Missing merchantOrderId" });
-        }
-
-        const token = await getPhonePeToken();
-
-        const statusRes = await axios.get(
-            `${PHONEPE_BASE_URL}/checkout/v2/order/${merchantOrderId}/status?details=true`,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `O-Bearer ${token}`,
-                },
-            }
-        );
-
-        const data = statusRes.data;
-        const orderState = data?.state;
-        const phonePeOrderId = data?.orderId;
-        const phonePeTxnId = data?.paymentDetails?.[0]?.transactionId || null;
-
-        // Find saved intent
-        const intent = await PaymentIntent.findOne({ merchantTransactionId: merchantOrderId });
-        if (intent) {
-            intent.phonePeOrderId = phonePeOrderId;
-            intent.phonePeTxnId = phonePeTxnId;
-            intent.rawResponse = data;
-            intent.status =
-                orderState === "COMPLETED"
-                    ? "SUCCESS"
-                    : orderState === "FAILED"
-                        ? "FAILED"
-                        : "PENDING";
-            await intent.save();
-        }
-
-        return res.status(200).json({
-            success: true,
-            state: orderState,
-            phonePeOrderId,
-            phonePeTxnId,
-            details: data,
-        });
-    } catch (err) {
-        console.error("PhonePe status check error:", err.response?.data || err.message);
-        return res.status(500).json({
-            success: false,
-            message: err.response?.data?.message || err.message,
-        });
     }
 };
