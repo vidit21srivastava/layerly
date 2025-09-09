@@ -29,6 +29,7 @@ app.use(express.json());
 const allowed = [
     process.env.FRONTEND_URL,
     process.env.ADMIN_URL,
+    'https://www.layerly.tech'
 ];
 
 if (process.env.NODE_ENV !== 'production') {
