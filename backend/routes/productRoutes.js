@@ -9,9 +9,9 @@ import {
 } from '../controllers/productController.js';
 import adminAuth from '../middleware/adminAuth.js';
 
-const router = express.Router();
+const productRouter = express.Router();
 
-router.post(
+productRouter.post(
     '/add', adminAuth,
     upload.fields([
         { name: 'image_white', maxCount: 1 },
@@ -23,7 +23,7 @@ router.post(
     addProduct
 );
 
-router.put(
+productRouter.put(
     '/update/:id', adminAuth,
     upload.fields([
         { name: 'image_white', maxCount: 1 },
@@ -35,8 +35,8 @@ router.put(
     updateProduct
 );
 
-router.get('/list', listProduct);
-router.get('/single/:id', singleProduct);
-router.delete('/remove/:id', adminAuth, removeProduct);
+productRouter.get('/list', listProduct);
+productRouter.get('/single/:id', singleProduct);
+productRouter.delete('/remove/:id', adminAuth, removeProduct);
 
-export default router;
+export default productRouter;

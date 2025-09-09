@@ -1,14 +1,17 @@
 import express from 'express';
 import userAuth from '../middleware/userAuth.js';
-import { initiatePhonePe, phonePeCallback } from '../controllers/paymentController.js';
+import { initiatePhonePe, phonePeCallback, checkPhonePeStatus } from '../controllers/paymentController.js';
 
-const router = express.Router();
+const paymentRouter = express.Router();
 
 // Start payment
-router.post('/phonepe/initiate', userAuth, initiatePhonePe);
+paymentRouter.post('/phonepe/initiate', userAuth, initiatePhonePe);
 
 // Redirect/callback from PhonePe
-router.post('/phonepe/callback', phonePeCallback);
-router.get('/phonepe/callback', phonePeCallback);
+paymentRouter.post('/phonepe/callback', phonePeCallback);
+paymentRouter.get('/phonepe/callback', phonePeCallback);
 
-export default router;
+// Manual status check (frontend can poll this)
+paymentRouter.get('/phonepe/status/:merchantOrderId', userAuth, checkPhonePeStatus);
+
+export default paymentRouter;

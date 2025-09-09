@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 const paymentIntentSchema = new mongoose.Schema(
   {
     merchantTransactionId: { type: String, required: true, unique: true, index: true },
+    phonePeOrderId: { type: String },
+    phonePeTxnId: { type: String },
     userID: { type: String, required: true },
     items: { type: Array, required: true },
     amount: { type: Number, required: true },
@@ -14,6 +16,7 @@ const paymentIntentSchema = new mongoose.Schema(
       default: "PENDING",
       required: true,
     },
+    rawResponse: { type: Object },
   },
   { timestamps: true }
 );
