@@ -1,6 +1,8 @@
 import PDFDocument from 'pdfkit';
 import axios from 'axios';
 import orderModel from '../models/orderModel.js';
+import { sendOrderStatusEmail } from '../config/email.js';
+import userModel from '../models/userModel.js';
 
 // ADMIN: get all orders
 const allOrders = async (req, res) => {
@@ -32,21 +34,55 @@ const updateStatus = async (req, res) => {
         if (!orderId || !status) {
             return res.status(400).json({ success: false, message: "Order ID and status are required" });
         }
+
         const order = await orderModel.findByIdAndUpdate(orderId, { status }, { new: true });
         if (!order) {
             return res.status(404).json({ success: false, message: "Order not found" });
         }
+
+
         res.status(200).json({
             success: true,
             message: "Order status updated successfully",
             order,
         });
+
+
+        (async () => {
+            try {
+
+                let to = order?.address?.email || null;
+                let name = `${order?.address?.firstName || ''} ${order?.address?.lastName || ''}`.trim();
+
+                if (!to) {
+                    const user = await userModel.findById(order.userID);
+                    if (user?.email) {
+                        to = user.email;
+                        if (!name && user.name) name = user.name;
+                    }
+                }
+
+                if (!to) {
+                    console.warn(`Order ${orderId}: no email found to send status update`);
+                    return;
+                }
+
+                await sendOrderStatusEmail({
+                    to,
+                    name,
+                    status,
+                    order,
+                });
+            } catch (e) {
+                console.error('Failed to send order status email:', e?.message || e);
+            }
+        })();
+
     } catch (error) {
         console.error("Update status error:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
-
 
 const COMPANY = {
     gstin: process.env.COMPANY_GSTIN || 'UDYAM-GJ-03-0051710',

@@ -124,7 +124,7 @@ const Orders = ({ setToken }) => {
                                                     onChange={(e) => updateOrderStatus(order._id, e.target.value)}
                                                     disabled={updating === order._id}
                                                 >
-                                                    {['Order Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map(s => (
+                                                    {['Order Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Refunded'].map(s => (
                                                         <option key={s} value={s}>{s}</option>
                                                     ))}
                                                 </select>
