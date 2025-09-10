@@ -103,6 +103,8 @@ async function start() {
     app.use('/api/custom', customRouter);
 
     app.get('/', (req, res) => res.send('API Working'));
+    app.get('/health', (req, res) => res.send('OK'));
+
 
     // Error handler
     app.use((err, req, res, next) => {
