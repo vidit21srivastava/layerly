@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 const List = ({ setToken }) => {
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [updating, setUpdating] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
     const [editFormData, setEditFormData] = useState({
         productID: '',
@@ -127,6 +128,7 @@ const List = ({ setToken }) => {
     };
 
     const handleEditSubmit = async (e, productId) => {
+        setUpdating(true);
         e.preventDefault();
 
         try {
@@ -181,6 +183,8 @@ const List = ({ setToken }) => {
             } else {
                 toast.error(error.response?.data?.message || 'Failed to update product');
             }
+        } finally {
+            setUpdating(false);
         }
     };
 
@@ -383,10 +387,13 @@ const List = ({ setToken }) => {
 
                                                 <div className="flex gap-3 pt-2">
                                                     <button
-                                                        type="submit"
-                                                        className="bg-amber-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition-colors"
+                                                        type="submit" disabled={updating}
+                                                        className={`px-4 py-2 rounded-lg font-bold transition-colors ${updating
+                                                                ? "bg-gray-400 text-white cursor-not-allowed"
+                                                                : "bg-amber-500 text-white hover:bg-gray-700"
+                                                            }`}
                                                     >
-                                                        Save Changes
+                                                        {updating ? "Updating..." : "Save Changes"}
                                                     </button>
                                                     <button
                                                         type="button"

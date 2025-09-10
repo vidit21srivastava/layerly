@@ -196,7 +196,7 @@ const Add = ({ setToken }) => {
 
     return (
         <form onSubmit={onSubmitHandler} className="p-3 sm:p-6 max-w-7xl mx-auto">
-            {/* Error and Success Messages */}
+
             {error && (
                 <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
                     {error}
