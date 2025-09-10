@@ -282,7 +282,7 @@ const Orders = () => {
                                                         Reorder Items
                                                     </button>
                                                 )}
-                                                {/* Track Order button removed as requested */}
+
                                                 <button onClick={() => handleDownloadInvoice(order._id)} className='w-full border border-gray-300 text-gray-700 py-2.5 px-4 rounded-lg text-sm font-bold hover:bg-gray-50 transition-colors duration-200'>
                                                     Download Invoice
                                                 </button>
