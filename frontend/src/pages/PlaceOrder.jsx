@@ -181,7 +181,7 @@ const PlaceOrder = () => {
                                 placeholder='Mobile No. (10-digits)' maxLength='10' pattern='\d{10}' required />
                         </div>
                         <textarea className='border border-gray-300 rounded-lg py-2.5 px-3.5 w-full focus:border-gray-500 focus:outline-none'
-                            rows="2" maxLength="100" name='instruction' value={formData.instruction} onChange={handleInputChange} placeholder='Instruction for Custom Order (if any)' />
+                            rows="2" maxLength="500" name='instruction' value={formData.instruction} onChange={handleInputChange} placeholder='Instruction for Custom Order (if any)' />
 
                     </form>
                 </div>

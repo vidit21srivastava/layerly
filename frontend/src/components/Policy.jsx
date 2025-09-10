@@ -94,7 +94,7 @@ const Policy = () => {
                                 />
                             </button>
                             {openIndex === 1 && (
-                                <div className="px-5 pb-4 text-sm text-gray-600">
+                                <div className="px-5 pb-4 text-gray-600">
                                     <p>Orders are usually delivered within 5–7 working days, depending on your location.</p>
                                 </div>
                             )}
@@ -113,7 +113,7 @@ const Policy = () => {
                                 />
                             </button>
                             {openIndex === 2 && (
-                                <div className="px-5 pb-4 text-sm text-gray-600 ">
+                                <div className="px-5 pb-4 text-gray-600 ">
                                     <p>To cancel your order, you must call us at +91 96648 51323 (as listed in the Contact section). If order processing has not yet begun, we may provide a refund. For refunds, please email us your bank account or UPI details along with your Order ID.</p>
                                 </div>
                             )}
@@ -132,7 +132,7 @@ const Policy = () => {
                                 />
                             </button>
                             {openIndex === 3 && (
-                                <div className="px-5 pb-4 text-sm text-gray-600 ">
+                                <div className="px-5 pb-4  text-gray-600 ">
                                     <p>Order processing begins within 24–48 hours of order placement. You will receive an email notification when processing starts.</p>
                                 </div>
                             )}
@@ -151,7 +151,7 @@ const Policy = () => {
                                 />
                             </button>
                             {openIndex === 4 && (
-                                <div className="px-5 pb-4 text-sm text-gray-600 ">
+                                <div className="px-5 pb-4 text-gray-600 ">
                                     <p>At checkout, enter the text to be printed in the Info field. For multiple items, format it as "Product_Name - Text_to_be_printed".</p>
                                 </div>
                             )}
@@ -169,7 +169,7 @@ const Policy = () => {
                                 />
                             </button>
                             {openIndex === 5 && (
-                                <div className="px-5 pb-4 text-sm text-gray-600 ">
+                                <div className="px-5 pb-4  text-gray-600 ">
                                     <p>For detailed information refer to the link mentioned in the Company section at the end of this page.</p>
                                 </div>
                             )}
