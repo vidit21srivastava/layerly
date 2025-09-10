@@ -11,7 +11,4 @@ paymentRouter.post('/phonepe/initiate', userAuth, initiatePhonePe);
 paymentRouter.post('/phonepe/callback', phonePeCallback);
 paymentRouter.get('/phonepe/callback', phonePeCallback);
 
-//Manual Check
-paymentRouter.get('/phonepe/status/:merchantOrderId', userAuth, checkPhonePeStatus);
-
 export default paymentRouter;
