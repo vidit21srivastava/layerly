@@ -13,11 +13,11 @@ const CLIENT_VERSION = process.env.PHONEPE_CLIENT_VERSION || 1;
 const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 4000}`;
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
-// cache token in memory
+
 let accessToken = null;
 let accessTokenExpiry = 0;
 
-// fetching new OAuth token if expired
+
 async function getPhonePeToken() {
     const now = Math.floor(Date.now() / 1000);
 
@@ -41,7 +41,7 @@ async function getPhonePeToken() {
     return accessToken;
 }
 
-export const initiatePhonePe = async (req, res) => {
+const initiatePhonePe = async (req, res) => {
     try {
         const { items, address, userID } = req.body;
 
@@ -127,7 +127,7 @@ export const initiatePhonePe = async (req, res) => {
     }
 };
 
-export const phonePeCallback = async (req, res) => {
+const phonePeCallback = async (req, res) => {
     try {
         const { merchantOrderId } = { ...req.query, ...req.body };
         if (!merchantOrderId) {
@@ -136,7 +136,7 @@ export const phonePeCallback = async (req, res) => {
 
         const token = await getPhonePeToken();
 
-        // Fetch order status from PhonePe
+
         const statusRes = await axios.get(
             `${PHONEPE_BASE_URL}/checkout/v2/order/${merchantOrderId}/status?details=true`,
             {
@@ -152,13 +152,13 @@ export const phonePeCallback = async (req, res) => {
         const phonePeOrderId = data?.orderId;
         const phonePeTxnId = data?.paymentDetails?.[0]?.transactionId || null;
 
-        // Find saved intent
+
         const intent = await PaymentIntent.findOne({ merchantTransactionId: merchantOrderId });
         if (!intent) {
             return res.redirect(`${FRONTEND_URL}/orders?payment=failed`);
         }
 
-        // Update intent with PhonePe response
+
         intent.phonePeOrderId = phonePeOrderId;
         intent.phonePeTxnId = phonePeTxnId;
         intent.rawResponse = data;
@@ -188,7 +188,7 @@ export const phonePeCallback = async (req, res) => {
 
             return res.redirect(`${FRONTEND_URL}/orders?payment=failed`);
         } else {
-            // Still pending
+
             intent.status = "PENDING";
             await intent.save();
 
@@ -199,3 +199,60 @@ export const phonePeCallback = async (req, res) => {
         return res.redirect(`${FRONTEND_URL}/orders?payment=failed`);
     }
 };
+
+const checkPhonePeStatus = async (req, res) => {
+    try {
+        const { merchantOrderId } = req.params;
+        if (!merchantOrderId) {
+            return res.status(400).json({ success: false, message: "Missing merchantOrderId" });
+        }
+
+        const token = await getPhonePeToken();
+
+        const statusRes = await axios.get(
+            `${PHONEPE_BASE_URL}/checkout/v2/order/${merchantOrderId}/status?details=true`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `O-Bearer ${token}`,
+                },
+            }
+        );
+
+        const data = statusRes.data;
+        const orderState = data?.state;
+        const phonePeOrderId = data?.orderId;
+        const phonePeTxnId = data?.paymentDetails?.[0]?.transactionId || null;
+
+
+        const intent = await PaymentIntent.findOne({ merchantTransactionId: merchantOrderId });
+        if (intent) {
+            intent.phonePeOrderId = phonePeOrderId;
+            intent.phonePeTxnId = phonePeTxnId;
+            intent.rawResponse = data;
+            intent.status =
+                orderState === "COMPLETED"
+                    ? "SUCCESS"
+                    : orderState === "FAILED"
+                        ? "FAILED"
+                        : "PENDING";
+            await intent.save();
+        }
+
+        return res.status(200).json({
+            success: true,
+            state: orderState,
+            phonePeOrderId,
+            phonePeTxnId,
+            details: data,
+        });
+    } catch (err) {
+        console.error("PhonePe status check error:", err.response?.data || err.message);
+        return res.status(500).json({
+            success: false,
+            message: err.response?.data?.message || err.message,
+        });
+    }
+};
+
+export { checkPhonePeStatus, initiatePhonePe, phonePeCallback };
