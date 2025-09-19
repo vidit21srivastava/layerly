@@ -320,7 +320,7 @@ const Product = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
 
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Policies</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Shop with Confidence</h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col items-center gap-3 bg-white border border-gray-200 rounded-xl shadow-sm px-4 py-6 text-center">
                 <img
