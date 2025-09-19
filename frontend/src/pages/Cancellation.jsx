@@ -8,7 +8,7 @@ const Cancellation = () => {
                     <div className='py-10 border rounded-xl sm:py-15 bg-gradient-to-bl from-brand-orange to-pink-600 text-white mb-4'>
                         <div className='max-w-4xl mx-auto px-4 text-center'>
                             <h1 className='text-2xl sm:text-5xl font-semibold'>
-                                Refund & Cancellations
+                                Refund & Cancellation
                             </h1>
                         </div>
 

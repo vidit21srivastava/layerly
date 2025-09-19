@@ -48,7 +48,7 @@ const Footer = () => {
                                 { text: 'About Us', href: '/about' },
                                 { text: 'Return Policy', href: '/returns' },
                                 { text: 'Shipping Policy', href: '/shipping' },
-                                { text: 'Refunds & Cancellation', href: '/cancellation' },
+                                { text: 'Refund & Cancellation', href: '/cancellation' },
                                 { text: 'Privacy Policy', href: '/privacy' },
                                 { text: 'Terms & Conditions', href: '/tac' }
                             ].map((item, index) => (
