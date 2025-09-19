@@ -67,7 +67,7 @@ const PlaceOrder = () => {
         return true;
     };
 
-    // Convert cart items to order format
+
     const getOrderItems = () => {
         const orderItems = [];
         for (const itemId in cartItems) {

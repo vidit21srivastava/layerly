@@ -22,13 +22,13 @@ const Login = () => {
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        // Redirect if already logged in
+
         if (token) {
             navigate('/');
             return;
         }
 
-        // Check for error params
+
         const error = searchParams.get('error');
         if (error === 'auth_failed') {
             toast.error('Google authentication failed');

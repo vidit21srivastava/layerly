@@ -58,15 +58,19 @@ const Navbar = () => {
             <ul className='hidden sm:flex gap-5 text-sm text-grey-700'>
                 <NavLink to='/' className='flex flex-col items-center gap-1'>
                     <p className='delius-unicase-regular'>HOME</p>
+                    <hr className='w-2/4 h-[1.5px] border-none bg-gray-700 hidden' />
                 </NavLink>
                 <NavLink to='/catalogue' className='flex flex-col items-center gap-1'>
                     <p className='delius-unicase-regular'>CATALOGUE</p>
+                    <hr className='w-2/4 h-[1.5px] border-none bg-gray-700 hidden' />
                 </NavLink>
                 <NavLink to='/custom' className='flex flex-col items-center gap-1'>
                     <p className='delius-unicase-regular'>CUSTOM</p>
+                    <hr className='w-2/4 h-[1.5px] border-none bg-gray-700 hidden' />
                 </NavLink>
                 <NavLink to='/about' className='flex flex-col items-center gap-1'>
                     <p className='delius-unicase-regular'>ABOUT</p>
+                    <hr className='w-2/4 h-[1.5px] border-none bg-gray-700 hidden' />
                 </NavLink>
             </ul>
 

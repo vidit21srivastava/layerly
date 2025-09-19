@@ -3,19 +3,19 @@ import { Link } from 'react-router-dom';
 
 const About = () => {
     return (
-        <div className='border-t border-gray-300'>
-            <main className='pt-8 sm:pt-14 pb-12 sm:pb-16'>
+        <div>
+            <main className='pt-8 pb-12 sm:pb-16'>
                 <section className=' mx-auto px-4'>
-                    <div className='text-center mb-8'>
-                        <h1 className='delius-unicase-regular text-2xl sm:text-3xl lg:text-4xl font-normal text-gray-700 mb-4'>
-                            ABOUT LAYERLY
-                        </h1>
-                        <div className='flex justify-center mb-8'>
-                            <hr className='w-16 border-none h-[2px] bg-gray-500' />
+                    <div className='py-10 border rounded-xl sm:py-15 bg-gradient-to-bl from-brand-orange to-pink-600 text-white mb-4'>
+                        <div className='max-w-4xl mx-auto px-4 text-center'>
+                            <h1 className='text-2xl sm:text-5xl font-semibold'>
+                                About Layerly
+                            </h1>
                         </div>
+
                     </div>
 
-                    <div className='space-y-6 text-gray-600 leading-relaxed'>
+                    <div className='space-y-6 text-gray-600 text-justify leading-relaxed'>
                         <p className='text-base sm:text-lg'>
                             Founded in 2024 within the vibrant environment of IIT Bhubaneswar's hostel rooms,
                             Layerly began as a student-driven initiative to support academic innovation by offering
@@ -50,7 +50,7 @@ const About = () => {
                 </section>
             </main>
 
-            {/* CTA Section */}
+
             <div className='py-16 border rounded-xl sm:py-20 bg-gradient-to-bl from-gray-900 to-gray-500 text-white'>
                 <div className='max-w-4xl mx-auto px-4 text-center'>
                     <h2 className='text-2xl sm:text-3xl font-semibold mb-10'>
@@ -67,7 +67,7 @@ const About = () => {
                             to="/custom"
                             className='border border-white text-white px-8 py-3 font-bold hover:bg-white hover:text-gray-900 transition-colors duration-200'
                         >
-                            Custom Order
+                            Order Custom
                         </Link>
                     </div>
                 </div>

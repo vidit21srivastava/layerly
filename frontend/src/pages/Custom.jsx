@@ -101,20 +101,22 @@ const Custom = () => {
     };
 
     return (
-        <div className='border-t border-gray-300'>
-            <main className='pt-8 sm:pt-14 pb-12 sm:pb-16'>
-                <div className='max-w-7xl mx-auto px-4'>
-                    <h1 className='delius-unicase-regular text-2xl sm:text-3xl lg:text-4xl font-normal text-gray-700 mb-4 text-center'>
-                        PRINT CUSTOM
-                    </h1>
-                    <div className='flex justify-center mb-8'>
-                        <hr className='w-16 border-none h-[2px] bg-gray-500' />
+        <div>
+            <main className='pt-8 pb-12 sm:pb-16'>
+                <div className='mx-auto px-4'>
+                    <div className='py-10 border rounded-xl sm:py-15 bg-gradient-to-bl from-brand-orange to-pink-600 text-white mb-4'>
+                        <div className='max-w-4xl mx-auto px-4 text-center'>
+                            <h1 className='text-2xl sm:text-5xl font-semibold'>
+                                Order Custom
+                            </h1>
+                        </div>
+
                     </div>
                     <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-                        {/* Form */}
+
                         <div className='lg:col-span-2'>
                             <form onSubmit={handleSubmit} className='space-y-8'>
-                                {/* Drive Link */}
+
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>
                                         STL File Link - Google Drive
@@ -132,7 +134,7 @@ const Custom = () => {
                                     </p>
                                 </div>
 
-                                {/* Requester info */}
+
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <h2 className='text-lg font-semibold text-gray-900 mb-4'>Your Details</h2>
                                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
@@ -163,7 +165,7 @@ const Custom = () => {
                                     </div>
                                 </div>
 
-                                {/* Print settings */}
+
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>
                                         Print Settings
@@ -231,7 +233,7 @@ const Custom = () => {
                                     </div>
                                 </div>
 
-                                {/* Add-ons */}
+
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4'>Add-ons</h2>
                                     <div className='space-y-3'>
@@ -250,7 +252,7 @@ const Custom = () => {
                                     </div>
                                 </div>
 
-                                {/* Color */}
+
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <label className='block text-sm font-medium text-gray-700 mb-3'>Choose Color</label>
                                     <div className='flex gap-3'>
@@ -269,7 +271,7 @@ const Custom = () => {
                                     <p className='text-sm text-gray-600 mt-2'>Selected: {selectedColor}</p>
                                 </div>
 
-                                {/* Instructions */}
+
                                 <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
                                     <h2 className='text-lg font-semibold text-gray-900 mb-4'>Special Instructions</h2>
                                     <textarea
@@ -291,7 +293,7 @@ const Custom = () => {
                             </form>
                         </div>
 
-                        {/* Preview */}
+
                         <div className='lg:col-span-1'>
                             <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm sticky top-4'>
                                 <h3 className='text-lg font-semibold text-gray-900 mb-4'>3D Model Preview</h3>

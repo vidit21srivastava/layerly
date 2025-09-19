@@ -95,7 +95,7 @@ const ResetPassword = () => {
                                 onClick={() => setShowPassword(!showPassword)}
                                 className='absolute inset-y-0 right-0 top-6 px-3 flex items-center text-gray-600'
                             >
-                                {showPassword ? '👁️' : '👁️‍🗨️'}
+                                {showPassword ? <img className='w-4' src='https://img.icons8.com/?size=100&id=85028&format=png&color=000000' /> : <img className='w-4' src='https://img.icons8.com/?size=100&id=85035&format=png&color=000000' />}
                             </button>
                         </div>
 
@@ -118,7 +118,7 @@ const ResetPassword = () => {
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 className='absolute inset-y-0 right-0 top-6 px-3 flex items-center text-gray-600'
                             >
-                                {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                                {showConfirmPassword ? <img className='w-4' src='https://img.icons8.com/?size=100&id=85028&format=png&color=000000' /> : <img className='w-4' src='https://img.icons8.com/?size=100&id=85035&format=png&color=000000' />}
                             </button>
                         </div>
 
@@ -126,8 +126,8 @@ const ResetPassword = () => {
                             type='submit'
                             disabled={loading}
                             className={`w-full py-2 px-4 rounded-lg font-medium ${loading
-                                    ? 'bg-gray-400 cursor-not-allowed'
-                                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-blue-600 text-white hover:bg-blue-700'
                                 } transition-colors`}
                         >
                             {loading ? 'Resetting Password...' : 'Reset Password'}

@@ -13,13 +13,10 @@ const Footer = () => {
                             <img src={assets.logo_slogan} className='w-36 object-contain' alt="Company Logo" />
 
                         </div>
-                        <p className='w-full md:w-4/5 text-gray-600 leading-relaxed text-sm'>
+                        <p className='w-full md:w-4/5 text-gray-600 text-jusitfy leading-relaxed text-sm'>
                             Embark on a journey of 3D printing with Layerly! Personalize, innovate, and turn your ideas into reality with us.
-
                             Browse our curated catalogue for a range of pre-designed accessories, from your daily chores to specific needs.
-
                             Prefer a unique touch? Upload your design to our Custom 3D Print section and experience the joy of bringing your vision to life—exactly as you imagined.<br />
-
                             We Design, Develop, Deliver - one layer at a time.
                         </p>
 
@@ -49,8 +46,11 @@ const Footer = () => {
                             {[
                                 { text: 'Home', href: '/' },
                                 { text: 'About Us', href: '/about' },
-                                { text: 'Privacy Policy', href: 'https://drive.google.com/file/d/1O8KuMVZCtDtBtt9LVbNJTmvzm0e_bCZR/view?usp=sharing' },
-                                { text: 'Terms of Service', href: 'https://drive.google.com/file/d/1kEuwZ05TV9xh1cMKbw8t-6m9r9j49FwA/view?usp=sharing' }
+                                { text: 'Return Policy', href: '/returns' },
+                                { text: 'Shipping Policy', href: '/shipping' },
+                                { text: 'Refunds & Cancellation', href: '/cancellation' },
+                                { text: 'Privacy Policy', href: '/privacy' },
+                                { text: 'Terms & Conditions', href: '/tac' }
                             ].map((item, index) => (
                                 <li key={index}>
                                     <a href={item.href} className='text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200 cursor-pointer flex items-center group'>
@@ -71,11 +71,18 @@ const Footer = () => {
                         <ul className='space-y-3'>
                             <li className='text-sm text-gray-600 flex items-start'>
                                 <span className="w-4 h-4 mt-0.5 mr-3 flex-shrink-0"><img src={assets.mail} /></span>
-                                <a href='mailto:layerly2024@gmail.com'><span>layerly2024@gmail.com</span></a>
+                                <a href='mailto:team.layerly@gmail.com'><span>team.layerly@gmail.com</span></a>
                             </li>
                             <li className='text-sm text-gray-600 flex items-start'>
                                 <span className="w-4 h-4 mt-0.5 mr-3 flex-shrink-0"><img src={assets.phone} /></span>
                                 <span>+91 96648 51323</span>
+                            </li>
+                            <li className='text-sm text-gray-600 flex items-start'>
+                                <span className="w-4 h-4 mt-0.5 mr-3 flex-shrink-0"><img src={assets.address} /></span>
+                                <span>Ranchhodray Nagar Society,<br />
+                                    B/H Payal Cinema, ITI Road,<br />
+                                    Vasad, Anand, Gujarat,<br />
+                                    388306.</span>
                             </li>
                         </ul>
                     </div>
