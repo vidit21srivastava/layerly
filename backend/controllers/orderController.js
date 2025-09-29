@@ -70,7 +70,7 @@ async function fetchLogoBuffer() {
 
 function formatINR(n) {
     const val = Number(n || 0);
-    return `₹${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `Rs. ${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 const downloadInvoice = async (req, res) => {
