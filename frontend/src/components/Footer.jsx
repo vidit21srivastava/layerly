@@ -105,7 +105,7 @@ const Footer = () => {
                 </span>
                 <span>
                   <strong>
-                    Layerly <br />
+                    Layerly
                   </strong>
                   <br />
                   Ranchhodray Nagar Society,
