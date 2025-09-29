@@ -22,9 +22,14 @@ import linkedin from './icons8-linkedin.svg';
 import xcom from './icons8-x.svg'
 import phone from './reshot-icon-phone-XVG9DMYSLJ.svg';
 import mail from './reshot-icon-message-5LPNC7XTWA.svg';
-
+import fastforward from './icons8-fast-forward-100.png';
+import moneysaving from './moneysaving.png';
+import address from './icons8-address-50.png';
 
 export const assets = {
+    address,
+    fastforward,
+    moneysaving,
     cross_icon_24,
     search_icon_30,
     mail,

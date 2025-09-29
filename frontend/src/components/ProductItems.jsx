@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext'
 
 const ProductItems = ({ id, name, price, product }) => {
@@ -34,134 +35,131 @@ const ProductItems = ({ id, name, price, product }) => {
         }
     }
 
-    return (
-        <div className='text-gray-700 group block w-full'>
-            <div className='overflow-hidden bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 h-full flex flex-col'>
-                {/* Product Image */}
-                <div className='aspect-square bg-gray-50 relative overflow-hidden'>
-                    <img
-                        className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
-                        src={currentImage}
-                        alt={name}
-                        loading="lazy"
-                    />
+    return (<Link to={`/product/${id}`} className='text-gray-700 cursor-pointer group block w-full'>
 
-                    {/* Bestseller Badge */}
-                    {product?.bestseller && (
-                        <div className='absolute top-2 left-2 bg-orange-400 text-white px-2 py-1 text-xs sm:text-xs font-semibold rounded-2xl shadow-sm'>
-                            BESTSELLER
-                        </div>
-                    )}
-                </div>
 
-                {/* Product Info */}
-                <div className='p-3 sm:p-4 flex-1 flex flex-col'>
-                    {/* Product Name with proper ellipsis */}
-                    <h3 className='text-sm sm:text-base font-medium mb-2 flex-shrink-0'>
-                        <span
-                            className='block overflow-hidden text-ellipsis whitespace-nowrap sm:whitespace-normal sm:line-clamp-2'
-                            title={name}
-                        >
-                            {name}
-                        </span>
-                    </h3>
+        {/* <div className='text-gray-700 group block w-full'> */}
+        <div className='overflow-hidden bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 h-full flex flex-col'>
 
-                    {/* Color, Price and Category Container */}
-                    <div className='mt-auto'>
-                        {/* Color Selection */}
-                        <p className='text-xs text-gray-500 mb-2'>Color:</p>
-                        <div className='flex gap-1.5 sm:gap-2 flex-wrap'>
-                            {product?.availableColors.map((color) => (
+            <div className='aspect-square bg-gray-50 relative overflow-hidden'>
+                <img
+                    className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
+                    src={currentImage}
+                    alt={name}
+                    loading="lazy"
+                />
+
+
+                {product?.bestseller && (
+                    <div className='absolute top-2 left-2 bg-orange-400 text-white px-2 py-1 text-xs sm:text-xs font-semibold rounded-2xl shadow-sm'>
+                        BESTSELLER
+                    </div>
+                )}
+            </div>
+
+
+            <div className='p-3 sm:p-4 flex-1 flex flex-col'>
+
+                <h3 className='text-sm sm:text-base font-medium mb-2 flex-shrink-0'>
+                    <span
+                        className='block overflow-hidden text-ellipsis whitespace-nowrap sm:whitespace-normal sm:line-clamp-2'
+                        title={name}
+                    >
+                        {name}
+                    </span>
+                </h3>
+
+
+                <div className='mt-auto'>
+
+                    <div className='flex gap-1.5 sm:gap-2 flex-wrap'>
+                        {product?.availableColors.map((color) => (
+                            <button
+                                key={color}
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    setSelectedColor(color)
+                                }}
+                                className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 transition-all touch-manipulation ${selectedColor === color
+                                    ? 'border-gray-800 scale-110'
+                                    : 'border-gray-300 hover:border-gray-500'
+                                    }`}
+                                style={{
+                                    backgroundColor: getColorHex(color)
+                                }}
+                                title={color}
+                                aria-label={`Select ${color} color`}
+                            />
+                        ))}
+                    </div>
+                    <p
+                        className='text-xs text-gray-600 mt-2 overflow-hidden text-ellipsis whitespace-nowrap'
+                        title={selectedColor}
+                    >
+                        {selectedColor}
+                    </p>
+
+
+                    <p
+                        className='text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap mt-1 mb-2'
+                        title={product?.category}
+                    >
+                        {product?.category}
+                    </p>
+
+
+
+                    <div className='flex items-center justify-between gap-3'>
+                        <p className='text-base md:text-xl font-semibold text-gray-900 flex-shrink-0'>
+                            <span className='overflow-hidden text-ellipsis whitespace-nowrap block'>
+                                {currency}{price}
+                            </span>
+                        </p>
+
+                        {!isInCart ? (
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    handleAddToCart()
+                                }}
+                                className='flex-shrink-0 cursor-pointer bg-gray-900 text-white py-1.5 px-3 md:py-2 md:px-4 rounded-lg text-xs md:text-sm font-bold hover:bg-orange-400 transition-colors duration-200 active:scale-95 transform'
+                            >
+                                Add to Cart
+                            </button>
+                        ) : (
+                            <div className='flex items-center justify-between bg-gray-100 rounded-lg p-0.5 md:p-1 flex-shrink-0 min-w-[100px] md:min-w-[120px]'>
                                 <button
-                                    key={color}
                                     onClick={(e) => {
                                         e.preventDefault()
-                                        setSelectedColor(color)
+                                        handleQuantityChange(-1)
                                     }}
-                                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 transition-all touch-manipulation ${selectedColor === color
-                                        ? 'border-gray-800 scale-110'
-                                        : 'border-gray-300 hover:border-gray-500'
-                                        }`}
-                                    style={{
-                                        backgroundColor: getColorHex(color)
-                                    }}
-                                    title={color}
-                                    aria-label={`Select ${color} color`}
-                                />
-                            ))}
-                        </div>
-                        <p
-                            className='text-xs text-gray-600 mt-1 overflow-hidden text-ellipsis whitespace-nowrap'
-                            title={selectedColor}
-                        >
-                            {selectedColor}
-                        </p>
-
-                        {/* Category */}
-                        <p
-                            className='text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap mt-1'
-                            title={product?.category}
-                        >
-                            {product?.category}
-                        </p>
-                        <p
-                            className='text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap mt-1 mb-3'
-                            title={product?.description}
-                        >
-                            {product?.description}
-                        </p>
-
-                        {/* Price and Add to Cart / Quantity Controls */}
-                        <div className='flex items-center justify-between gap-3'>
-                            <p className='text-base md:text-xl font-semibold text-gray-900 flex-shrink-0'>
-                                <span className='overflow-hidden text-ellipsis whitespace-nowrap block'>
-                                    {currency}{price}
-                                </span>
-                            </p>
-
-                            {!isInCart ? (
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault()
-                                        handleAddToCart()
-                                    }}
-                                    className='flex-shrink-0 cursor-pointer bg-gray-900 text-white py-1.5 px-3 md:py-2 md:px-4 rounded-lg text-xs md:text-sm font-bold hover:bg-orange-400 transition-colors duration-200 active:scale-95 transform'
+                                    className='w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200 active:scale-95 transform'
                                 >
-                                    Add to Cart
+                                    <span className='cursor-pointer text-gray-600 font-medium text-base md:text-lg leading-none'>−</span>
                                 </button>
-                            ) : (
-                                <div className='flex items-center justify-between bg-gray-100 rounded-lg p-0.5 md:p-1 flex-shrink-0 min-w-[100px] md:min-w-[120px]'>
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault()
-                                            handleQuantityChange(-1)
-                                        }}
-                                        className='w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200 active:scale-95 transform'
-                                    >
-                                        <span className='cursor-pointer text-gray-600 font-medium text-base md:text-lg leading-none'>−</span>
-                                    </button>
 
-                                    <span className='text-xs md:text-sm font-medium text-gray-900 min-w-[1.5rem] md:min-w-[2rem] text-center'>
-                                        {currentQuantity}
-                                    </span>
+                                <span className='text-xs md:text-sm font-medium text-gray-900 min-w-[1.5rem] md:min-w-[2rem] text-center'>
+                                    {currentQuantity}
+                                </span>
 
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault()
-                                            handleQuantityChange(1)
-                                        }}
-                                        className='w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200 active:scale-95 transform'
-                                    >
-                                        <span className='cursor-pointer text-gray-600 font-medium text-base md:text-lg leading-none'>+</span>
-                                    </button>
-                                </div>
-                            )}
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        handleQuantityChange(1)
+                                    }}
+                                    className='w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200 active:scale-95 transform'
+                                >
+                                    <span className='cursor-pointer text-gray-600 font-medium text-base md:text-lg leading-none'>+</span>
+                                </button>
+                            </div>
+                        )}
 
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        {/* </div> */}
+    </Link>
     )
 }
 

@@ -77,7 +77,7 @@ const Profile = () => {
             if (response.data.success) {
                 toast.success('Profile updated successfully!');
                 setIsEditing(false);
-                getUserProfile(); // Refresh user data
+                getUserProfile();
             }
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Failed to update profile';
@@ -119,7 +119,7 @@ const Profile = () => {
             const payload = {
                 newPassword: pwdData.newPassword
             };
-            // For normal email/password accounts, send currentPassword too
+
             if (user?.hasGoogleAccount !== true) {
                 payload.currentPassword = pwdData.currentPassword;
             }

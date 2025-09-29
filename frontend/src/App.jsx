@@ -16,6 +16,12 @@ import ResetPassword from './pages/ResetPassword'
 import AuthSuccess from './pages/AuthSuccess'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Product from './pages/Product'
+import TAC from './pages/TAC'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import Returns from './pages/Returns'
+import Shipping from './pages/Shipping'
+import Cancellation from './pages/Cancellation'
 
 const App = () => {
   return (
@@ -39,8 +45,14 @@ const App = () => {
         <Route path='/' element={<Home />} />
         <Route path='/catalogue' element={<Catalogue />} />
         <Route path='/about' element={<About />} />
+        <Route path='/tac' element={<TAC />} />
+        <Route path='/privacy' element={<PrivacyPolicy />} />
+        <Route path='/returns' element={<Returns />} />
+        <Route path='/shipping' element={<Shipping />} />
+        <Route path='/cancellation' element={<Cancellation />} />
         <Route path='/custom' element={<Custom />} />
         <Route path='/cart' element={<Cart />} />
+        <Route path='/product/:productId' element={<Product />} />
         <Route path='/login' element={<Login />} />
         <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='/orders' element={<Orders />} />

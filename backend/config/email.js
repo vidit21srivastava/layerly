@@ -283,5 +283,83 @@ const sendCustomQuoteReplyEmail = async ({ to, name, remark, price, stlUrl }) =>
     }
 };
 
-export { sendVerificationEmail, sendPasswordResetEmail, sendCustomQuoteReplyEmail, sendWelcomeEmail };
+
+const sendOrderStatusEmail = async ({ to, name, status, order }) => {
+    const transporter = createTransporter();
+
+    const orderIdShort = order?._id?.toString()?.slice(-8) || '';
+    const itemsCount = Array.isArray(order?.items) ? order.items.reduce((s, it) => s + (it.quantity || 0), 0) : 0;
+    const amount = Number(order?.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+    const placedAt = order?.date ? new Date(order.date).toLocaleString('en-IN') : '';
+    const ordersUrl = `${process.env.FRONTEND_URL}/orders`;
+
+    const subjectByStatus = {
+        'Processing': `Your Layerly order #${orderIdShort} is being processed`,
+        'Shipped': `Your Layerly order #${orderIdShort} has been shipped`,
+        'Delivered': `Your Layerly order #${orderIdShort} has been delivered`,
+        'Cancelled': `Your Layerly order #${orderIdShort} has been cancelled`,
+        'Refunded': `Your refund for Layerly order #${orderIdShort} has been initiated`
+    };
+    const subject = subjectByStatus[status] || `Update on your Layerly order #${orderIdShort}`;
+
+    const statusBadgeColor = {
+        'Processing': '#f59e0b',
+        'Shipped': '#8b5cf6',
+        'Delivered': '#10b981',
+        'Cancelled': '#ef4444',
+        'Refunded': '#ef5555',
+    }[status] || '#374151';
+
+    const mailOptions = {
+        from: {
+            name: 'Layerly',
+            address: process.env.EMAIL_USER,
+        },
+        to,
+        subject,
+        html: `
+      <div style="max-width:620px;margin:0 auto;font-family:Arial,sans-serif;color:#333;line-height:1.6">
+        <div style="background:#111;color:#fff;padding:18px 22px;border-radius:8px 8px 0 0">
+          <h2 style="margin:0;font-size:20px;">Order Update</h2>
+        </div>
+        <div style="background:#fff;border:1px solid #eee;padding:22px;border-radius:0 0 8px 8px">
+          <p style="font-size:16px;margin:0 0 8px;">Hi ${name || 'there'},</p>
+          <p style="font-size:16px;margin:0 0 14px;">The status of your order <strong>#${orderIdShort}</strong> has been updated to:</p>
+          <div style="display:inline-block;background:${statusBadgeColor};color:#fff;padding:6px 12px;border-radius:999px;font-weight:bold;margin:6px 0 14px;">
+            ${status}
+          </div>
+
+          <div style="background:#f8f9fa;border:1px solid #eee;border-radius:6px;padding:12px 14px;margin:6px 0 16px;">
+            <p style="margin:4px 0;font-size:14px;"><strong>Items:</strong> ${itemsCount}</p>
+            <p style="margin:4px 0;font-size:14px;"><strong>Amount:</strong> ₹ ${amount}</p>
+            <p style="margin:4px 0;font-size:14px;"><strong>Placed:</strong> ${placedAt}</p>
+          </div>
+
+          <p style="font-size:14px;margin:14px 0;">You can view the details of your order at any time:</p>
+          <p style="margin:16px 0;">
+            <a href="${ordersUrl}" style="background:#111;color:#fff;padding:10px 16px;text-decoration:none;border-radius:6px;font-weight:bold;display:inline-block;">View My Orders</a>
+          </p>
+
+          <p style="font-size:13px;color:#666;margin:16px 0;">If you have any questions, just reply to this email.</p>
+          <p style="font-size:13px;color:#666;margin:4px 0;">Regards,<br/>Layerly Team</p>
+        </div>
+        <div style="text-align:center;color:#999;font-size:12px;margin-top:12px">
+          <p>© ${new Date().getFullYear()} Layerly. All rights reserved.</p>
+        </div>
+      </div>
+    `
+    };
+
+    try {
+        const result = await transporter.sendMail(mailOptions);
+        console.log('Order status email sent:', result.messageId);
+        return { success: true, messageId: result.messageId };
+    } catch (error) {
+        console.error('Error sending order status email:', error);
+        throw new Error('Failed to send order status email');
+    }
+};
+
+
+export { sendVerificationEmail, sendPasswordResetEmail, sendCustomQuoteReplyEmail, sendWelcomeEmail, sendOrderStatusEmail };
 

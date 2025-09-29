@@ -86,7 +86,7 @@ const replyToCustomQuote = async (req, res) => {
         quote.status = 'REPLIED';
         await quote.save();
 
-        // Optional: try to pick nicer name from user record
+
         let name = quote.name;
         if (quote.userID) {
             try {
@@ -167,7 +167,8 @@ const proxyStl = async (req, res) => {
         if (!['http:', 'https:'].includes(parsed.protocol)) {
             return res.status(400).json({ success: false, message: 'Invalid protocol' });
         }
-        // Only allow specific hosts
+
+
         const hostOk = [...ALLOWED_HOSTS].some(h => parsed.hostname === h || parsed.hostname.endsWith(`.${h}`));
         if (!hostOk) {
             return res.status(403).json({ success: false, message: 'Host not allowed' });

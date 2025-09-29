@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: 'Order Placed',
-        enum: ['Order Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
+        enum: ['Order Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Refunded']
     },
     payment: { type: Boolean, required: true, default: false },
     paymentMethod: {

@@ -72,12 +72,12 @@ const Catalogue = () => {
         <div>
             <SearchBar />
             <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-3 md:pt-10 border-t border-t-gray-300'>
-                {/* Filters */}
-                <div className='min-w-60'>
+
+                <div className='min-w-60 md:sticky md:top-4 md:self-start'>
                     <p onClick={() => setShowFilter(!showFilter)} className='delius-unicase-regular my-2 text-xs md:text-base flex items-center gap-2 text-gray-700'> FILTERS
                         <img className={`h-2.5 sm:hidden ${showFilter ? 'rotate-90' : ''}`} src={assets.dropdown_icon} alt="" />
                     </p>
-                    {/* Category */}
+
                     <div className={`border border-gray-300 pl-5 py-3  my-2 mt-5  ${showFilter ? '' : 'hidden'} sm:block`}>
                         <p className='delius-unicase-regular mb-3 text-xs md:text-sm font-medium text-gray-700'>CATEGORIES</p>
                         <div className='flex flex-col gap-2 text-xs md:text-sm font-light text-gray-700'>
@@ -101,7 +101,7 @@ const Catalogue = () => {
                     </div>
                 </div>
 
-                {/* Items */}
+
 
                 <div className='flex-1'>
                     <div className='flex justify-between text-base sm:text-2xl mb-4'>
@@ -112,7 +112,7 @@ const Catalogue = () => {
                             <hr className='w-12 md:w-16 border-none h-[2px] sm:h-[2px] bg-gray-500 ml-23' />
                         </div>
 
-                        {/* Sort Menu*/}
+
 
                         <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3'>
                             <label htmlFor="sort-select" className='hidden md:inline-block md:text-base font-medium text-gray-700'>
@@ -135,7 +135,7 @@ const Catalogue = () => {
 
                     </div>
 
-                    {/* Products */}
+
                     <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
                         {
                             filterProducts.map((item, index) => (

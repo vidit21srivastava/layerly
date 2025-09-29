@@ -124,7 +124,7 @@ const Orders = ({ setToken }) => {
                                                     onChange={(e) => updateOrderStatus(order._id, e.target.value)}
                                                     disabled={updating === order._id}
                                                 >
-                                                    {['Order Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map(s => (
+                                                    {['Order Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Refunded'].map(s => (
                                                         <option key={s} value={s}>{s}</option>
                                                     ))}
                                                 </select>
@@ -156,7 +156,7 @@ const Orders = ({ setToken }) => {
                                                             </div>
                                                         ))}
 
-                                                        {/* New: order & payment & address details */}
+
                                                         <div className='grid grid-cols-1 md:grid-cols-3 gap-3'>
                                                             <div className='bg-white border border-gray-200 rounded p-3'>
                                                                 <h4 className='font-semibold text-sm mb-2'>Order</h4>
