@@ -105,7 +105,7 @@ const Footer = () => {
                 </span>
                 <span>
                   <strong>
-                    Layerly <br /> (An ISO 9001:2015 Certified Company)
+                    Layerly <br />
                   </strong>
                   <br />
                   Ranchhodray Nagar Society,
