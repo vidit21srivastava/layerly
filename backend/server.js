@@ -15,17 +15,13 @@ import paymentRouter from './routes/paymentRoutes.js';
 import customRouter from './routes/customRoutes.js';
 
 const app = express();
-const port = process.env.PORT || 4000;
 
 app.set('trust proxy', 1);
 
-// DBs
-connectDB();
-connectCloudinary();
-
-// JSON/CORS
+// JSON
 app.use(express.json());
 
+// CORS
 const allowed = [
     process.env.FRONTEND_URL,
     process.env.ADMIN_URL,
@@ -41,14 +37,12 @@ const allowPreview = process.env.ALLOW_VERCEL_PREVIEWS === 'true';
 app.use(cors({
     origin: (origin, cb) => {
         try {
-            if (!origin) return cb(null, true); // mobile apps/cURL
+            if (!origin) return cb(null, true);
             if (allowed.filter(Boolean).includes(origin)) return cb(null, true);
             if (allowPreview && /\.vercel\.app$/.test(new URL(origin).hostname)) {
                 return cb(null, true);
             }
-        } catch (e) {
-
-        }
+        } catch (e) { }
         return cb(new Error('Not allowed by CORS: ' + origin));
     },
     credentials: true,
@@ -56,8 +50,15 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'token']
 }));
 
+let isInitialized = false;
 
-async function start() {
+async function init() {
+    if (isInitialized) return;
+
+    // DBs
+    connectDB();
+    connectCloudinary();
+
     const redisClient = createClient({
         username: 'default',
         password: process.env.REDIS_PASSWORD,
@@ -105,19 +106,23 @@ async function start() {
     app.get('/', (req, res) => res.send('API Working'));
     app.get('/health', (req, res) => res.send('OK'));
 
-
     // Error handler
     app.use((err, req, res, next) => {
         console.error('Error:', err);
         res.status(500).json({ success: false, message: 'Internal server error' });
     });
 
-    app.listen(port, () => console.log('Server started on PORT :' + port));
+    isInitialized = true;
 }
 
-start().catch((e) => {
-    console.error('Failed to start server', e);
-    process.exit(1);
-});
+export default async function handler(req, res) {
+    try {
+        await init();
+        return app(req, res);
+    } catch (e) {
+        console.error('Failed to init server', e);
+        return res.status(500).json({ success: false, message: 'Server init failed' });
+    }
+}
 
 
