@@ -116,7 +116,7 @@ const Custom = () => {
     <div>
       <main className="pt-8 pb-12 sm:pb-16">
         <div className="mx-auto px-4">
-          <div className="py-10 border rounded-xl sm:py-15 bg-gradient-to-bl from-brand-orange to-orange-600 text-white mb-4">
+          <div className="py-10 border rounded-xl sm:py-[3.75rem] bg-gradient-to-bl from-brand-orange to-orange-600 text-white mb-4">
             <div className="max-w-4xl mx-auto px-4 text-center">
               <h1 className="text-2xl sm:text-5xl font-semibold">
                 Order Custom
@@ -182,7 +182,7 @@ const Custom = () => {
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-md font-medium text-gray-700 mb-2">
+                      <label className="block text-base font-medium text-gray-700 mb-2">
                         Material
                       </label>
                       <select
@@ -198,7 +198,7 @@ const Custom = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-md font-medium text-gray-700 mb-2">
+                      <label className="block text-base font-medium text-gray-700 mb-2">
                         Layer Height
                       </label>
                       <select
@@ -214,7 +214,7 @@ const Custom = () => {
                       </select>
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="block text-md font-medium text-gray-700 mb-2">
+                      <label className="block text-base font-medium text-gray-700 mb-2">
                         Infill Density
                       </label>
                       <div className="flex items-center gap-4">
@@ -235,7 +235,7 @@ const Custom = () => {
                       </div>
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="block text-md font-medium text-gray-700 mb-2">
+                      <label className="block text-base font-medium text-gray-700 mb-2">
                         Infill Pattern
                       </label>
                       <select
@@ -279,7 +279,7 @@ const Custom = () => {
                         checked={supports}
                         onChange={(e) => setSupports(e.target.checked)}
                       />
-                      <span className="text-md text-gray-700">
+                      <span className="text-base text-gray-700">
                         Generate Support Structures
                       </span>
                     </label>
@@ -289,7 +289,7 @@ const Custom = () => {
                         checked={brim}
                         onChange={(e) => setBrim(e.target.checked)}
                       />
-                      <span className="text-md text-gray-700">Add Brim</span>
+                      <span className="text-base text-gray-700">Add Brim</span>
                     </label>
                     <label className="flex items-center gap-2">
                       <input
@@ -297,7 +297,7 @@ const Custom = () => {
                         checked={raft}
                         onChange={(e) => setRaft(e.target.checked)}
                       />
-                      <span className="text-md text-gray-700">Add Raft</span>
+                      <span className="text-base text-gray-700">Add Raft</span>
                     </label>
                   </div>
                 </div>
@@ -312,11 +312,10 @@ const Custom = () => {
                         type="button"
                         key={c}
                         onClick={() => setSelectedColor(c)}
-                        className={`w-6 h-6 rounded-full border-2 transition-all ${
-                          selectedColor === c
+                        className={`w-6 h-6 rounded-full border-2 transition-all ${selectedColor === c
                             ? "border-gray-800 scale-110"
                             : "border-gray-300 hover:border-gray-500"
-                        }`}
+                          }`}
                         style={{ backgroundColor: getColorStyle(c) }}
                         title={c}
                       />
@@ -342,9 +341,8 @@ const Custom = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className={`w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-bold hover:bg-orange-400 transition-colors duration-200 ${
-                    submitting ? "opacity-80 cursor-not-allowed" : ""
-                  }`}
+                  className={`w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-bold hover:bg-orange-400 transition-colors duration-200 ${submitting ? "opacity-80 cursor-not-allowed" : ""
+                    }`}
                 >
                   {submitting ? "Submitting..." : "Get Quote & Proceed"}
                 </button>

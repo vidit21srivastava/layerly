@@ -8,17 +8,21 @@ const AuthSuccess = () => {
   const { login, navigate } = useContext(ShopContext);
 
   useEffect(() => {
-    const token = searchParams.get("token");
+    const handleAuth = async () => {
+      const token = searchParams.get("token");
 
-    if (token) {
-      login(token);
-      toast.success("Login successful!");
-      navigate("/");
-    } else {
-      toast.error("Authentication failed");
-      navigate("/login");
-    }
-  }, []);
+      if (token) {
+        await login(token);
+        toast.success("Login successful!");
+        navigate("/");
+      } else {
+        toast.error("Authentication failed");
+        navigate("/login");
+      }
+    };
+
+    handleAuth();
+  }, [searchParams, login, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

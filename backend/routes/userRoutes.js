@@ -15,20 +15,32 @@ import {
 
 import passport from '../config/passport.js';
 import userAuth from '../middleware/userAuth.js';
+import rateLimit from 'express-rate-limit';
 
 const userRouter = express.Router();
 
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: {
+        success: false,
+        message: 'Too many requests, please try again later.'
+    }
+});
+
 // Regular auth routes
-userRouter.post('/register', registerUser);
-userRouter.post('/login', loginUser);
-userRouter.post('/admin', adminLogin);
+userRouter.post('/register', authLimiter, registerUser);
+userRouter.post('/login', authLimiter, loginUser);
+userRouter.post('/admin', authLimiter, adminLogin);
 
 // Email verification routes
 userRouter.post('/verify-email', verifyEmail);
 userRouter.post('/resend-verification', resendVerificationEmail);
 
 // Password reset routes
-userRouter.post('/forgot-password', forgotPassword);
+userRouter.post('/forgot-password', authLimiter, forgotPassword);
 userRouter.post('/reset-password', resetPassword);
 
 // Google OAuth routes

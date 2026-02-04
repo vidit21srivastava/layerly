@@ -64,13 +64,13 @@ const StlCanvas = ({
 
         // Simple drag rotate
         let down = false, sx = 0, sy = 0;
-        container.addEventListener('pointerdown', e => {
+        const handlePointerDown = (e) => {
             down = true;
             sx = e.clientX;
             sy = e.clientY;
-        });
-        container.addEventListener('pointerup', () => { down = false; });
-        container.addEventListener('pointermove', e => {
+        };
+        const handlePointerUp = () => { down = false; };
+        const handlePointerMove = (e) => {
             if (!down || !meshRef.current) return;
             const dx = (e.clientX - sx) * 0.01;
             const dy = (e.clientY - sy) * 0.01;
@@ -78,7 +78,10 @@ const StlCanvas = ({
             meshRef.current.rotation.x += dy;
             sx = e.clientX;
             sy = e.clientY;
-        });
+        };
+        container.addEventListener('pointerdown', handlePointerDown);
+        container.addEventListener('pointerup', handlePointerUp);
+        container.addEventListener('pointermove', handlePointerMove);
 
         // Zoom with mouse wheel
         const handleWheel = (e) => {
@@ -105,6 +108,9 @@ const StlCanvas = ({
             cancelAnimationFrame(frameRef.current);
             ro.disconnect();
             container.removeEventListener('wheel', handleWheel);
+            container.removeEventListener('pointerdown', handlePointerDown);
+            container.removeEventListener('pointerup', handlePointerUp);
+            container.removeEventListener('pointermove', handlePointerMove);
             if (meshRef.current) {
                 scene.remove(meshRef.current);
                 meshRef.current.geometry?.dispose();

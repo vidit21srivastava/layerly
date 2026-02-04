@@ -3,12 +3,6 @@ import { v2 as cloudinary } from 'cloudinary';
 
 // ADD PRODUCT FUNCTION
 const addProduct = async (req, res) => {
-    console.log("=== REQUEST DEBUG ===");
-    console.log("HEADERS:", req.headers);
-    console.log("BODY:", req.body);
-    console.log("FILES:", req.files);
-    console.log("===================");
-
     try {
         const {
             productID,
@@ -90,13 +84,6 @@ const addProduct = async (req, res) => {
 
 // UPDATE PRODUCT FUNCTION
 const updateProduct = async (req, res) => {
-    console.log("=== UPDATE REQUEST DEBUG ===");
-    console.log("HEADERS:", req.headers);
-    console.log("BODY:", req.body);
-    console.log("FILES:", req.files);
-    console.log("PARAMS:", req.params);
-    console.log("============================");
-
     try {
         const { id } = req.params;
 

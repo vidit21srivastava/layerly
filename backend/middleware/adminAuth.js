@@ -12,9 +12,9 @@ const adminAuth = async (req, res, next) => {
 
         const token_decode = jwt.verify(token, process.env.JWT_SECRET);
 
-        if (token_decode !== process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
+        if (token_decode.email !== process.env.ADMIN_EMAIL || token_decode.role !== 'admin') {
             return res.status(401).json({
-                sucess: false,
+                success: false,
                 message: "Not Authorized. Check the credentials."
             })
         }
@@ -23,6 +23,12 @@ const adminAuth = async (req, res, next) => {
 
     } catch (error) {
         console.log(error);
+        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid or expired token."
+            });
+        }
         res.status(500).json({
             success: false,
             message: error.message

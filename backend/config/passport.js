@@ -8,42 +8,38 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.GOOGLE_REDIRECT_URI
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        console.log('Google OAuth Profile:', profile);
-
+        const email = profile.emails?.[0]?.value;
+        if (!email) {
+            return done(new Error('Google account has no email'), null);
+        }
+        const avatar = profile.photos?.[0]?.value;
 
         let user = await userModel.findOne({ googleId: profile.id });
 
         if (user) {
-            console.log('Existing Google user found:', user.email);
             return done(null, user);
         }
 
-
-        user = await userModel.findOne({ email: profile.emails[0].value });
+        user = await userModel.findOne({ email });
 
         if (user) {
-
-            console.log('Linking Google account to existing user:', user.email);
             user.googleId = profile.id;
-            user.avatar = profile.photos[0]?.value || user.avatar;
+            user.avatar = avatar || user.avatar;
             user.isEmailVerified = true;
             await user.save();
             return done(null, user);
         }
 
-
-        console.log('Creating new Google user:', profile.emails[0].value);
         const newUser = new userModel({
             name: profile.displayName,
-            email: profile.emails[0].value,
+            email,
             googleId: profile.id,
-            avatar: profile.photos[0]?.value,
+            avatar,
             isEmailVerified: true,
             cartData: {}
         });
 
         const savedUser = await newUser.save();
-        console.log('New Google user created:', savedUser.email);
         return done(null, savedUser);
 
     } catch (error) {
