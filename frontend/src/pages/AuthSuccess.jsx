@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
@@ -6,8 +6,12 @@ import { toast } from "react-toastify";
 const AuthSuccess = () => {
   const [searchParams] = useSearchParams();
   const { login, navigate } = useContext(ShopContext);
+  const hasHandledAuth = useRef(false);
 
   useEffect(() => {
+    if (hasHandledAuth.current) return;
+    hasHandledAuth.current = true;
+
     const handleAuth = async () => {
       const token = searchParams.get("token");
 
