@@ -21,7 +21,7 @@ A full-stack e-commerce platform for 3D printed products with custom quote funct
   - Password reset functionality
 - **Shopping Cart**: Add products with color selection
 - **Order Management**: Place orders and track order history
-- **Secure Payments**: Stripe payment integration
+- **Secure Payments**: PhonePe payment gateway integration
 - **User Profile**: Manage account information and view order history
 
 ### Admin Features
@@ -61,7 +61,7 @@ A full-stack e-commerce platform for 3D printed products with custom quote funct
 - **File Upload**: Multer 2.0
 - **Cloud Storage**: Cloudinary 2.7
 - **Email**: Nodemailer 7.0
-- **Payment**: Stripe integration
+- **Payment**: PhonePe payment gateway integration
 - **Security**: 
   - bcrypt 6.0 for password hashing
   - express-rate-limit for API protection
@@ -277,7 +277,7 @@ layerly/
 | `productController.js` | Product operations | `addProduct()` - Creates new products with multi-color images<br>`updateProduct()` - Modifies existing product details<br>`listProduct()` - Retrieves all products from database<br>`singleProduct()` - Fetches single product by ID<br>`removeProduct()` - Deletes products from catalog |
 | `cartController.js` | Shopping cart | `addToCart()` - Adds items with color/quantity to user cart<br>`updateCart()` - Updates item quantities in cart<br>`getUserCart()` - Retrieves user's cart data<br>`removeFromCart()` - Removes items from cart |
 | `orderController.js` | Order processing | `allOrders()` - Admin retrieval of all orders<br>`userOrders()` - Fetches orders for specific user<br>`updateStatus()` - Admin updates order status<br>`placeOrder()` - Creates new order from cart<br>`generateInvoice()` - Generates PDF invoices using PDFKit |
-| `paymentController.js` | Payment handling | `initiatePhonePe()` - Creates PhonePe payment intent<br>`verifyPayment()` - Confirms payment completion<br>`createStripeIntent()` - Initializes Stripe payment<br>`handleWebhook()` - Processes payment webhooks |
+| `paymentController.js` | Payment handling | `initiatePhonePe()` - Creates PhonePe payment intent<br>`verifyPayment()` - Confirms payment completion and status<br>`handleCallback()` - Processes PhonePe payment callbacks<br>`getPhonePeToken()` - Retrieves OAuth access token for PhonePe API |
 | `customController.js` | Custom quotes | `createCustomQuote()` - Submits custom 3D printing quote requests<br>`listCustomQuotes()` - Admin retrieves all quote requests<br>`replyToCustomQuote()` - Admin responds to customer quotes<br>`closeCustomQuote()` - Marks quote as closed<br>`proxyStl()` - Proxies STL file requests for security |
 
 #### Middleware (backend/middleware/)
@@ -344,7 +344,7 @@ layerly/
 | `Product.jsx` | Product details | Shows single product details, color selection, quantity picker, add to cart, 3D preview if available |
 | `Custom.jsx` | Custom quote form | Form for submitting custom 3D print requests with STL upload, material/settings selection |
 | `Cart.jsx` | Shopping cart | Lists cart items, quantity adjustment, color display, total calculation, proceed to checkout |
-| `PlaceOrder.jsx` | Checkout page | Shipping address form, order summary, payment method selection, Stripe integration |
+| `PlaceOrder.jsx` | Checkout page | Shipping address form, order summary, payment method selection, PhonePe payment gateway integration |
 | `Orders.jsx` | Order history | Displays user's past orders, order status tracking, invoice download links |
 | `Profile.jsx` | User profile | Shows/edits user information, avatar upload, email verification status, password change |
 | `Login.jsx` | Authentication | Login/register forms, email/password authentication, Google OAuth button, form validation |
@@ -450,8 +450,9 @@ layerly/
 - `GET /api/custom/proxy-stl` - Proxy STL file requests
 
 ### Payment Routes
-- `POST /api/payment/create-intent` - Create Stripe payment intent
-- `POST /api/payment/confirm` - Confirm payment
+- `POST /api/payment/create-intent` - Create PhonePe payment intent
+- `POST /api/payment/callback` - Handle PhonePe payment callback
+- `GET /api/payment/status/:paymentId` - Check payment status
 
 ## Security Features
 
