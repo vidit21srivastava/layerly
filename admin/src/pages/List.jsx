@@ -37,7 +37,9 @@ const List = ({ setToken }) => {
     const fetchList = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(backendURL + '/api/product/list');
+            const response = await axios.get(backendURL + '/api/product/list', {
+                params: { _ts: Date.now() }
+            });
             if (response.data.success) {
                 setList(response.data.products);
             } else {
@@ -389,8 +391,8 @@ const List = ({ setToken }) => {
                                                     <button
                                                         type="submit" disabled={updating}
                                                         className={`px-4 py-2 rounded-lg font-bold transition-colors ${updating
-                                                                ? "bg-gray-400 text-white cursor-not-allowed"
-                                                                : "bg-amber-500 text-white hover:bg-gray-700"
+                                                            ? "bg-gray-400 text-white cursor-not-allowed"
+                                                            : "bg-amber-500 text-white hover:bg-gray-700"
                                                             }`}
                                                     >
                                                         {updating ? "Updating..." : "Save Changes"}

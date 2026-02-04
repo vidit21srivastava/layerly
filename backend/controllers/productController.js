@@ -207,7 +207,15 @@ const updateProduct = async (req, res) => {
 // LIST PRODUCT FUNCTION
 const listProduct = async (req, res) => {
     try {
-        res.set('Cache-Control', 'no-store');
+        res.set({
+            'Cache-Control': 'no-store, max-age=0, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+            'Surrogate-Control': 'no-store'
+        });
+        res.removeHeader('ETag');
+        res.removeHeader('Last-Modified');
+
         const products = await Product.find({});
         res.status(200).json({ success: true, products });
     } catch (error) {
