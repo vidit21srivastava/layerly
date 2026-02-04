@@ -8,7 +8,7 @@ const paymentIntentSchema = new mongoose.Schema(
     phonePeTxnId: { type: String },
     userID: { type: String, required: true },
     items: { type: Array, required: true },
-    amount: { type: Number, required: true },
+    amount: { type: Number, required: true, min: 0 },
     address: { type: Object, required: true },
     status: {
       type: String,

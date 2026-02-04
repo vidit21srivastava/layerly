@@ -6,6 +6,7 @@ const Sidebar = () => {
         <div className='w-15 sm:w-15 md:w-70 min-h-screen border-r border-gray-200 bg-gray-100'>
             <div className='flex flex-col gap-2 pt-6 pl-[20%] text-sm md:text-base lg:text-lg'>
                 <NavLink
+                    aria-label='Add Items'
                     className={({ isActive }) =>
                         `flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l transition-all duration-200 ${isActive
                             ? 'bg-amber-50 border-orange-600 text-orange-600 shadow-sm'
@@ -21,6 +22,7 @@ const Sidebar = () => {
                 </NavLink>
 
                 <NavLink
+                    aria-label='List Items'
                     className={({ isActive }) =>
                         `flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l transition-all duration-200 ${isActive
                             ? 'bg-amber-50 border-orange-600 text-orange-600 shadow-sm'
@@ -36,6 +38,7 @@ const Sidebar = () => {
                 </NavLink>
 
                 <NavLink
+                    aria-label='Orders'
                     className={({ isActive }) =>
                         `flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l transition-all duration-200 ${isActive
                             ? 'bg-amber-50 border-orange-600 text-orange-600 shadow-sm'
@@ -52,6 +55,7 @@ const Sidebar = () => {
 
                 {/* ADD: Quotes */}
                 <NavLink
+                    aria-label='Quotes'
                     className={({ isActive }) =>
                         `flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l transition-all duration-200 ${isActive
                             ? 'bg-amber-50 border-orange-600 text-orange-600 shadow-sm'

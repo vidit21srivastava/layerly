@@ -63,7 +63,7 @@ const ShopContextProvider = (props) => {
             if (response.data.success) {
                 setUser(response.data.user);
                 // Load cart data
-                getUserCart(authToken);
+                await getUserCart(authToken);
             }
         } catch (error) {
             console.error('Get profile error:', error);
@@ -107,18 +107,20 @@ const ShopContextProvider = (props) => {
             });
             if (response.data.success) {
 
-                let cartData = structuredClone(cartItems);
-                if (cartData[itemId]) {
-                    if (cartData[itemId][color]) {
-                        cartData[itemId][color] += quantity;
+                setCartItems(prev => {
+                    const cartData = structuredClone(prev);
+                    if (cartData[itemId]) {
+                        if (cartData[itemId][color]) {
+                            cartData[itemId][color] += quantity;
+                        } else {
+                            cartData[itemId][color] = quantity;
+                        }
                     } else {
+                        cartData[itemId] = {};
                         cartData[itemId][color] = quantity;
                     }
-                } else {
-                    cartData[itemId] = {};
-                    cartData[itemId][color] = quantity;
-                }
-                setCartItems(cartData);
+                    return cartData;
+                });
 
                 const product = findProductById(itemId);
                 const productName = product ? product.name : 'Item';
@@ -148,21 +150,23 @@ const ShopContextProvider = (props) => {
             });
             if (response.data.success) {
 
-                let cartData = structuredClone(cartItems);
-                if (quantity <= 0) {
-                    if (cartData[itemId]) {
-                        delete cartData[itemId][color];
-                        if (Object.keys(cartData[itemId]).length === 0) {
-                            delete cartData[itemId];
+                setCartItems(prev => {
+                    const cartData = structuredClone(prev);
+                    if (quantity <= 0) {
+                        if (cartData[itemId]) {
+                            delete cartData[itemId][color];
+                            if (Object.keys(cartData[itemId]).length === 0) {
+                                delete cartData[itemId];
+                            }
                         }
+                    } else {
+                        if (!cartData[itemId]) {
+                            cartData[itemId] = {};
+                        }
+                        cartData[itemId][color] = quantity;
                     }
-                } else {
-                    if (!cartData[itemId]) {
-                        cartData[itemId] = {};
-                    }
-                    cartData[itemId][color] = quantity;
-                }
-                setCartItems(cartData);
+                    return cartData;
+                });
 
                 const product = findProductById(itemId);
                 const productName = product ? product.name : 'Item';
@@ -211,14 +215,14 @@ const ShopContextProvider = (props) => {
     };
 
 
-    const login = (authToken, userData = null) => {
+    const login = async (authToken, userData = null) => {
         setToken(authToken);
         localStorage.setItem('token', authToken);
         if (userData) {
             setUser(userData);
-            getUserCart(authToken);
+            await getUserCart(authToken);
         } else {
-            getUserProfile(authToken);
+            await getUserProfile(authToken);
         }
     };
 

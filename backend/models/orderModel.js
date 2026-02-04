@@ -20,7 +20,7 @@ const orderSchema = new mongoose.Schema({
     },
     phonePeTxnId: { type: String, default: null },
     date: {
-        type: Date, required: true, default: Date.now()
+        type: Date, required: true, default: Date.now
     }
 });
 

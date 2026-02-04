@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid';
 import { sendVerificationEmail, sendPasswordResetEmail, sendWelcomeEmail } from '../config/email.js';
 
 const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET);
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 }
 
 
@@ -24,7 +24,7 @@ const registerUser = async (req, res) => {
             });
         }
 
-        if (!validator.isEmail(email)) {
+        if (!email || !validator.isEmail(email)) {
             return res.status(400).json({
                 success: false,
                 message: "Please enter a valid email"
@@ -32,7 +32,7 @@ const registerUser = async (req, res) => {
         }
 
 
-        if (password.length < 8) {
+        if (!password || password.length < 8) {
             return res.status(400).json({
                 success: false,
                 message: "Password must be at least 8 characters long"
@@ -196,7 +196,7 @@ const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await userModel.findOne({ email });
+        const user = await userModel.findOne({ email }).select('+password');
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -459,9 +459,12 @@ const updateUserProfile = async (req, res) => {
 const adminLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
-
         if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-            const token = jwt.sign(email + password, process.env.JWT_SECRET);
+            const token = jwt.sign(
+                { role: 'admin', email },
+                process.env.JWT_SECRET,
+                { expiresIn: '1d' }
+            );
             res.status(200).json({ success: true, token });
         } else {
             res.status(401).json({

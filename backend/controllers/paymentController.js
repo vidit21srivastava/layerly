@@ -55,17 +55,24 @@ const initiatePhonePe = async (req, res) => {
 
         let subtotal = 0;
         for (const item of items) {
-            if (!item.productId || !item.quantity || !item.color) {
+            if (!item.productId || !item.color) {
                 return res.status(400).json({
                     success: false,
                     message: "Each item must include productId, color, and quantity",
+                });
+            }
+            const qty = Number(item.quantity);
+            if (!Number.isInteger(qty) || qty <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Item quantity must be a positive integer",
                 });
             }
             const product = await Product.findById(item.productId);
             if (!product) {
                 return res.status(404).json({ success: false, message: `Product not found: ${item.productId}` });
             }
-            subtotal += product.price * Number(item.quantity);
+            subtotal += product.price * qty;
         }
 
         const deliveryFee = 60;
@@ -164,17 +171,25 @@ const phonePeCallback = async (req, res) => {
         intent.rawResponse = data;
 
         if (orderState === "COMPLETED") {
-            await orderModel.create({
-                userID: intent.userID,
-                items: intent.items,
-                amount: intent.amount,
-                address: intent.address,
-                status: "Order Placed",
-                payment: true,
-                paymentMethod: "PHONEPE",
-                phonePeTxnId: phonePeTxnId,
-                date: Date.now(),
-            });
+            if (intent.status === "SUCCESS") {
+                return res.redirect(`${FRONTEND_URL}/orders?payment=success`);
+            }
+            const existingOrder = phonePeTxnId
+                ? await orderModel.findOne({ phonePeTxnId })
+                : null;
+            if (!existingOrder) {
+                await orderModel.create({
+                    userID: intent.userID,
+                    items: intent.items,
+                    amount: intent.amount,
+                    address: intent.address,
+                    status: "Order Placed",
+                    payment: true,
+                    paymentMethod: "PHONEPE",
+                    phonePeTxnId: phonePeTxnId,
+                    date: Date.now(),
+                });
+            }
 
             await userModel.findByIdAndUpdate(intent.userID, { cartData: {} });
 

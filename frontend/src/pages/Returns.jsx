@@ -5,7 +5,7 @@ const Returns = () => {
     <div>
       <main className="pt-8 pb-12 sm:pb-16">
         <section className=" mx-auto px-4">
-          <div className="py-10 border rounded-xl sm:py-15 bg-gradient-to-bl from-brand-orange to-orange-600 text-white mb-4">
+          <div className="py-10 border rounded-xl sm:py-[3.75rem] bg-gradient-to-bl from-brand-orange to-orange-600 text-white mb-4">
             <div className="max-w-4xl mx-auto px-4 text-center">
               <h1 className="text-2xl sm:text-5xl font-semibold">
                 Return Policy
@@ -14,7 +14,7 @@ const Returns = () => {
           </div>
 
           <div className="space-y-6 text-gray-600 leading-relaxed text-justify">
-            <strong className="text-md md:text-lg">
+            <strong className="text-base md:text-lg">
               Updated on: 12/09/2025
             </strong>
             <p className="text-base sm:text-lg">

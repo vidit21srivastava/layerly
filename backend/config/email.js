@@ -3,15 +3,15 @@ import nodemailer from 'nodemailer';
 const createTransporter = () => {
     return nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        secure: false,
+        port: Number(process.env.EMAIL_PORT),
+        secure: process.env.EMAIL_SECURE === 'true',
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS,
         },
-        tls: {
-            rejectUnauthorized: false
-        }
+        ...(process.env.EMAIL_REJECT_UNAUTHORIZED === 'false'
+            ? { tls: { rejectUnauthorized: false } }
+            : {}),
     });
 };
 
@@ -81,7 +81,7 @@ const sendVerificationEmail = async (email, name, token) => {
     };
 
     try {
-        const result = transporter.sendMail(mailOptions);
+        const result = await transporter.sendMail(mailOptions);
         console.log('Verification email sent:', result.messageId);
         return { success: true, messageId: result.messageId };
     } catch (error) {

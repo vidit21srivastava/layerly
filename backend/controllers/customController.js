@@ -83,7 +83,6 @@ const replyToCustomQuote = async (req, res) => {
         if (price !== undefined && price !== null && !isNaN(price)) {
             quote.price = Number(price);
         }
-        quote.status = 'REPLIED';
         await quote.save();
 
 
@@ -102,6 +101,9 @@ const replyToCustomQuote = async (req, res) => {
             price: quote.price,
             stlUrl: quote.fileUrl
         });
+
+        quote.status = 'REPLIED';
+        await quote.save();
 
         return res.status(200).json({ success: true, message: 'Reply sent successfully', quote });
     } catch (err) {
@@ -174,14 +176,19 @@ const proxyStl = async (req, res) => {
             return res.status(403).json({ success: false, message: 'Host not allowed' });
         }
 
+        const controller = new AbortController();
+        req.on('close', () => controller.abort());
         const upstream = await axios.get(parsed.toString(), {
             responseType: 'stream',
             headers: { 'User-Agent': 'Layerly-STL-Proxy' },
             maxRedirects: 5,
+            timeout: 10000,
+            signal: controller.signal,
         });
 
         res.set('Content-Type', upstream.headers['content-type'] || 'model/stl');
         res.set('Cache-Control', 'public, max-age=3600');
+        upstream.data.on('error', () => res.destroy());
         upstream.data.pipe(res);
     } catch (err) {
         console.error('proxyStl error:', err.message);

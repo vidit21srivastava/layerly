@@ -4,6 +4,13 @@ import userModel from "../models/userModel.js";
 const addToCart = async (req, res) => {
     try {
         const { userID, itemId, color, quantity = 1 } = req.body;
+        const qty = Number.parseInt(quantity, 10);
+        if (!Number.isFinite(qty) || qty <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Quantity must be a positive integer"
+            });
+        }
 
         if (!itemId || !color) {
             return res.status(400).json({
@@ -25,13 +32,13 @@ const addToCart = async (req, res) => {
         // Add to cart
         if (cartData[itemId]) {
             if (cartData[itemId][color]) {
-                cartData[itemId][color] += parseInt(quantity);
+                cartData[itemId][color] += qty;
             } else {
-                cartData[itemId][color] = parseInt(quantity);
+                cartData[itemId][color] = qty;
             }
         } else {
             cartData[itemId] = {};
-            cartData[itemId][color] = parseInt(quantity);
+            cartData[itemId][color] = qty;
         }
 
         await userModel.findByIdAndUpdate(userID, { cartData });
@@ -54,6 +61,13 @@ const addToCart = async (req, res) => {
 const updateCart = async (req, res) => {
     try {
         const { userID, itemId, color, quantity } = req.body;
+        const qty = Number.parseInt(quantity, 10);
+        if (!Number.isFinite(qty)) {
+            return res.status(400).json({
+                success: false,
+                message: "Quantity must be a valid integer"
+            });
+        }
 
         if (!itemId || !color || quantity === undefined) {
             return res.status(400).json({
@@ -72,7 +86,7 @@ const updateCart = async (req, res) => {
 
         let cartData = user.cartData || {};
 
-        if (parseInt(quantity) <= 0) {
+        if (qty <= 0) {
 
             if (cartData[itemId]) {
                 delete cartData[itemId][color];
@@ -87,7 +101,7 @@ const updateCart = async (req, res) => {
             if (!cartData[itemId]) {
                 cartData[itemId] = {};
             }
-            cartData[itemId][color] = parseInt(quantity);
+            cartData[itemId][color] = qty;
         }
 
         await userModel.findByIdAndUpdate(userID, { cartData });

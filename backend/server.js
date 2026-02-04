@@ -60,68 +60,80 @@ app.use(cors({
 }));
 
 let isInitialized = false;
+let initPromise = null;
 
 async function init() {
-    if (isInitialized) return;
+    if (initPromise) return initPromise;
+    initPromise = (async () => {
+        if (isInitialized) return;
 
-    // DBs
-    connectDB();
-    connectCloudinary();
+        // DBs
+        await connectDB();
+        await connectCloudinary();
 
-    const redisClient = createClient({
-        username: 'default',
-        password: process.env.REDIS_PASSWORD,
-        socket: {
-            host: process.env.REDIS_HOST,
-            port: process.env.REDIS_PORT
+
+        const redisClient = createClient({
+            username: 'default',
+            password: process.env.REDIS_PASSWORD,
+            socket: {
+                host: process.env.REDIS_HOST,
+                port: process.env.REDIS_PORT
+            }
+        });
+
+        redisClient.on('error', (err) => console.error('Redis error:', err));
+        await redisClient.connect();
+        console.log('Redis connected successfully');
+
+        const store = new RedisStore({
+            client: redisClient,
+            prefix: 'sess:',
+        });
+
+        const sessionSecret = process.env.SESSION_SECRET;
+        if (!sessionSecret) {
+            throw new Error('SESSION_SECRET is required');
         }
-    });
 
-    redisClient.on('error', (err) => console.error('Redis error:', err));
-    await redisClient.connect();
-    console.log('Redis connected successfully');
+        app.use(session({
+            store,
+            secret: sessionSecret,
+            resave: false,
+            saveUninitialized: false,
+            name: 'layerly.sid',
+            cookie: {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 24 * 60 * 60 * 1000,
+            },
+        }));
 
-    const store = new RedisStore({
-        client: redisClient,
-        prefix: 'sess:',
-    });
+        // Passport
+        app.use(passport.initialize());
+        app.use(passport.session());
 
-    app.use(session({
-        store,
-        secret: process.env.SESSION_SECRET || process.env.JWT_SECRET || 'layerly-session-secret',
-        resave: false,
-        saveUninitialized: false,
-        name: 'layerly.sid',
-        cookie: {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-            maxAge: 24 * 60 * 60 * 1000,
-        },
-    }));
+        // Routes
+        app.use('/api/user', userRouter);
+        app.use('/api/product', productRouter);
+        app.use('/api/cart', cartRouter);
+        app.use('/api/order', orderRouter);
+        app.use('/api/payment', paymentRouter);
+        app.use('/api/custom', customRouter);
 
-    // Passport
-    app.use(passport.initialize());
-    app.use(passport.session());
+        app.get('/', (req, res) => res.send('API Working'));
+        app.get('/health', (req, res) => res.send('OK'));
 
-    // Routes
-    app.use('/api/user', userRouter);
-    app.use('/api/product', productRouter);
-    app.use('/api/cart', cartRouter);
-    app.use('/api/order', orderRouter);
-    app.use('/api/payment', paymentRouter);
-    app.use('/api/custom', customRouter);
+        // Error handler
+        app.use((err, req, res, next) => {
+            console.error('Error:', err);
+            res.status(500).json({ success: false, message: 'Internal server error' });
+        });
 
-    app.get('/', (req, res) => res.send('API Working'));
-    app.get('/health', (req, res) => res.send('OK'));
+        isInitialized = true;
+    })();
 
-    // Error handler
-    app.use((err, req, res, next) => {
-        console.error('Error:', err);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    });
-
-    isInitialized = true;
+    return initPromise;
 }
 
 export default async function handler(req, res) {
