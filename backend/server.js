@@ -43,15 +43,20 @@ if (process.env.NODE_ENV !== 'production') {
 
 const allowPreview = process.env.ALLOW_VERCEL_PREVIEWS === 'true';
 
+function isOriginAllowed(origin) {
+    try {
+        if (!origin) return true;
+        if (allowed.filter(Boolean).includes(origin)) return true;
+        if (allowPreview && /\.vercel\.app$/.test(new URL(origin).hostname)) {
+            return true;
+        }
+    } catch (e) { }
+    return false;
+}
+
 app.use(cors({
     origin: (origin, cb) => {
-        try {
-            if (!origin) return cb(null, true);
-            if (allowed.filter(Boolean).includes(origin)) return cb(null, true);
-            if (allowPreview && /\.vercel\.app$/.test(new URL(origin).hostname)) {
-                return cb(null, true);
-            }
-        } catch (e) { }
+        if (isOriginAllowed(origin)) return cb(null, true);
         return cb(new Error('Not allowed by CORS: ' + origin));
     },
     credentials: true,
@@ -138,10 +143,19 @@ async function init() {
 
 export default async function handler(req, res) {
     try {
+        if (req.method === 'OPTIONS') {
+            return app(req, res);
+        }
         await init();
         return app(req, res);
     } catch (e) {
         console.error('Failed to init server', e);
+        const origin = req.headers.origin;
+        if (isOriginAllowed(origin)) {
+            res.setHeader('Access-Control-Allow-Origin', origin);
+            res.setHeader('Access-Control-Allow-Credentials', 'true');
+            res.setHeader('Vary', 'Origin');
+        }
         return res.status(500).json({ success: false, message: 'Server init failed' });
     }
 }
