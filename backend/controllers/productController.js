@@ -207,6 +207,7 @@ const updateProduct = async (req, res) => {
 // LIST PRODUCT FUNCTION
 const listProduct = async (req, res) => {
     try {
+        res.set('Cache-Control', 'no-store');
         const products = await Product.find({});
         res.status(200).json({ success: true, products });
     } catch (error) {

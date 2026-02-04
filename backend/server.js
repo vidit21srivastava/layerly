@@ -17,6 +17,7 @@ import customRouter from './routes/customRoutes.js';
 const app = express();
 
 app.set('trust proxy', 1);
+app.set('etag', false);
 
 // JSON
 app.use(express.json());
